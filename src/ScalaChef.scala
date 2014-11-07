@@ -50,5 +50,23 @@
  */
 
 class ScalaChef{
-
+    abstract sealed class ChefLine
+    case class PrintStack() extends ChefLine
+    case class PushStack() extends ChefLine
+    case class PopStack() extends ChefLine
+    case class Add() extends ChefLine
+    case class Subtract() extends ChefLine
+    case class Multiply() extends ChefLine
+    case class Divide() extends ChefLine
+    case class AddDry() extends ChefLine
+    case class ToUnicode() extends ChefLine
+    case class StackToUnicode() extends ChefLine
+    case class MixStack() extends ChefLine
+    case class EmptyStack() extends ChefLine
+    case class ArrangeStack() extends ChefLine
+    case class StackToReturnStack() extends ChefLine
+    /* missing loop case classes; do we need them? */
+    case class Break() extends ChefLine
+    case class CallFunction() extends ChefLine
+    case class Return() extends ChefLine
 }
