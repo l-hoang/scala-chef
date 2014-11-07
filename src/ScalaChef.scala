@@ -1,3 +1,10 @@
+/* Refer to the Baysick implementation,
+ * LOLCODE and Shakessembly impelementations from last year's class
+ * for details on how to do this */
+
+
+
+
 /* Chef syntax stuff (simplified):
  * 
  * Mixing bowl = stack
