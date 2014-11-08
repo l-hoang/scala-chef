@@ -76,4 +76,34 @@ class ScalaChef{
     case class Break() extends ChefLine
     case class CallFunction() extends ChefLine
     case class Return() extends ChefLine
+
+    /* operation "enum" types */
+    var currentOpType = -1
+    val O_TAKE = 0
+    val O_PUT = 1
+    val O_FOLD = 2
+    val O_ADD = 3
+    val O_REMOVE = 4
+    val O_COMBINE = 5
+    val O_DIVIDE = 6
+
+    /* ingredient in use; tracks the ingredient that is being used in some line */  
+    var currentIngredient: Symbol = null
+
+    /* the number of the stack we want to use; unlike Chef, this code only has
+     * a limited # of stacks (at the moment) */
+    var currentStack = "none"
+    val FIRST = "FIRST"
+    val SECOND = "SECOND"
+    val THIRD = "THIRD"
+    val FOURTH = "FOURTH"
+    val FIFTH = "FIFTH"
+    val SIXTH = "SIXTH"
+    val SEVENTH = "SEVENTH"
+
+    /* stack type we are referring to: mixing bowl or baking dish */
+    var stackType = -1
+    val T_BOWL = 0
+    val T_DISH = 1
+
 }
