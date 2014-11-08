@@ -128,7 +128,23 @@ class ScalaChef {
     val variableBindings = new mutable.HashMap[Symbol, Ingredient]
 
     /* This structure holds mixing bowl stacks */
-    val mixingStacks = new mutable.Stack[Ingredient]
+    val mixingStacks = new mutable.HashMap[String, mutable.Stack[Ingredient]]
+
+    /* set up mixingStacks (only 5 set up for now) */
+    mixingStacks.put(FIRST, new mutable.Stack)
+    mixingStacks.put(SECOND, new mutable.Stack)
+    mixingStacks.put(THIRD, new mutable.Stack)
+    mixingStacks.put(FOURTH, new mutable.Stack)
+    mixingStacks.put(FIFTH, new mutable.Stack)
+
     /* This structure holds baking dish stacks */
-    val bakingStacks = new mutable.Stack[Ingredient]
+    val bakingStacks = new mutable.HashMap[String, mutable.Stack[Ingredient]]
+
+    /* set up bakingStacks (again only 5 for now) */
+    bakingStacks.put(FIRST, new mutable.Stack)
+    bakingStacks.put(SECOND, new mutable.Stack)
+    bakingStacks.put(THIRD, new mutable.Stack)
+    bakingStacks.put(FOURTH, new mutable.Stack)
+    bakingStacks.put(FIFTH, new mutable.Stack)
+
 }
