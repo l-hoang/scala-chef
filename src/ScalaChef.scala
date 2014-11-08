@@ -81,13 +81,13 @@ class ScalaChef {
     val I_LIQUID = 1
     val I_EITHER = 2
     class Ingredient(value: Int, interpretation: Int) {
-        var this.value= value
+        var number = value
 
         if (interpretation != I_DRY || interpretation != I_LIQUID ||
                 interpretation != I_EITHER) {
             throw new RuntimeException("bad ingredient designation")
         }
-        var this.state = interpretation
+        var state = interpretation
     }
 
 
@@ -125,7 +125,7 @@ class ScalaChef {
     /* This structure holds the program lines */
     val lines = new mutable.HashMap[Int, ChefLine]
     /* This structure holds ingredient bindings */
-    val variableBindings = new mutable.HashMap[Symbol, Int]
+    val variableBindings = new mutable.HashMap[Symbol, Ingredient]
 
     /* This structure holds mixing bowl stacks */
     val mixingStacks = new mutable.Stack[Any]
