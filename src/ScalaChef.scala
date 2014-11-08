@@ -128,9 +128,7 @@ class ScalaChef {
     val variableBindings = new mutable.HashMap[Symbol, Ingredient]
 
     /* This structure holds mixing bowl stacks */
-    val mixingStacks = new mutable.Stack[Any]
+    val mixingStacks = new mutable.Stack[Ingredient]
     /* This structure holds baking dish stacks */
-    val bakingStacks = new mutable.Stack[Any]
-
-
+    val bakingStacks = new mutable.Stack[Ingredient]
 }
