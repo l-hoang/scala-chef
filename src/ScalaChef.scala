@@ -2,9 +2,6 @@
  * LOLCODE and Shakessembly impelementations from last year's class
  * for details on how to do this */
 
-
-
-
 /* Chef syntax stuff (simplified):
  * 
  * Mixing bowl = stack
@@ -56,6 +53,8 @@
  *
  */
 
+import scala.collection.mutable
+
 class ScalaChef{
     abstract sealed class ChefLine
     case class PrintStack() extends ChefLine
@@ -105,5 +104,12 @@ class ScalaChef{
     var stackType = -1
     val T_BOWL = 0
     val T_DISH = 1
+
+    /* This structure holds the program lines */
+    val lines = new mutable.HashMap[Int, ChefLine]
+    /* This structure holds ingredient bindings */
+    val variableBindings = new mutable.HashMap[Symbol, Int]
+
+    var currentLine = 1
 
 }
