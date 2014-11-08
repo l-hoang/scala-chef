@@ -55,7 +55,7 @@
 
 import scala.collection.mutable
 
-class ScalaChef{
+class ScalaChef {
     abstract sealed class ChefLine
     case class PrintStack() extends ChefLine
     case class PushStack() extends ChefLine
@@ -75,6 +75,22 @@ class ScalaChef{
     case class Break() extends ChefLine
     case class CallFunction() extends ChefLine
     case class Return() extends ChefLine
+
+    /* ways to intrepret an ingredient */
+    val I_DRY = 0
+    val I_LIQUID = 1
+    val I_EITHER = 2
+    class Ingredient(value: Int, interpretation: Int) {
+        var this.value= value
+
+        if (interpretation != I_DRY || interpretation != I_LIQUID ||
+                interpretation != I_EITHER) {
+            throw new RuntimeException("bad ingredient designation")
+        }
+        var this.state = interpretation
+    }
+
+
 
     /* operation "enum" types */
     var currentOpType = -1
@@ -105,11 +121,16 @@ class ScalaChef{
     val T_BOWL = 0
     val T_DISH = 1
 
+    var currentLine = 1
     /* This structure holds the program lines */
     val lines = new mutable.HashMap[Int, ChefLine]
     /* This structure holds ingredient bindings */
     val variableBindings = new mutable.HashMap[Symbol, Int]
 
-    var currentLine = 1
+    /* This structure holds mixing bowl stacks */
+    val mixingStacks = new mutable.Stack[Any]
+    /* This structure holds baking dish stacks */
+    val bakingStacks = new mutable.Stack[Any]
+
 
 }
