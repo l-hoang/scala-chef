@@ -58,7 +58,7 @@ import scala.collection.mutable
 class ScalaChef {
     abstract sealed class ChefLine
     case class PrintStack() extends ChefLine
-    case class PushStack() extends ChefLine
+    case class PushStack(fn: () => mutable.Stack[Ingredient]) extends ChefLine
     case class PopStack() extends ChefLine
     case class Add() extends ChefLine
     case class Subtract() extends ChefLine
@@ -80,6 +80,7 @@ class ScalaChef {
     val I_DRY = 0
     val I_LIQUID = 1
     val I_EITHER = 2
+    /* Holds an Ingredient value and how it is to be interpreted */
     class Ingredient(value: Int, interpretation: Int) {
         var number = value
 
@@ -88,12 +89,18 @@ class ScalaChef {
             throw new RuntimeException("bad ingredient designation")
         }
         var state = interpretation
+        
+        /* returns this ingredient's value as a number */
+        def asNumber(): Int = {
+            number       
+        }
     }
 
 
 
     /* operation "enum" types */
     var currentOpType = -1
+    val O_NOTHING = -1
     val O_TAKE = 0
     val O_PUT = 1
     val O_FOLD = 2
@@ -108,6 +115,7 @@ class ScalaChef {
     /* the number of the stack we want to use; unlike Chef, this code only has
      * a limited # of stacks (at the moment) */
     var currentStack = "none"
+    val NONE = "none"
     val FIRST = "FIRST"
     val SECOND = "SECOND"
     val THIRD = "THIRD"
@@ -118,6 +126,7 @@ class ScalaChef {
 
     /* stack type we are referring to: mixing bowl or baking dish */
     var stackType = -1
+    val T_NOTHING = -1
     val T_BOWL = 0
     val T_DISH = 1
 
@@ -147,4 +156,93 @@ class ScalaChef {
     bakingStacks.put(FOURTH, new mutable.Stack)
     bakingStacks.put(FIFTH, new mutable.Stack)
 
+
+
+    /*********************************/
+    /* Here begins keywords for Chef */
+    /*********************************/
+
+    /* Start evaluating a line that starts with PUT */
+    object PUT {
+        def apply(ingredient: Symbol) = {
+            currentOpType = O_PUT
+            currentIngredient = ingredient
+            new Into
+        }
+    }
+
+    /* This class reads the keyword INTO in a line */
+    class Into {
+        def INTO(stack: String) = {
+            currentStack = stack
+            new BowlOrDish
+        }
+    }
+
+    /* This class will evaluate MIXING_BOWL or BAKING_DISH in a line.
+     * It sets the line stack type, then calls END's finish method */
+    class BowlOrDish() {
+        def MIXING_BOWL(e: End) = {
+            stackType = T_BOWL
+            e.finish
+        }
+
+        def BAKING_DISH(e: End) = {
+            stackType = T_DISH
+            e.finish
+        }
+    }
+
+    /* This class's purpose is solely to let the object END extend it so that
+     * END can be used as an argument/pass type checking. */
+    abstract sealed class End {
+        def finish
+    }
+
+    /* The keyword END must be at the end of every line. The finish method of
+     * this object will finish reading the line and add it to the list of
+     * lines for evaluation later 
+     * 
+     * It extends the abstract class End so that other keywords can take END
+     * as an "argument". */
+    object END extends End {
+        def finish = {
+            /* do different things depending on what the operation of the line
+             * is */
+            currentOpType match {
+                case O_PUT => {
+                    val ingredient = variableBindings(currentIngredient)
+
+                    /* should make getter/setters later */
+                    val ingredientValue = ingredient.number
+                    val ingredientState = ingredient.state
+                    
+                    /* make a copy of the ingredient since you don't want any
+                     * changes to the original ingredient to affect what is on
+                     * the stack */
+                    val ingredientToPush = new Ingredient(ingredientValue,
+                                                          ingredientState)
+                    
+                    /* make a function that will push the ingredient copy onto
+                     * the stack */
+                    val fn = {() => {
+                               mixingStacks(currentStack).push(ingredientToPush)
+                             }}
+                    /* assign this function to the current line */
+                    lines(currentLine) = PushStack(fn)
+                }
+                case _ => {
+                    println("currentOpType invalid")
+                }
+
+            }
+
+            /* get ready to read next line */
+            currentOpType = O_NOTHING
+            currentIngredient = null
+            currentStack = NONE
+            stackType = T_NOTHING
+            currentLine += 1
+        }
+    }
 }
