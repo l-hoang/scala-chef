@@ -66,7 +66,7 @@ class ScalaChef {
     case class Multiply() extends ChefLine
     case class Divide() extends ChefLine
     case class AddDry() extends ChefLine
-    case class ToUnicode() extends ChefLine
+    case class ToUnicode(fn: () => Unit) extends ChefLine
     case class StackToUnicode() extends ChefLine
     case class MixStack() extends ChefLine
     case class EmptyStack() extends ChefLine
@@ -91,9 +91,25 @@ class ScalaChef {
         }
         var state = interpretation
         
+        /* change the interpretation of this ingredient */
+        def changeInterpretation(newInterpretation: Int) = {
+            if (newInterpretation != I_DRY || newInterpretation != I_LIQUID ||
+                    newInterpretation != I_EITHER) {
+                throw new RuntimeException("bad ingredient designation in change" +
+                                           "interpretation")
+            }
+            state = newInterpretation
+        }
+
+       
         /* returns this ingredient's value as a number */
         def asNumber(): Int = {
             number       
+        }
+
+        /* returns this ingredient's value as a Unicode char */
+        def asChar(): Char = {
+            number.toChar
         }
     }
 
@@ -109,6 +125,7 @@ class ScalaChef {
     val O_REMOVE = 4
     val O_COMBINE = 5
     val O_DIVIDE = 6
+    val O_LIQUEFY = 7
 
     /* ingredient in use; tracks the ingredient that is being used in some line */  
     var currentIngredient: Symbol = null
@@ -172,6 +189,14 @@ class ScalaChef {
         }
     }
 
+    /* Start evaluating a line that starts with LIQUEFY */
+    object LIQUEFY {
+        def apply(ingredient: Symbol) = {
+            currentOpType = O_LIQUEFY
+            currentIngredient = ingredient
+        }
+    }
+
     /* This class reads the keyword INTO in a line */
     class Into {
         def INTO(stack: String) = {
@@ -207,6 +232,13 @@ class ScalaChef {
      * It extends the abstract class End so that other keywords can take END
      * as an "argument". */
     object END extends End {
+        /* the apply method must be defined just in case it ends up being the
+         * "last" keyword in a line (in other words, another object can't take
+         * the END keyword as an argument */
+        def apply() = {
+            finish
+        }
+
         def finish = {
             /* do different things depending on what the operation of the line
              * is */
@@ -231,6 +263,17 @@ class ScalaChef {
                              }}
                     /* assign this function to the current line */
                     lines(currentLine) = PushStack(fn)
+                }
+                case O_LIQUEFY => {
+                    val ingredient = variableBindings(currentIngredient)
+
+                    val fn = {() => {
+                                ingredient.changeInterpretation(I_LIQUID)
+                             }}
+
+                    /* assign function to current line */
+                    lines(currentLine) = ToUnicode(fn)
+
                 }
                 case _ => {
                     println("currentOpType invalid")
