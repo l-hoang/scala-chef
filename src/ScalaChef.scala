@@ -54,11 +54,12 @@
  */
 
 import scala.collection.mutable
+import java.util.ArrayDeque
 
 class ScalaChef {
     abstract sealed class ChefLine
     case class PrintStack() extends ChefLine
-    case class PushStack(fn: () => mutable.Stack[Ingredient]) extends ChefLine
+    case class PushStack(fn: () => Unit) extends ChefLine
     case class PopStack() extends ChefLine
     case class Add() extends ChefLine
     case class Subtract() extends ChefLine
@@ -137,24 +138,24 @@ class ScalaChef {
     val variableBindings = new mutable.HashMap[Symbol, Ingredient]
 
     /* This structure holds mixing bowl stacks */
-    val mixingStacks = new mutable.HashMap[String, mutable.Stack[Ingredient]]
+    val mixingStacks = new mutable.HashMap[String, ArrayDeque[Ingredient]]
 
     /* set up mixingStacks (only 5 set up for now) */
-    mixingStacks.put(FIRST, new mutable.Stack)
-    mixingStacks.put(SECOND, new mutable.Stack)
-    mixingStacks.put(THIRD, new mutable.Stack)
-    mixingStacks.put(FOURTH, new mutable.Stack)
-    mixingStacks.put(FIFTH, new mutable.Stack)
+    mixingStacks.put(FIRST, new ArrayDeque)
+    mixingStacks.put(SECOND, new ArrayDeque)
+    mixingStacks.put(THIRD, new ArrayDeque)
+    mixingStacks.put(FOURTH, new ArrayDeque)
+    mixingStacks.put(FIFTH, new ArrayDeque)
 
     /* This structure holds baking dish stacks */
-    val bakingStacks = new mutable.HashMap[String, mutable.Stack[Ingredient]]
+    val bakingStacks = new mutable.HashMap[String, ArrayDeque[Ingredient]]
 
     /* set up bakingStacks (again only 5 for now) */
-    bakingStacks.put(FIRST, new mutable.Stack)
-    bakingStacks.put(SECOND, new mutable.Stack)
-    bakingStacks.put(THIRD, new mutable.Stack)
-    bakingStacks.put(FOURTH, new mutable.Stack)
-    bakingStacks.put(FIFTH, new mutable.Stack)
+    bakingStacks.put(FIRST, new ArrayDeque)
+    bakingStacks.put(SECOND, new ArrayDeque)
+    bakingStacks.put(THIRD, new ArrayDeque)
+    bakingStacks.put(FOURTH, new ArrayDeque)
+    bakingStacks.put(FIFTH, new ArrayDeque)
 
 
 
