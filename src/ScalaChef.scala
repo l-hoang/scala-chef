@@ -53,6 +53,7 @@
  *
  */
 
+import scala.language.postfixOps
 import scala.collection.mutable
 import java.util.ArrayDeque
 
@@ -125,10 +126,27 @@ class ScalaChef {
     val O_REMOVE = 4
     val O_COMBINE = 5
     val O_DIVIDE = 6
-    val O_LIQUEFY = 7
+    val O_ADDDRY = 7
+    val O_LIQUEFY = 8
+    val O_LIQUEFY2 = 9
+    val O_STIR = 10
+    val O_STIR2 = 11
+    val O_MIX = 12
+    val O_CLEAN = 13
+    val O_POUR = 14
+    val O_VERB = 15
+    val O_VERBEND = 16
+    val O_SET = 17
+    val O_SERVE = 18
+    val O_REFRIDGE = 19
+    val O_SERVES = 20
+
 
     /* ingredient in use; tracks the ingredient that is being used in some line */  
     var currentIngredient: Symbol = null
+
+    /* this argument is used to hold integer arguments for a line */
+    var intArg: Int = -1
 
     /* the number of the stack we want to use; unlike Chef, this code only has
      * a limited # of stacks (at the moment) */
@@ -139,8 +157,6 @@ class ScalaChef {
     val THIRD = "THIRD"
     val FOURTH = "FOURTH"
     val FIFTH = "FIFTH"
-    val SIXTH = "SIXTH"
-    val SEVENTH = "SEVENTH"
 
     /* stack type we are referring to: mixing bowl or baking dish */
     var stackType = -1
@@ -191,11 +207,28 @@ class ScalaChef {
 
     /* Start evaluating a line that starts with LIQUEFY */
     object LIQUEFY {
-        def apply(ingredient: Symbol) = {
+        def apply(ingredient: Symbol):Ender = {
             currentOpType = O_LIQUEFY
             currentIngredient = ingredient
+            new Ender(END)
         }
     }
+
+    /* Start evaluating a line that starts with SERVES (the last line) */
+    object SERVES {
+        def apply(numberOfDiners: Int) = {
+            currentOpType = O_SERVES
+            if (numberOfDiners <= 0 || numberOfDiners > 5) {
+                throw new RuntimeException("You can only serve 5 people and " +
+                                            "you need to serve at least 1")
+            }   
+            intArg = numberOfDiners
+            new Ender(END)
+        }
+
+    }
+
+
 
     /* This class reads the keyword INTO in a line */
     class Into {
@@ -219,6 +252,16 @@ class ScalaChef {
         }
     }
 
+    /* This class is created when the next keyword to parse is END; it absorbs
+     * the END keyword and calls the object END finish method to finish the
+     * line eval. */
+    class Ender(e: End) {
+        def END = {
+            e.finish
+        }
+    }
+
+
     /* This class's purpose is solely to let the object END extend it so that
      * END can be used as an argument/pass type checking. */
     abstract sealed class End {
@@ -232,13 +275,6 @@ class ScalaChef {
      * It extends the abstract class End so that other keywords can take END
      * as an "argument". */
     object END extends End {
-        /* the apply method must be defined just in case it ends up being the
-         * "last" keyword in a line (in other words, another object can't take
-         * the END keyword as an argument */
-        def apply() = {
-            finish
-        }
-
         def finish = {
             /* do different things depending on what the operation of the line
              * is */
@@ -261,6 +297,7 @@ class ScalaChef {
                     val fn = {() => {
                                mixingStacks(currentStack).push(ingredientToPush)
                              }}
+                    System.out.printf("akdlfj")
                     /* assign this function to the current line */
                     lines(currentLine) = PushStack(fn)
                 }
@@ -275,6 +312,13 @@ class ScalaChef {
                     lines(currentLine) = ToUnicode(fn)
 
                 }
+                case O_SERVES => {
+                    val fn = {() => {
+                        val stackNumbers = Array(FIRST, SECOND, THIRD, FOURTH,
+                                                 FIFTH)
+                    }}
+
+                }
                 case _ => {
                     println("currentOpType invalid")
                 }
@@ -286,6 +330,7 @@ class ScalaChef {
             currentIngredient = null
             currentStack = NONE
             stackType = T_NOTHING
+            intArg = -1
             currentLine += 1
         }
     }
