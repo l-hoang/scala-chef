@@ -322,20 +322,11 @@ class ScalaChef {
 
                 }
                 case O_CLEAN => { 
-                    var fn = {()=>{}}
-                    if(stackType == T_BOWL){
-                        fn = {() => {
+                    val fn = {() => {
                                 mixingStacks(currentStack).clear()
                              }}
-                    }
-                    else {
-                        fn = {() => {
-                                bakingStacks(currentStack).clear()
-                             }}
-                    }
                     /* assign function to current line */
                     lines(currentLine) = EmptyStack(fn)
-
                 }
                 case O_SERVES => {
                     val fn = {() => {
