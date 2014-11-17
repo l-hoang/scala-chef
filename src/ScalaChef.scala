@@ -70,7 +70,7 @@ class ScalaChef {
     case class ToUnicode(fn: () => Unit) extends ChefLine
     case class StackToUnicode() extends ChefLine
     case class MixStack() extends ChefLine
-    case class EmptyStack() extends ChefLine
+    case class EmptyStack(fn: () => Unit) extends ChefLine
     case class ArrangeStack() extends ChefLine
     case class StackToReturnStack() extends ChefLine
     /* missing loop case classes; do we need them? */
@@ -205,6 +205,15 @@ class ScalaChef {
         }
     }
 
+    /* Start evaluating a line that starts with CLEAN */
+    object CLEAN {
+        def apply(stack: String) = {
+            currentOpType = O_CLEAN
+            currentStack = stack
+            new BowlOrDish
+        }
+    }
+
     /* Start evaluating a line that starts with LIQUEFY */
     object LIQUEFY {
         def apply(ingredient: Symbol):Ender = {
@@ -213,7 +222,7 @@ class ScalaChef {
             new Ender(END)
         }
     }
-
+    
     /* Start evaluating a line that starts with SERVES (the last line) */
     object SERVES {
         def apply(numberOfDiners: Int) = {
@@ -310,6 +319,22 @@ class ScalaChef {
 
                     /* assign function to current line */
                     lines(currentLine) = ToUnicode(fn)
+
+                }
+                case O_CLEAN => { 
+                    var fn = {()=>{}}
+                    if(stackType == T_BOWL){
+                        fn = {() => {
+                                mixingStacks(currentStack).clear()
+                             }}
+                    }
+                    else {
+                        fn = {() => {
+                                bakingStacks(currentStack).clear()
+                             }}
+                    }
+                    /* assign function to current line */
+                    lines(currentLine) = EmptyStack(fn)
 
                 }
                 case O_SERVES => {
