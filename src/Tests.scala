@@ -24,6 +24,9 @@ SOFTWARE.
 
 import org.scalatest.FlatSpec
 
+
+
+
 class Tests extends FlatSpec {
     "Sanity check" should "not run into any errors" in {
         object DoesItCompile extends ScalaChef {
@@ -56,4 +59,67 @@ class Tests extends FlatSpec {
         }
         DoesItCompile.run()
     }
+
+
+    // tests to make sure a program must start with a title
+
+    // test to make sure you can't declare a title twice in a row
+
+    // test to make sure a program must have ingredients after the
+    // title declaration
+
+    // test to make sure you can't have 2 START_INGREDIENTS
+
+    // test to make sure you can't have 2 END_INGREDIENTS
+
+    // test to make sure you can't start a program with just ingredients
+
+    // test to make sure you can't start a program with Chef statements
+
+
+    // test to make sure PUT puts stuff in a stack
+
+    // test to make sure you can put to all 5 mixing bowls
+
+
+    // test to make sure ADD adds to something already on a stack and
+    // pushes that new value to the stack (while leaving the other one
+    // intact)
+
+    // test to make sure you can ADD to all 5 bowls
+
+    // test to make sure ADD fails if nothing is in the specified stack
+
+
+    // test to make sure REMOVE subtracts from something already on a stack and
+    // pushes that new value to the stack (while leaving the other one
+    // intact)
+
+    // test to make sure you can REMOVE from all 5 bowls
+
+    // test to make sure REMOVE fails if nothing is in the specified stack
+
+
+    // test to make sure COMBINE multiplies to something already on a stack and
+    // pushes that new value to the stack (while leaving the other one
+    // intact)
+
+    // test to make sure you can COMBINE to all 5 bowls
+
+    // test to make sure COMBINE fails if nothing is in the specified stack
+
+
+    // test to make sure add DIVIDE divides something already on a stack and
+    // pushes that new value to the stack (while leaving the other one
+    // intact)
+
+    // test to make sure you can DIVIDE to all 5 bowls
+
+    // test to make sure DIVIDE fails if nothing is in the specified stack
+
+
+    // test to make sure SERVES prints nothing if the baking dishes (but
+    // not the mixing bowls) are empty
+
+    // test to make sure SERVES actually prints stuff from all 5 dishes
 }
