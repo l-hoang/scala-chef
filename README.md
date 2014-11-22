@@ -6,17 +6,67 @@ For more details, check the webpage: http://www.dangermouse.net/esoteric/chef.ht
 
 ## Impelmentation Details
 
+### Syntax
+
+The internal DSL takes this general form:
+
+```
+TITLE ("title here") END
+
+START_INGREDIENTS
+
+ingredients here (must be ended with an END)
+
+END_INGREDIENTS
+
+program lines
+
+SERVES (a # from 1 to 5) END
+
+RUN (this should start runtime evaluation)
+```
+
+**NOTE THAT ALL LINES SHOULD BE FOLLOWED BY A BLANK LINE**
+This is because otherwise certain commands will break.
+
 ### How state is stored/represented
 
-There 
+Chef has mixing bowls and baking dishes. These are esentially stacks. They
+are represented in the program as ArrayDeques. To access a particular 1 (e.g.
+the first one), HashMaps exists that takes FIRST, SECOND, THIRD, FOURTH, or
+FIFTH, and it'll grab the corrosponding bowl/dish.
 
+Statements will have a case class that is associated with it. These
+classes are stored in a HashMap where the key to get them is the line # 
+of the program. This representation allows easy runtime evaluation: a program
+would start by grabbing the case class for a particular line number, and
+depending on the case class, different things will be done to alter program
+state. Most case classes will have a function that the runtime evaluator can
+call to do the work that's required. Others will need to have some logic
+in the runtime evaluator itself (e.g. loops).
 
+Ingredients are represented by an Ingredient class that holds its value and
+its interpretation (as a number, character, or either).
+
+Bindings for ingredients are represented as a HashMap that maps a Symbol
+(the ingredient name) to an Ingredient object.
 
 **What follows is stuff that still needs to be implemented, but it's the idea
 I've come up with for it**
 
+There will exist 2 HashMaps for looping purposes: LoopStart and LoopEnd. 
+LoopStart takes a Verb and returns the line where the loop starts.
+LoopEnd takes a Verb and returns the line where the program would execute given
+that the loop condition fails (i.e. after the until statement)
+
 There will exist a HashMap that maps recipe titles to line numbers. This is so
 a function call can just jump to a particular line number and start from there.
+
+There will also exist a HashMap that maps titles to variable bindings. This is
+so every function/recipe can have its own set of variable bindings.
+
+Likewise, there will be a HashMap that maps titles to mixing bowls and 
+baking dishes. Again, this is so every recipe has its own set.
 
 ### How it is parsed
 
