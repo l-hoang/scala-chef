@@ -26,7 +26,7 @@ SERVES (a # from 1 to 5) END
 RUN (this should start runtime evaluation)
 ```
 
-**NOTE THAT ALL LINES SHOULD BE FOLLOWED BY A BLANK LINE**
+**NOTE THAT ALL LINES SHOULD BE FOLLOWED BY A BLANK LINE.**
 This is because otherwise certain commands will break.
 
 ### How state is stored/represented
@@ -153,7 +153,7 @@ will be evaluated once more.
 
 **NEEDS TO BE IMPLEMENTED**
 
-
+*To be added later...*
 
 ## Changes from Chef
 * The END keyword is used in most places instead of a period.
