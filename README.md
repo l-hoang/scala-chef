@@ -12,6 +12,8 @@ mandatory
 * Symbol notation is required for ingredients, and spaces aren't allowed in
 ingredient names (I think)
 * Cooking time and oven temperature are not supported
+* measure-type in ingredients not supported
+* Everything is in CAPS
 
 # TO DO:
 
