@@ -151,7 +151,7 @@ class ScalaChef {
 
     /* the number of the stack we want to use; unlike Chef, this code only has
      * a limited # of stacks (at the moment) */
-    var currentStack = "none"
+    var currentStack = NONE
     val NONE = "none"
     val FIRST = "FIRST"
     val SECOND = "SECOND"
@@ -197,6 +197,11 @@ class ScalaChef {
     /* Here begins keywords for Chef */
     /*********************************/
 
+    /* Start evaluating a line that starts with TAKE */
+    object TAKE {
+        // MISSING
+    }
+
     /* Start evaluating a line that starts with PUT */
     object PUT {
         def apply(ingredient: Symbol) = {
@@ -220,8 +225,19 @@ class ScalaChef {
         def apply(ingredient: Symbol) = {
             currentOpType = O_ADD
             currentIngredient = ingredient
-            new Into
+            new To
         }
+
+        def DRY(ingredients: String) {
+            // MISSING
+            currentOpType = O_ADDDRY
+            new To
+        }
+    }
+
+    /* Start evaluating a line that starts with REMOVE */
+    object REMOVE {
+        // MISSING
     }
     
     /* Start evaluating a line that starts with COMBINE */
@@ -242,6 +258,42 @@ class ScalaChef {
         }
     }
     
+
+    /* Start evaluating a line that starts with LIQUEFY */
+    object LIQUEFY {
+        def apply(ingredient: Symbol):Ender = {
+            currentOpType = O_LIQUEFY
+            currentIngredient = ingredient
+            new Ender(END)
+        }
+        def CONTENTS(of: String) {
+            // MISSING
+            currentOpType = O_LIQUEFY2
+            new The
+        }
+    }
+
+    /* Start evaluating a line that starts with STIR */
+    object STIR {
+        /* Stir the nth mixing....
+        def THE(stack: String) {
+            // MISSING
+        }
+
+        /* Stir ingredient ... */
+        def apply(ingredient: Symbol) = {
+            // MISSING
+        }
+
+    }
+
+    /* Start evaluating a line that starts with MIX */
+    object MIX {
+        def THE(stack: String) {
+            // MISSING
+        }
+    }
+
     /* Start evaluating a line that starts with CLEAN */
     object CLEAN {
         def apply(stack: String) = {
@@ -251,15 +303,12 @@ class ScalaChef {
         }
     }
 
-    /* Start evaluating a line that starts with LIQUEFY */
-    object LIQUEFY {
-        def apply(ingredient: Symbol):Ender = {
-            currentOpType = O_LIQUEFY
-            currentIngredient = ingredient
-            new Ender(END)
-        }
+    /* Start evaluating a line that starts with POUR */
+    object POUR {
+        // MISSING
+
     }
-    
+   
     /* Start evaluating a line that starts with SERVES (the last line) */
     object SERVES {
         def apply(numberOfDiners: Int) = {
@@ -276,6 +325,7 @@ class ScalaChef {
 
 
 
+
     /* This class reads the keyword INTO in a line */
     class Into {
         def INTO(stack: String) = {
@@ -283,16 +333,35 @@ class ScalaChef {
             new BowlOrDish
         }
     }
+     
+    /* This class reads the keyword TO in a line */
+    class To {
+        def TO(stack: String) = {
+            currentStack = stack
+            new BowlOrDish
+        }
+    }
+
+    /* This class reads the keyword THE in a line */
+    class The {
+        def THE(stack: String) = {
+            currentStack = stack
+            new BowlOrDish
+        }
+    }
 
     /* This class will evaluate MIXING_BOWL or BAKING_DISH in a line.
      * It sets the line stack type, then calls END's finish method */
-    class BowlOrDish() {
+    class BowlOrDish {
         def MIXING_BOWL(e: End) = {
             stackType = T_BOWL
             e.finish
         }
 
         def BAKING_DISH(e: End) = {
+            if (currentOp != O_POUR) {
+                throw new RuntimeException("You can only do POUR on a baking dish")
+            }
             stackType = T_DISH
             e.finish
         }
@@ -348,7 +417,6 @@ class ScalaChef {
                     lines(currentLine) = PushStack(fn)
                 }
                 case O_FOLD => {
-                    
                     /* make a function that will peek from the stack and
                      * write the result to ingredient */
                     val fn = {() => {
@@ -449,6 +517,7 @@ class ScalaChef {
                     val fn = {() => {
                         val stackNumbers = Array(FIRST, SECOND, THIRD, FOURTH,
                                                  FIFTH)
+                        // MISSING
                     }}
 
                 }
