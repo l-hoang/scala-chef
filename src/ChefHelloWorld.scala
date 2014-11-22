@@ -3,18 +3,34 @@
  */
 object ChefHelloWorld extends ScalaChef {
     def main(args: Array[String]): Unit = {
-        INGREDIENTS
-        72 g haricot_beans
-        101 eggs
-        108 g lard
-        111 cups oil
-        32 zucchinis
-        119 ml water
-        114 g red_salmon
-        100 g dijon_mustard
-        33 potatoes
+        TITLE ("Hello World") END
 
-        Method
+
+
+        START_INGREDIENTS
+
+        72 G ('haricot_beans) END
+
+        101 ('eggs) END
+
+        108 G ('lard) END
+
+        111 CUPS ('oil) END
+
+        32 ('zucchinis) END
+
+        119 ML ('water) END
+
+        114 G ('red_salmon) END
+
+        100 G ('dijon_mustard) END
+
+        33 ('potatoes) END
+
+        END_INGREDIENTS
+
+
+
         PUT ('potatoes) INTO FIRST MIXING_BOWL END
         PUT ('dijon_mustard) INTO FIRST MIXING_BOWL END
         PUT ('lard) INTO FIRST MIXING_BOWL END

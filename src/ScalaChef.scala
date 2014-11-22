@@ -87,7 +87,7 @@ class ScalaChef {
     class Ingredient(value: Int, interpretation: Int) {
         var number = value
 
-        if (interpretation != I_DRY || interpretation != I_LIQUID ||
+        if (interpretation != I_DRY && interpretation != I_LIQUID &&
                 interpretation != I_EITHER) {
             throw new RuntimeException("bad ingredient designation")
         }
@@ -95,7 +95,7 @@ class ScalaChef {
         
         /* change the interpretation of this ingredient */
         def changeInterpretation(newInterpretation: Int) = {
-            if (newInterpretation != I_DRY || newInterpretation != I_LIQUID ||
+            if (newInterpretation != I_DRY && newInterpretation != I_LIQUID &&
                     newInterpretation != I_EITHER) {
                 throw new RuntimeException("bad ingredient designation in change" +
                                            "interpretation")
@@ -200,6 +200,7 @@ class ScalaChef {
 
     /* tells you if you can start parsing ingredients */
     var canParseIngredients = 0
+    var ingredientType = -1
 
     /*********************************/
     /* Here begins keywords for Chef */
@@ -224,6 +225,87 @@ class ScalaChef {
 
         canParseIngredients = 1
     }
+
+    case class IngredientGetter(num: Int) {
+        if (canParseIngredients == 0) {
+            throw new RuntimeException("you can't parse ingredients now")
+        }
+
+        def G(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_DRY
+            intArg = num
+            new Ender(END)
+        }
+
+        def KG(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_DRY
+            intArg = num
+            new Ender(END)
+        }
+
+        def PINCHES(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_DRY
+            intArg = num
+            new Ender(END)
+        }
+
+        def ML(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_LIQUID
+            intArg = num
+            new Ender(END)
+        }
+
+        def L(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_LIQUID
+            intArg = num
+            new Ender(END)
+        }
+
+        def DASHES(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_LIQUID
+            intArg = num
+            new Ender(END)
+        }
+
+        def CUPS(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_EITHER
+            intArg = num
+            new Ender(END)
+        }
+
+        def TEASPOONS(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_EITHER
+            intArg = num
+            new Ender(END)
+        }
+
+        def TABLESPOONS(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_EITHER
+            intArg = num
+            new Ender(END)
+        }
+
+        /* this method is if they don't specify a measure */
+        def apply(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_EITHER
+            intArg = num
+            new Ender(END)
+        }
+
+    }
+
+
+    implicit def int2IngredientGetter(i: Int) = IngredientGetter(i)
 
     /* This def serves to end ingredient mode */
     def END_INGREDIENTS {
@@ -412,7 +494,7 @@ class ScalaChef {
      * the END keyword and calls the object END finish method to finish the
      * line eval. */
     class Ender(e: End) {
-        def END() = {
+        def END = {
             e.finish
         }
     }
@@ -435,7 +517,16 @@ class ScalaChef {
             /* this mode = program parsing */
             if (currentMode == M_TITLE) {
                 /* go to ingredient parsing mode */
-                currentMode == M_PROGRAM
+                println("here")
+                currentMode = M_INGREDIENT
+            } else if (currentMode == M_INGREDIENT) {
+                /* save an ingredient var into the bindings */
+                val ingredientToAdd = new Ingredient(intArg, ingredientType)
+                variableBindings(currentIngredient) = ingredientToAdd
+
+                currentIngredient = null
+                ingredientType = -1
+                intArg = -1
             } else if (currentMode == M_PROGRAM) {
                 /* do different things depending on what the operation of the line
                  * is */
@@ -458,7 +549,6 @@ class ScalaChef {
                         val fn = {() => {
                                    mixingStacks(currentStack).push(ingredientToPush)
                                  }}
-                        System.out.printf("akdlfj")
                         /* assign this function to the current line */
                         lines(currentLine) = PushStack(fn)
                     }
@@ -479,16 +569,16 @@ class ScalaChef {
                         val ingredientValue = ingredient.number 
                         val ingredientState = ingredient.state
                         
-                        /* make a copy of the ingredient since you don't want any
-                         * changes to the original ingredient to affect what is on
-                         * the stack */
-                        val ingredientToPush = new Ingredient(ingredientValue
-                                                 + mixingStacks(currentStack).peek.asNumber,
-                                                 ingredientState)
-                        
                         /* make a function that will push the new ingredient onto
                          * the stack */
                         val fn = {() => {
+                                   /* make a copy of the ingredient since you don't want any
+                                    * changes to the original ingredient to affect what is on
+                                    * the stack */
+                                   val ingredientToPush = new Ingredient((ingredientValue + 
+                                                    mixingStacks(currentStack).peek.asNumber),
+                                                    ingredientState)
+
                                    mixingStacks(currentStack).push(ingredientToPush)
                                  }}
                         
@@ -502,16 +592,17 @@ class ScalaChef {
                         val ingredientValue = ingredient.number 
                         val ingredientState = ingredient.state
                         
-                        /* make a copy of the ingredient since you don't want any
-                         * changes to the original ingredient to affect what is on
-                         * the stack */
-                        val ingredientToPush = new Ingredient(ingredientValue
-                                                 * mixingStacks(currentStack).peek.asNumber,
-                                                 ingredientState)
                         
                         /* make a function that will push the new ingredient onto
                          * the stack */
                         val fn = {() => {
+                                  /* make a copy of the ingredient since you don't want any
+                                   * changes to the original ingredient to affect what is on
+                                   * the stack */
+                                  val ingredientToPush = new Ingredient(ingredientValue
+                                                           * mixingStacks(currentStack).peek.asNumber,
+                                                           ingredientState)
+
                                    mixingStacks(currentStack).push(ingredientToPush)
                                  }}
                         
@@ -525,16 +616,17 @@ class ScalaChef {
                         val ingredientValue = ingredient.number 
                         val ingredientState = ingredient.state
                         
-                        /* make a copy of the ingredient since you don't want any
-                         * changes to the original ingredient to affect what is on
-                         * the stack */
-                        val ingredientToPush = new Ingredient(ingredientValue
-                                                 / mixingStacks(currentStack).peek.asNumber,
-                                                 ingredientState)
                         
                         /* make a function that will push the new ingredient onto
                          * the stack */
                         val fn = {() => {
+                                   /* make a copy of the ingredient since you don't want any
+                                    * changes to the original ingredient to affect what is on
+                                    * the stack */
+                                   val ingredientToPush = new Ingredient(ingredientValue
+                                                            / mixingStacks(currentStack).peek.asNumber,
+                                                            ingredientState)
+
                                    mixingStacks(currentStack).push(ingredientToPush)
                                  }}
                         

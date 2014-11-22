@@ -2,9 +2,13 @@ object DoesItCompile extends ScalaChef {
     def main(args: Array[String]): Unit = {       
         TITLE ("tester") END
 
+
         START_INGREDIENTS
 
+        111 ('potatoes) END
+
         END_INGREDIENTS
+
 
         PUT ('potatoes) INTO FIRST MIXING_BOWL END
 
