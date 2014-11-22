@@ -85,6 +85,30 @@ class Tests extends FlatSpec {
     // test to make sure ADD adds to something already on a stack and
     // pushes that new value to the stack (while leaving the other one
     // intact)
+    "Add test 1" should "print 5 then 2" in {
+        object AddTest extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Add") END
+        
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+                3 ('cakes) END
+        
+                END_INGREDIENTS
+        
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+        
+                ADD ('cakes) TO FIRST MIXING_BOWL END
+        
+                SERVES (1) END
+
+                RUN
+            }
+        }
+
+        AddTest.run()
+    }
 
     // test to make sure you can ADD to all 5 bowls
 
