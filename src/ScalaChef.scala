@@ -198,6 +198,8 @@ class ScalaChef {
     val M_PROGRAM =  2
     var currentMode = M_TITLE
 
+    /* tells you if you can start parsing ingredients */
+    var canParseIngredients = 0
 
     /*********************************/
     /* Here begins keywords for Chef */
@@ -209,6 +211,31 @@ class ScalaChef {
             println(title)
             new Ender(END)
         }
+    }
+
+    /* Start ingredient parsing */
+    def START_INGREDIENTS {
+        if (currentMode != M_INGREDIENT) {
+            throw new RuntimeException("not in ingredient mode")
+        }
+        if (canParseIngredients == 1) {
+            throw new RuntimeException("you've already called Start_Ingre once")
+        }
+
+        canParseIngredients = 1
+    }
+
+    /* This def serves to end ingredient mode */
+    def END_INGREDIENTS {
+        if (currentMode != M_INGREDIENT) {
+            throw new RuntimeException("not in ingredient mode")
+        }
+        if (canParseIngredients == 0) {
+            throw new RuntimeException("START_INGREDIENT not called")
+        }
+
+        canParseIngredients = 0;
+        currentMode = M_PROGRAM;
     }
 
     /* Start evaluating a line that starts with TAKE */
@@ -407,7 +434,7 @@ class ScalaChef {
         def finish = {
             /* this mode = program parsing */
             if (currentMode == M_TITLE) {
-                println("yay I made it")
+                /* go to ingredient parsing mode */
                 currentMode == M_PROGRAM
             } else if (currentMode == M_PROGRAM) {
                 /* do different things depending on what the operation of the line
