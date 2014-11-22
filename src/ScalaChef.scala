@@ -86,8 +86,7 @@ class ScalaChef {
     abstract sealed class ChefLine
     case class PrintStack() extends ChefLine
     case class PushStack(fn: () => Unit) extends ChefLine
-    case class PeekStack(fn: () => Unit) extends ChefLine
-    case class PopStack() extends ChefLine
+    case class PopStack(fn: () => Unit) extends ChefLine
     case class AddStack(fn: () => Unit) extends ChefLine
     case class SubtractStack() extends ChefLine
     case class MultiplyStack(fn: () => Unit) extends ChefLine
@@ -581,11 +580,11 @@ class ScalaChef {
                         /* make a function that will peek from the stack and
                          * write the result to ingredient */
                         val fn = {() => {
-                                   variableBindings(currentIngredient) = mixingStacks(currentStack).peek()
+                                   variableBindings(currentIngredient) = mixingStacks(currentStack).pop()
                                  }}
                         
                         /* assign this function to the current line */
-                        lines(currentLine) = PeekStack(fn)
+                        lines(currentLine) = PopStack(fn)
                     }
                     case O_ADD => {
                         val ingredient = variableBindings(currentIngredient)
