@@ -4,6 +4,24 @@ scala-chef
 Implementation of the esoteric programming language Chef as an internal Scala DSL.
 For more details, check the webpage: http://www.dangermouse.net/esoteric/chef.html
 
+## How to Run
+
+*to be added*
+
+## How to run tests
+
+Run these 2 commands in the src directory. Make sure ScalaChef.scala
+has already been compiled.
+
+```
+scalac -cp scalatest_2.11-2.2.1.jar:. Tests.java
+scala -cp scalatest_2.11-2.2.1.jar org.scalatest.run Tests
+
+```
+
+For more details, check here:
+http://www.scalatest.org/quick_start
+
 ## Impelmentation Details
 
 ### Syntax
