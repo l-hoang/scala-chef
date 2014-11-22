@@ -4,7 +4,19 @@ scala-chef
 Implementation of the esoteric programming language Chef as an internal Scala DSL.
 For more details, check the webpage: http://www.dangermouse.net/esoteric/chef.html
 
-### How it works
+## Impelmentation Details
+
+### How state is stored
+
+
+
+**What follows is stuff that still needs to be implemented, but it's the idea
+I've come up with for it**
+
+There will exist a HashMap that maps recipe titles to line numbers. This is so
+a function call can just jump to a particular line number and start from there.
+
+### How it is parsed
 
 The code has a concept of "modes". There are 3 modes: title parsing, ingredient
 parsing, and program parsing. Depending on which of the 3 modes the program is
@@ -40,7 +52,13 @@ PUT line with some specified ingredient and stack, so it will create a function
 that pushes that ingredient value onto the specified stack and save that
 function in the HashMap of lines for runtime evaluation.
 
-### Changes from Chef
+### How loops work
+
+### How function calls work
+
+
+
+## Changes from Chef
 * The END keyword is used in most places instead of a period.
 * The ingredient parsing begins and ends with START/END_INGREDIENTS; it is also
 mandatory
@@ -52,7 +70,7 @@ ingredient names (I think)
 * Everything is in CAPS
 * mixing bowl and baking dish are combined into MIXING_BOWL and BAKING_DISH
 
-### To Do:
+## To Do:
 - [ ] implement runtime evaluator
 - [ ] implement loops
 - [ ] implement the rest of the instructions
