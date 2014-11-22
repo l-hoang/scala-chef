@@ -6,7 +6,9 @@ For more details, check the webpage: http://www.dangermouse.net/esoteric/chef.ht
 
 ## Impelmentation Details
 
-### How state is stored
+### How state is stored/represented
+
+There 
 
 
 
@@ -54,7 +56,52 @@ function in the HashMap of lines for runtime evaluation.
 
 ### How loops work
 
+**NEEDS TO BE IMPLEMENTED**
+
+Loops in Chef consist of these 2 statements:
+
+*Verb the ingredient.* (loop declaration)
+*Verb the ingredient until verbed.* (loop end)
+
+The first checks to see if the value of the ingredient is non-zero. If it is,
+it does everything until the *Verb the ingredient until verbed.*. *verbed* must
+match the *Verb* in the loop declaration. Also, the loop end statement will
+decrement the value of the ingredient specified by 1 every time it hits it.
+
+When the parsing hits a loop start statement, END.finish will need to do these
+things:
+
+* Create an entry for the verb being used in the LoopStart hashmap, and assign
+it to the current line number.
+* Create an entry for the verb being used in the LoopEnd hashmap. It will be
+assigned by the "until" statement.
+* Create a LoopStart class and save it to the hash map of lines and their
+functions.
+
+The runtime evaluator will need to grab the values from the hashmaps itself
+when it sees that a line is a LoopStart line. (i.e. this doesn't create a
+function to use) It also needs to check if the condition (non-zero value)
+holds: if it doesn't, it will get the LoopEnd value of this verb and jump
+there. Otherwise, it'll "enter the loop" by going into the next line.
+
+When parsing hits the loop end/until statement, these things need to be done:
+
+* Create a function that will decrement the ingredient value that was provided.
+* Take 'verbed' and take the -d off the end. Use that to index into the LoopEnd
+hashmap, and assign that entry the line number of the line that this statement
+is on PLUS 1 (so it can jump to the point after this statement).
+* Create a LoopEnd class and save it to the hashmap of lines and their
+functions for the runtime evaluator to use later. Also be sure to pass in the
+function that decrements the ingredient value.
+
+The runtime evaluator will need to grab the values from the hashmaps itself
+when it sees that a line is a LoopStart line. From there, the runtime 
+evaluator needs to jump back to the beginning of the loop where the condition
+will be evaluated once more.
+
 ### How function calls work
+
+**NEEDS TO BE IMPLEMENTED**
 
 
 
