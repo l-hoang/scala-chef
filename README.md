@@ -15,5 +15,10 @@ ingredient names (I think)
 * measure-type in ingredients not supported
 * Everything is in CAPS
 
-# TO DO:
+# To Do:
+- [ ] implement runtime evaluator
+- [ ] implement loops
+- [ ] implement the rest of the instructions
+- [ ] decide how to do function calls
+- [ ] write a bunch of tests
 
