@@ -78,13 +78,13 @@ SOFTWARE.
  *
  */
 
+import scala.language.implicitConversions
 import scala.language.postfixOps
 import scala.collection.mutable
 import java.util.ArrayDeque
 
 class ScalaChef {
     abstract sealed class ChefLine
-    case class PrintStack() extends ChefLine
     case class PushStack(fn: () => Unit) extends ChefLine
     case class PopStack(fn: () => Unit) extends ChefLine
     case class AddStack(fn: () => Unit) extends ChefLine
@@ -102,6 +102,7 @@ class ScalaChef {
     case class Break() extends ChefLine
     case class CallFunction() extends ChefLine
     case class Return() extends ChefLine
+    case class PrintStacks(fn: () => Unit) extends ChefLine
 
     /* ways to intrepret an ingredient */
     val I_DRY = 0
@@ -127,7 +128,6 @@ class ScalaChef {
             state = newInterpretation
         }
 
-       
         /* returns this ingredient's value as a number */
         def asNumber(): Int = {
             number       
@@ -233,7 +233,6 @@ class ScalaChef {
     /* Start evaluating a line that starts with TITLE */
     object TITLE {
         def apply(title: String):Ender = {
-            println(title)
             new Ender(END)
         }
     }
@@ -541,7 +540,6 @@ class ScalaChef {
             /* this mode = program parsing */
             if (currentMode == M_TITLE) {
                 /* go to ingredient parsing mode */
-                println("here")
                 currentMode = M_INGREDIENT
             } else if (currentMode == M_INGREDIENT) {
                 /* save an ingredient var into the bindings */
@@ -679,12 +677,25 @@ class ScalaChef {
                         val fn = {() => {
                             val stackNumbers = Array(FIRST, SECOND, THIRD, FOURTH,
                                                      FIFTH)
-                            // MISSING
+                            var i = 0
+                            for (i <- 0 to intArg) {
+                                val stackToUse = mixingStacks(stackNumbers(i))
+                                while (stackToUse.size != 0) {
+                                    val ingredient = stackToUse.pop
+                                    if (ingredient.state == I_DRY ||
+                                            ingredient.state == I_EITHER) {
+                                        printf("%d", ingredient.asNumber)
+                                    } else if (ingredient.state == I_LIQUID) {
+                                        printf("%c", ingredient.asChar)
+                                    }
+                                }
+                            }
                         }}
 
+                        lines(currentLine) = PrintStacks(fn)
                     }
                     case _ => {
-                        println("currentOpType invalid")
+                        throw new RuntimeException("currentOpType invalid")
                     }
                 }
 
