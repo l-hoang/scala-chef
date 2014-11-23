@@ -82,6 +82,8 @@ import scala.language.implicitConversions
 import scala.language.postfixOps
 import scala.collection.mutable
 import java.util.ArrayDeque
+import java.util.ArrayList
+import java.util.Collections
 import java.util.Scanner
 
 class ScalaChef {
@@ -96,7 +98,7 @@ class ScalaChef {
     case class AddDry() extends ChefLine
     case class ToUnicode(fn: () => Unit) extends ChefLine
     case class StackToUnicode() extends ChefLine
-    case class MixStack() extends ChefLine
+    case class MixStack(fn: () => Unit) extends ChefLine
     case class EmptyStack(fn: () => Unit) extends ChefLine
     case class ArrangeStack() extends ChefLine
     case class StackToReturnStack() extends ChefLine
@@ -441,9 +443,23 @@ class ScalaChef {
 
     /* Start evaluating a line that starts with MIX */
     object MIX {
-        def THE(stack: String) {
-            // MISSING
+        def THE(stack: String) = {
+            currentOpType = O_MIX
+            currentStack = stack
+            new mixWell
         }
+    }
+    
+    //
+    class mixWell{
+        def MIXING_BOWL(w:well) = {
+            new Ender(END);
+        }
+    }
+    
+    abstract sealed class well {
+    }
+    object WELL extends well{
     }
 
     /* Start evaluating a line that starts with CLEAN */
@@ -486,7 +502,6 @@ class ScalaChef {
     abstract sealed class refrigerator {
     }
     object REFRIGERATOR extends refrigerator{
-         
     }
     
     /* This class reads the keyword INTO in a line */
@@ -693,6 +708,18 @@ class ScalaChef {
 
                         /* assign function to current line */
                         lines(currentLine) = ToUnicode(fn)
+
+                    }
+                    case O_MIX => {
+                        //function that shuffles the stack
+                        val fn = {() => {
+                                   val temp = new ArrayList(mixingStacks(currentStack))
+                                   Collections.shuffle(temp)
+                                   mixingStacks(currentStack) = new ArrayDeque(temp)
+                                 }}
+
+                        /* assign function to current line */
+                        lines(currentLine) = MixStack(fn)
 
                     }
                     case O_CLEAN => { 
