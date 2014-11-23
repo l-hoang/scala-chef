@@ -97,7 +97,7 @@ class ScalaChef {
     case class DivideStack(fn: () => Unit) extends ChefLine
     case class AddDry() extends ChefLine
     case class ToUnicode(fn: () => Unit) extends ChefLine
-    case class StackToUnicode() extends ChefLine
+    case class StackToUnicode(fn: () => Unit) extends ChefLine
     case class MixStack(fn: () => Unit) extends ChefLine
     case class EmptyStack(fn: () => Unit) extends ChefLine
     case class ArrangeStack() extends ChefLine
@@ -749,7 +749,7 @@ class ScalaChef {
                                  }}
 
                         /* assign function to current line */
-                        lines(currentLine) = ToUnicode(fn)
+                        lines(currentLine) = StackToUnicode(fn)
 
                     }
                     case O_MIX => {
@@ -821,4 +821,71 @@ class ScalaChef {
     }
     
     
+    //evaluator: might need a stack to hold loop frames
+    def evaluate(line : Int){
+         lines(line) match{
+             case Read(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             case PushStack(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             case PopStack(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             case AddStack(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             /*case SubtractStack(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }*/
+             case MultiplyStack(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             case DivideStack(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             /*case AddDry(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }*/
+             case ToUnicode(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             case StackToUnicode(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             case MixStack(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             case EmptyStack(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             /*case ArrangeStack(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }*/
+             case StackToReturnStack(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+             case PrintStacks(fn: Function0[Unit]) => {
+                 fn();
+                 evaluate(line+1)
+             }
+         }
+    }
+    
+    def RUN() = evaluate(1)
 }
