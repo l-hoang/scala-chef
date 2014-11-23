@@ -420,11 +420,14 @@ class ScalaChef {
             currentIngredient = ingredient
             new Ender(END)
         }
-        def CONTENTS(of: String) {
-            // MISSING
+        def CONTENTS(of: Of) = {
             currentOpType = O_LIQUEFY2
             new The
         }
+    }    
+    abstract sealed class Of{
+    }
+    object OF extends Of{
     }
 
     /* Start evaluating a line that starts with STIR */
@@ -448,18 +451,6 @@ class ScalaChef {
             currentStack = stack
             new mixWell
         }
-    }
-    
-    //
-    class mixWell{
-        def MIXING_BOWL(w:well) = {
-            new Ender(END);
-        }
-    }
-    
-    abstract sealed class well {
-    }
-    object WELL extends well{
     }
 
     /* Start evaluating a line that starts with CLEAN */
@@ -526,6 +517,17 @@ class ScalaChef {
             currentStack = stack
             new BowlOrDish
         }
+    }
+    
+    /* Classes to read keywords MIXING_BOWL WELL*/
+    class mixWell{
+        def MIXING_BOWL(w:well) = {
+            new Ender(END);
+        }
+    }
+    abstract sealed class well {
+    }
+    object WELL extends well{
     }
 
     /* This class will evaluate MIXING_BOWL or BAKING_DISH in a line.
@@ -704,6 +706,18 @@ class ScalaChef {
 
                         val fn = {() => {
                                     ingredient.changeInterpretation(I_LIQUID)
+                                 }}
+
+                        /* assign function to current line */
+                        lines(currentLine) = ToUnicode(fn)
+
+                    }
+                    case O_LIQUEFY2 => {
+                        val fn = {() => {
+                                    val it = mixingStacks(currentStack).iterator()
+                                    while(it.hasNext()){
+                                        it.next().changeInterpretation(I_LIQUID)
+                                    }
                                  }}
 
                         /* assign function to current line */
