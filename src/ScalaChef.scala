@@ -350,7 +350,7 @@ class ScalaChef {
         def apply(ingredient: Symbol) = {
             currentOpType = O_TAKE
             currentIngredient = ingredient
-            new refrigerator;
+            new fromRefr;
         }
     }
 
@@ -477,16 +477,16 @@ class ScalaChef {
 
     /* This class reads the keyword FROM in a line with REFRIGERATOR */
     class fromRefr {
-        def FROM() = {
-            new refrigerator
+        def FROM(r:refrigerator) = {
+            new Ender(END)
         }
     }
-
-    /* This class reads the keyword REFRIGERATOR in a line */
-    class refrigerator {
-        def REFRIGERATOR(e: End) = {
-            e.finish
-        }
+    
+    /* Object to read keyword REFRIGERATOR*/ 
+    abstract sealed class refrigerator {
+    }
+    object REFRIGERATOR extends refrigerator{
+         
     }
     
     /* This class reads the keyword INTO in a line */
