@@ -14,7 +14,7 @@ Run these 2 commands in the src directory. Make sure ScalaChef.scala
 has already been compiled.
 
 ```
-scalac -cp scalatest_2.11-2.2.1.jar:. Tests.java
+scalac -cp scalatest_2.11-2.2.1.jar:. Tests.scala
 scala -cp scalatest_2.11-2.2.1.jar org.scalatest.run Tests
 
 ```
