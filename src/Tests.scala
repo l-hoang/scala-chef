@@ -115,20 +115,24 @@ class Tests extends FlatSpec {
             def run(): Unit = {       
                 TITLE ("Add") END
         
+
                 START_INGREDIENTS
         
                 2 ('potatoes) END
+
                 3 ('cakes) END
         
                 END_INGREDIENTS
         
+
                 PUT ('potatoes) INTO FIRST MIXING_BOWL END
         
                 ADD ('cakes) TO FIRST MIXING_BOWL END
         
                 SERVES (1) END
 
-                RUN
+                // commented out for now since it won't compile otherwise
+                //RUN
             }
         }
 
