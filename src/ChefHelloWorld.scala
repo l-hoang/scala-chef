@@ -7,11 +7,11 @@ object ChefHelloWorld extends ScalaChef {
 
 
         START_INGREDIENTS
-
+        
         72 G ('haricot_beans) END
-
+        
         101 ('eggs) END
-
+        
         108 G ('lard) END
 
         111 CUPS ('oil) END
@@ -46,5 +46,7 @@ object ChefHelloWorld extends ScalaChef {
         POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
 
         SERVES (1) END
+        
+        RUN
     }
 }
