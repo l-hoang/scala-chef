@@ -82,6 +82,7 @@ import scala.language.implicitConversions
 import scala.language.postfixOps
 import scala.collection.mutable
 import java.util.ArrayDeque
+import java.util.Scanner
 
 class ScalaChef {
     abstract sealed class ChefLine
@@ -345,7 +346,11 @@ class ScalaChef {
 
     /* Start evaluating a line that starts with TAKE */
     object TAKE {
-        // MISSING
+        def apply(ingredient: Symbol) = {
+            currentOpType = O_TAKE
+            currentIngredient = ingredient
+            new refrigerator;
+        }
     }
 
     /* Start evaluating a line that starts with PUT */
@@ -469,9 +474,20 @@ class ScalaChef {
 
     }
 
+    /* This class reads the keyword FROM in a line with REFRIGERATOR */
+    class fromRefr {
+        def FROM() = {
+            new refrigerator
+        }
+    }
 
-
-
+    /* This class reads the keyword REFRIGERATOR in a line */
+    class refrigerator {
+        def REFRIGERATOR(e: End) = {
+            e.finish
+        }
+    }
+    
     /* This class reads the keyword INTO in a line */
     class Into {
         def INTO(stack: String) = {
@@ -553,6 +569,18 @@ class ScalaChef {
                 /* do different things depending on what the operation of the line
                  * is */
                 currentOpType match {
+                   case O_TAKE => {
+                        /* make a function that will push the ingredient copy onto
+                         * the stack */
+                        val fn = {() => {
+                                   val in = new Scanner(System.in)
+                                   val ingredientToAdd = new Ingredient(in.nextInt(), I_EITHER)
+                                   variableBindings(currentIngredient) = ingredientToAdd
+                                   in.close()
+                                 }}
+                        /* assign this function to the current line */
+                        lines(currentLine) = PushStack(fn)
+                    }
                     case O_PUT => {
                         val ingredient = variableBindings(currentIngredient)
 
@@ -713,4 +741,6 @@ class ScalaChef {
             }
         }
     }
+    
+    
 }
