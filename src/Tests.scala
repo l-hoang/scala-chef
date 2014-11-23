@@ -24,21 +24,19 @@ SOFTWARE.
 
 import org.scalatest.FlatSpec
 
-
-
-
 class Tests extends FlatSpec {
     "Sanity check" should "not run into any errors" in {
         object DoesItCompile extends ScalaChef {
             def run(): Unit = {       
-                TITLE ("tester") END
+                TITLE ("Sanity check") END
+
         
                 START_INGREDIENTS
         
                 111 ('potatoes) END
         
                 END_INGREDIENTS
-        
+
         
                 PUT ('potatoes) INTO FIRST MIXING_BOWL END
         
@@ -57,11 +55,19 @@ class Tests extends FlatSpec {
                 SERVES (1) END
             }
         }
+
         DoesItCompile.run()
     }
 
 
     // tests to make sure a program must start with a title
+    "Start test" should "start with a title" in {
+        object StartTest extends ScalaChef {
+            def run(): Unit = {
+
+            }
+        }
+    }
 
     // test to make sure you can't declare a title twice in a row
 
@@ -103,17 +109,13 @@ class Tests extends FlatSpec {
     // test to make sure you can't FOLD on a baking dish
 
 
-
-
-
-
     // test to make sure ADD adds to something already on a stack and
     // pushes that new value to the stack (while leaving the other one
     // intact)
     "Add test 1" should "print 5 then 2" in {
-        object AddTest extends ScalaChef {
+        object AddTest1 extends ScalaChef {
             def run(): Unit = {       
-                TITLE ("Add") END
+                TITLE ("Add 1") END
         
 
                 START_INGREDIENTS
@@ -132,7 +134,7 @@ class Tests extends FlatSpec {
                 SERVES (1) END
 
                 // commented out for now since it won't compile otherwise
-                //RUN
+                // RUN
             }
         }
 
@@ -140,6 +142,56 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure you can ADD to all 5 bowls
+    "Add test 2" should "print 3 then 1 then 4 then 1 then 5 then 1 then 6 then 1 then 7 then 1" in {
+        object AddTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Add 2") END
+
+
+                START_INGREDIENTS
+
+                1 ('flour) END
+
+                2 ('blueberries) END
+
+                3 ('strawberries) END
+
+                4 ('bananas) END
+
+                5 ('apples) END
+
+                6 ('pears) END
+
+                END_INGREDIENTS
+
+
+                PUT ('flour) INTO FIRST MIXING_BOWL END
+
+                PUT ('flour) INTO SECOND MIXING_BOWL END
+
+                PUT ('flour) INTO THIRD MIXING_BOWL END
+
+                PUT ('flour) INTO FOURTH MIXING_BOWL END
+
+                PUT ('flour) INTO FIFTH MIXING_BOWL END
+
+                ADD ('blueberries) TO FIRST MIXING_BOWL END
+
+                ADD ('strawberries) TO SECOND MIXING_BOWL END
+
+                ADD ('bananas) TO THIRD MIXING_BOWL END
+
+                ADD ('apples) TO FOURTH MIXING_BOWL END
+
+                ADD ('pears) TO FIFTH MIXING_BOWL END
+
+                SERVES (5) END
+
+
+                // RUN
+            }
+        }
+    }
 
     // test to make sure ADD doesn't take a non-existent ingredient
 
@@ -151,15 +203,90 @@ class Tests extends FlatSpec {
     // test to make sure REMOVE subtracts from something already on a stack and
     // pushes that new value to the stack (while leaving the other one
     // intact)
+    "Remove test 1" should "print 1 then 2" in {
+        object RemoveTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Remove 1") END
+
+
+                START_INGREDIENTS
+
+                1 ('water) END
+
+                2 ('milk) END
+
+                END_INGREDIENTS
+
+
+                PUT ('milk) INTO FIRST MIXING_BOWL END
+
+                REMOVE ('water) FROM FIRST MIXING_BOWL END
+
+                SERVES (1) END
+
+
+                // RUN
+            }
+        }
+    }
 
     // test to make sure you can REMOVE from all 5 bowls
+    "Remove test 2" should "1 then 6 then 2 then 6 then 3 then 6 then 4 then 6 then 5 then 6" in {
+        object RemoveTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Remove 2") END
+
+
+                START_INGREDIENTS
+
+                6 ('doughnuts) END
+
+                5 ('glaze) END
+
+                4 ('chocolate) END
+
+                3 ('creme) END
+
+                2 ('maple) END
+
+                1 ('sugar) END
+
+                END_INGREDIENTS
+
+
+                PUT ('doughnuts) INTO FIRST MIXING_BOWL END
+
+                PUT ('doughnuts) INTO SECOND MIXING_BOWL END
+
+                PUT ('doughnuts) INTO THIRD MIXING_BOWL END
+
+                PUT ('doughnuts) INTO FOURTH MIXING_BOWL END
+
+                PUT ('doughnuts) INTO FIFTH MIXING_BOWL END
+
+                REMOVE ('glaze) FROM FIRST MIXING_BOWL END
+
+                REMOVE ('chocolate) FROM SECOND MIXING_BOWL END
+
+                REMOVE ('creme) FROM THIRD MIXING_BOWL END
+
+                REMOVE ('maple) FROM FOURTH MIXING_BOWL END
+
+                REMOVE ('sugar) FROM FIFTH MIXING_BOWL END
+
+                SERVERS (5) END
+
+
+                // RUN
+            }
+        }
+    }
 
     // test to make sure REMOVE doesn't take a non-existent ingredient
 
     // test to make sure REMOVE fails if nothing is in the specified stack
 
     // test to make sure you can't REMOVE on a baking dish
-
 
 
     // test to make sure COMBINE multiplies to something already on a stack and
@@ -173,7 +300,6 @@ class Tests extends FlatSpec {
     // test to make sure COMBINE fails if nothing is in the specified stack
 
     // test to make sure you can't COMBINE on a baking dish
-
 
 
     // test to make sure add DIVIDE divides something already on a stack and
