@@ -97,16 +97,16 @@ class ScalaChef {
     case class DivideStack(fn: () => Unit) extends ChefLine
     case class AddDry() extends ChefLine
     case class ToUnicode(fn: () => Unit) extends ChefLine
-    case class StackToUnicode(fn: () => Unit) extends ChefLine
+    case class StackToUnicode(stack: String) extends ChefLine
     case class MixStack(fn: () => Unit) extends ChefLine
     case class EmptyStack(fn: () => Unit) extends ChefLine
     case class ArrangeStack() extends ChefLine
-    case class StackToReturnStack(fn: () => Unit) extends ChefLine
+    case class StackToReturnStack(stack: String, dish: String) extends ChefLine
     /* missing loop case classes; do we need them? */
     case class Break() extends ChefLine
     case class CallFunction() extends ChefLine
     case class Return() extends ChefLine
-    case class PrintStacks(fn: () => Unit) extends ChefLine
+    case class PrintStacks(num : Int) extends ChefLine
 
     /* ways to intrepret an ingredient */
     val I_DRY = 0
@@ -486,7 +486,7 @@ class ScalaChef {
     }
     class PourThe2 {
         def THE(stack: String) = {
-            currentStack = stack
+            currentDish = stack
             new PourDish
         }
     }
@@ -736,15 +736,8 @@ class ScalaChef {
 
                     }
                     case O_LIQUEFY2 => {
-                        val fn = {() => {
-                                    val it = mixingStacks(currentStack).iterator()
-                                    while(it.hasNext()){
-                                        it.next().changeInterpretation(I_LIQUID)
-                                    }
-                                 }}
-
                         /* assign function to current line */
-                        lines(currentLine) = StackToUnicode(fn)
+                        lines(currentLine) = StackToUnicode(currentStack)
 
                     }
                     case O_MIX => {
@@ -759,12 +752,9 @@ class ScalaChef {
                         lines(currentLine) = MixStack(fn)
 
                     }
-                    case O_POUR => { 
-                        val fn = {() => {
-                                    bakingStacks(currentDish).addAll(mixingStacks(currentStack))
-                                 }:Unit}
+                    case O_POUR => {
                         /* assign function to current line */
-                        lines(currentLine) = StackToReturnStack(fn)
+                        lines(currentLine) = StackToReturnStack(currentStack,currentDish)
                     }
                     case O_CLEAN => { 
                         val fn = {() => {
@@ -774,25 +764,7 @@ class ScalaChef {
                         lines(currentLine) = EmptyStack(fn)
                     }
                     case O_SERVES => {
-                        val fn = {() => {
-                            val stackNumbers = Array(FIRST, SECOND, THIRD, FOURTH,
-                                                     FIFTH)
-                            var i = 0
-                            for (i <- 0 to intArg) {
-                                val stackToUse = mixingStacks(stackNumbers(i))
-                                while (stackToUse.size != 0) {
-                                    val ingredient = stackToUse.pop
-                                    if (ingredient.state == I_DRY ||
-                                            ingredient.state == I_EITHER) {
-                                        printf("%d", ingredient.asNumber)
-                                    } else if (ingredient.state == I_LIQUID) {
-                                        printf("%c", ingredient.asChar)
-                                    }
-                                }
-                            }
-                        }}
-
-                        lines(currentLine) = PrintStacks(fn)
+                        lines(currentLine) = PrintStacks(intArg)
                     }
                     case _ => {
                         throw new RuntimeException("currentOpType invalid")
@@ -816,70 +788,87 @@ class ScalaChef {
     }
     
     
-    //evaluator: might need a stack to hold loop frames
+    //evaluator: might need a map to hold loop frames
+    val loopStarts = new mutable.HashMap[Int,Symbol];
     def evaluate(line : Int){
-         lines(line) match{
-             case Read(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-             case PushStack(stack: String , ingredient: Ingredient) => {
-                 mixingStacks(stack).push(ingredient)
-                 evaluate(line+1)
-             }
-             case PopStack(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-             case AddStack(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-             /*case SubtractStack(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }*/
-             case MultiplyStack(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-             case DivideStack(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-             /*case AddDry(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }*/
-             case ToUnicode(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-             case StackToUnicode(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-             case MixStack(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-             case EmptyStack(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-             /*case ArrangeStack(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }*/
-             case StackToReturnStack(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-             case PrintStacks(fn: Function0[Unit]) => {
-                 fn();
-                 evaluate(line+1)
-             }
-         }
+        lines(line) match{
+            case Read(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }
+            case PushStack(stack: String , ingredient: Ingredient) => {
+                mixingStacks(stack).push(ingredient)
+                evaluate(line+1)
+            }
+            case PopStack(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }
+            case AddStack(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }
+            /*case SubtractStack(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }*/
+            case MultiplyStack(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }
+            case DivideStack(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }
+            /*case AddDry(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }*/
+            case ToUnicode(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }
+            case StackToUnicode(stack : String) => {
+                val it = mixingStacks(stack).iterator()
+                while(it.hasNext()){
+                    it.next().changeInterpretation(I_LIQUID)
+                }
+                evaluate(line+1)
+            }
+            case MixStack(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }
+            case EmptyStack(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }
+            /*case ArrangeStack(fn: Function0[Unit]) => {
+                fn();
+                evaluate(line+1)
+            }*/
+            case StackToReturnStack(stack:String, dish:String) => {
+                bakingStacks(dish).addAll(mixingStacks(stack))
+                evaluate(line+1)
+            }
+            case PrintStacks(num : Int) => {
+                val stackNumbers = Array(FIRST, SECOND, THIRD, FOURTH,
+                                                     FIFTH)
+                var i = 0
+                for (i <- 0 to num) {
+                    val stackToUse = mixingStacks(stackNumbers(i))
+                    while (stackToUse.size != 0) {
+                        val ingredient = stackToUse.pop
+                        if (ingredient.state == I_DRY ||
+                                ingredient.state == I_EITHER) {
+                            printf("%d", ingredient.asNumber)
+                        } else if (ingredient.state == I_LIQUID) {
+                            printf("%c", ingredient.asChar)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     def RUN() = evaluate(1)
