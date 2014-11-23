@@ -274,7 +274,7 @@ class Tests extends FlatSpec {
 
                 REMOVE ('sugar) FROM FIFTH MIXING_BOWL END
 
-                SERVERS (5) END
+                SERVES (5) END
 
 
                 // RUN
