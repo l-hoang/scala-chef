@@ -89,7 +89,7 @@ import java.util.Scanner
 class ScalaChef {
     abstract sealed class ChefLine
     case class Read(fn: () => Unit) extends ChefLine
-    case class PushStack(fn: () => Unit) extends ChefLine
+    case class PushStack(stack: String, ingredient:Ingredient) extends ChefLine
     case class PopStack(fn: () => Unit) extends ChefLine
     case class AddStack(fn: () => Unit) extends ChefLine
     case class SubtractStack() extends ChefLine
@@ -640,13 +640,8 @@ class ScalaChef {
                         val ingredientToPush = new Ingredient(ingredientValue,
                                                               ingredientState)
                         
-                        /* make a function that will push the ingredient copy onto
-                         * the stack */
-                        val fn = {() => {
-                                   mixingStacks(currentStack).push(ingredientToPush)
-                                 }}
-                        /* assign this function to the current line */
-                        lines(currentLine) = PushStack(fn)
+                        /* pass necessary values to the current line */
+                        lines(currentLine) = PushStack(currentStack,ingredientToPush)
                     }
                     case O_FOLD => {
                         /* make a function that will peek from the stack and
@@ -828,8 +823,8 @@ class ScalaChef {
                  fn();
                  evaluate(line+1)
              }
-             case PushStack(fn: Function0[Unit]) => {
-                 fn();
+             case PushStack(stack: String , ingredient: Ingredient) => {
+                 mixingStacks(stack).push(ingredient)
                  evaluate(line+1)
              }
              case PopStack(fn: Function0[Unit]) => {
