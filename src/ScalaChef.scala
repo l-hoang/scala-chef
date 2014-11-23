@@ -86,6 +86,7 @@ import java.util.Scanner
 
 class ScalaChef {
     abstract sealed class ChefLine
+    case class Read(fn: () => Unit) extends ChefLine
     case class PushStack(fn: () => Unit) extends ChefLine
     case class PopStack(fn: () => Unit) extends ChefLine
     case class AddStack(fn: () => Unit) extends ChefLine
@@ -579,7 +580,7 @@ class ScalaChef {
                                    in.close()
                                  }}
                         /* assign this function to the current line */
-                        lines(currentLine) = PushStack(fn)
+                        lines(currentLine) = Read(fn)
                     }
                     case O_PUT => {
                         val ingredient = variableBindings(currentIngredient)
