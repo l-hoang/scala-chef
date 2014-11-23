@@ -1,6 +1,5 @@
-/* Sample chef code that prints "hello world". Change formatting as necessary.
- *
- */
+/*Sample chef code that prints "hello world". Change formatting as necessary.*/
+
 object ChefHelloWorld extends ScalaChef {
     def main(args: Array[String]): Unit = {
         TITLE ("Hello World") END
@@ -43,9 +42,9 @@ object ChefHelloWorld extends ScalaChef {
         PUT ('lard) INTO FIRST MIXING_BOWL END
         PUT ('eggs) INTO FIRST MIXING_BOWL END
         PUT ('haricot_beans) INTO FIRST MIXING_BOWL END
-        LIQUEFY CONTENTS OF FIRST MIXING_BOWL END
-        POUR CONTENTS OF FIRST MIXING_BOWL INTO FIRST BAKING_DISH END
+        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
+        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
 
-        SERVES 1 END
+        SERVES (1) END
     }
 }

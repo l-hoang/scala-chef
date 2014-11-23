@@ -101,7 +101,7 @@ class ScalaChef {
     case class MixStack(fn: () => Unit) extends ChefLine
     case class EmptyStack(fn: () => Unit) extends ChefLine
     case class ArrangeStack() extends ChefLine
-    case class StackToReturnStack() extends ChefLine
+    case class StackToReturnStack(fn: () => Unit) extends ChefLine
     /* missing loop case classes; do we need them? */
     case class Break() extends ChefLine
     case class CallFunction() extends ChefLine
@@ -186,6 +186,7 @@ class ScalaChef {
     val FOURTH = "FOURTH"
     val FIFTH = "FIFTH"
     var currentStack = NONE
+    var currentDish = NONE
 
     /* stack type we are referring to: mixing bowl or baking dish */
     var stackType = -1
@@ -464,8 +465,35 @@ class ScalaChef {
 
     /* Start evaluating a line that starts with POUR */
     object POUR {
-        // MISSING
-
+        def CONTENTS(of: Of) = {
+            currentOpType = O_POUR
+            new PourThe
+        }
+    }
+    class PourThe {
+        def THE(stack: String) = {
+            currentStack = stack
+            new PourBowl
+        }
+    }
+    class PourBowl {
+        def MIXING_BOWL(into:Into) = {
+            stackType = T_BOWL
+            new PourThe2
+        }
+    }
+    object INTO extends Into{
+    }
+    class PourThe2 {
+        def THE(stack: String) = {
+            currentStack = stack
+            new PourDish
+        }
+    }
+    class PourDish {
+        def BAKING_DISH(e: End) = {
+            e.finish
+        }
     }
    
     /* Start evaluating a line that starts with SERVES (the last line) */
@@ -736,6 +764,13 @@ class ScalaChef {
                         lines(currentLine) = MixStack(fn)
 
                     }
+                    case O_POUR => { 
+                        val fn = {() => {
+                                    bakingStacks(currentDish).addAll(mixingStacks(currentStack))
+                                 }:Unit}
+                        /* assign function to current line */
+                        lines(currentLine) = StackToReturnStack(fn)
+                    }
                     case O_CLEAN => { 
                         val fn = {() => {
                                     mixingStacks(currentStack).clear()
@@ -774,6 +809,7 @@ class ScalaChef {
                 currentOpType = O_NOTHING
                 currentIngredient = null
                 currentStack = NONE
+                currentDish = NONE
                 stackType = T_NOTHING
                 intArg = -1
                 currentLine += 1
