@@ -64,7 +64,7 @@ class Tests extends FlatSpec {
     "Start test" should "start with a title" in {
         object StartTest extends ScalaChef {
             def run(): Unit = {
-
+                // TODO
             }
         }
     }
@@ -138,7 +138,7 @@ class Tests extends FlatSpec {
             }
         }
 
-        AddTest.run()
+        AddTest1.run()
     }
 
     // test to make sure you can ADD to all 5 bowls
@@ -191,6 +191,8 @@ class Tests extends FlatSpec {
                 // RUN
             }
         }
+
+        AddTest2.run()
     }
 
     // test to make sure ADD doesn't take a non-existent ingredient
@@ -203,84 +205,88 @@ class Tests extends FlatSpec {
     // test to make sure REMOVE subtracts from something already on a stack and
     // pushes that new value to the stack (while leaving the other one
     // intact)
-    "Remove test 1" should "print 1 then 2" in {
-        object RemoveTest1 extends ScalaChef {
-            def run(): Unit = {
-                TITLE ("Remove 1") END
+    // "Remove test 1" should "print 1 then 2" in {
+    //     object RemoveTest1 extends ScalaChef {
+    //         def run(): Unit = {
+    //             TITLE ("Remove 1") END
 
 
-                START_INGREDIENTS
+    //             START_INGREDIENTS
 
-                1 ('water) END
+    //             1 ('water) END
 
-                2 ('milk) END
+    //             2 ('milk) END
 
-                END_INGREDIENTS
-
-
-                PUT ('milk) INTO FIRST MIXING_BOWL END
-
-                REMOVE ('water) FROM FIRST MIXING_BOWL END
-
-                SERVES (1) END
+    //             END_INGREDIENTS
 
 
-                // RUN
-            }
-        }
-    }
+    //             PUT ('milk) INTO FIRST MIXING_BOWL END
+
+    //             REMOVE ('water) FROM FIRST MIXING_BOWL END
+
+    //             SERVES (1) END
+
+
+    //             // RUN
+    //         }
+    //     }
+
+    //     RemoveTest1.run()
+    // }
 
     // test to make sure you can REMOVE from all 5 bowls
-    "Remove test 2" should "1 then 6 then 2 then 6 then 3 then 6 then 4 then 6 then 5 then 6" in {
-        object RemoveTest2 extends ScalaChef {
-            def run(): Unit = {
-                TITLE ("Remove 2") END
+    // "Remove test 2" should "1 then 6 then 2 then 6 then 3 then 6 then 4 then 6 then 5 then 6" in {
+    //     object RemoveTest2 extends ScalaChef {
+    //         def run(): Unit = {
+    //             TITLE ("Remove 2") END
 
 
-                START_INGREDIENTS
+    //             START_INGREDIENTS
 
-                6 ('doughnuts) END
+    //             6 ('doughnuts) END
 
-                5 ('glaze) END
+    //             5 ('glaze) END
 
-                4 ('chocolate) END
+    //             4 ('chocolate) END
 
-                3 ('creme) END
+    //             3 ('creme) END
 
-                2 ('maple) END
+    //             2 ('maple) END
 
-                1 ('sugar) END
+    //             1 ('sugar) END
 
-                END_INGREDIENTS
-
-
-                PUT ('doughnuts) INTO FIRST MIXING_BOWL END
-
-                PUT ('doughnuts) INTO SECOND MIXING_BOWL END
-
-                PUT ('doughnuts) INTO THIRD MIXING_BOWL END
-
-                PUT ('doughnuts) INTO FOURTH MIXING_BOWL END
-
-                PUT ('doughnuts) INTO FIFTH MIXING_BOWL END
-
-                REMOVE ('glaze) FROM FIRST MIXING_BOWL END
-
-                REMOVE ('chocolate) FROM SECOND MIXING_BOWL END
-
-                REMOVE ('creme) FROM THIRD MIXING_BOWL END
-
-                REMOVE ('maple) FROM FOURTH MIXING_BOWL END
-
-                REMOVE ('sugar) FROM FIFTH MIXING_BOWL END
-
-                SERVES (5) END
+    //             END_INGREDIENTS
 
 
-                // RUN
-            }
-        }
-    }
+    //             PUT ('doughnuts) INTO FIRST MIXING_BOWL END
+
+    //             PUT ('doughnuts) INTO SECOND MIXING_BOWL END
+
+    //             PUT ('doughnuts) INTO THIRD MIXING_BOWL END
+
+    //             PUT ('doughnuts) INTO FOURTH MIXING_BOWL END
+
+    //             PUT ('doughnuts) INTO FIFTH MIXING_BOWL END
+
+    //             REMOVE ('glaze) FROM FIRST MIXING_BOWL END
+
+    //             REMOVE ('chocolate) FROM SECOND MIXING_BOWL END
+
+    //             REMOVE ('creme) FROM THIRD MIXING_BOWL END
+
+    //             REMOVE ('maple) FROM FOURTH MIXING_BOWL END
+
+    //             REMOVE ('sugar) FROM FIFTH MIXING_BOWL END
+
+    //             SERVES (5) END
+
+
+    //             // RUN
+    //         }
+    //     }
+
+    //     RemoveTest2.run()
+    // }
 
     // test to make sure REMOVE doesn't take a non-existent ingredient
 
