@@ -112,7 +112,7 @@ class Tests extends FlatSpec {
     // test to make sure ADD adds to something already on a stack and
     // pushes that new value to the stack (while leaving the other one
     // intact)
-    "Add test 1" should "print 5 then 2" in {
+    "Add test 1" should "print 52" in {
         object AddTest1 extends ScalaChef {
             def run(): Unit = {       
                 TITLE ("Add 1") END
@@ -134,7 +134,7 @@ class Tests extends FlatSpec {
                 SERVES (1) END
 
                 // commented out for now since it won't compile otherwise
-                // RUN
+                RUN
             }
         }
 
@@ -142,7 +142,7 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure you can ADD to all 5 bowls
-    "Add test 2" should "print 3 then 1 then 4 then 1 then 5 then 1 then 6 then 1 then 7 then 1" in {
+    "Add test 2" should "print 3141516171" in {
         object AddTest2 extends ScalaChef {
             def run(): Unit = {
                 TITLE ("Add 2") END
@@ -188,7 +188,7 @@ class Tests extends FlatSpec {
                 SERVES (5) END
 
 
-                // RUN
+                RUN
             }
         }
 
@@ -205,7 +205,7 @@ class Tests extends FlatSpec {
     // test to make sure REMOVE subtracts from something already on a stack and
     // pushes that new value to the stack (while leaving the other one
     // intact)
-    // "Remove test 1" should "print 1 then 2" in {
+    // "Remove test 1" should "print 12" in {
     //     object RemoveTest1 extends ScalaChef {
     //         def run(): Unit = {
     //             TITLE ("Remove 1") END
@@ -235,7 +235,7 @@ class Tests extends FlatSpec {
     // }
 
     // test to make sure you can REMOVE from all 5 bowls
-    // "Remove test 2" should "1 then 6 then 2 then 6 then 3 then 6 then 4 then 6 then 5 then 6" in {
+    // "Remove test 2" should "print 1626364656" in {
     //     object RemoveTest2 extends ScalaChef {
     //         def run(): Unit = {
     //             TITLE ("Remove 2") END

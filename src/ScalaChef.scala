@@ -504,7 +504,7 @@ class ScalaChef {
                 throw new RuntimeException("You can only serve 5 people and " +
                                             "you need to serve at least 1")
             }   
-            intArg = numberOfDiners
+            intArg = (numberOfDiners - 1)
             new Ender(END)
         }
 
