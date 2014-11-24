@@ -92,7 +92,7 @@ class ScalaChef {
     case class PushStack(stack: String, ingredient:Symbol) extends ChefLine
     case class PopStack(stack: String, ingredient:Symbol) extends ChefLine
     case class AddStack(stack: String, ingredient:Symbol) extends ChefLine
-    case class SubtractStack() extends ChefLine
+    case class SubtractStack(stack: String, ingredient:Symbol) extends ChefLine
     case class MultiplyStack(stack: String, ingredient:Symbol) extends ChefLine
     case class DivideStack(stack: String, ingredient:Symbol) extends ChefLine
     case class AddDry() extends ChefLine
@@ -714,10 +714,13 @@ class ScalaChef {
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
-            /*case SubtractStack(fn: Function0[Unit]) => {
-                fn();
+            case SubtractStack(stack: String , ingredient: Symbol) => {
+                val ingredientToPush = new Ingredient((mixingStacks(stack).peek.asNumber - 
+                                                    variableBindings(ingredient).asNumber),
+                                                    variableBindings(ingredient).state)
+                mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
-            }*/
+            }
             case MultiplyStack(stack: String , ingredient: Symbol) => {
                 val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber * 
                                                     mixingStacks(stack).peek.asNumber),
@@ -732,8 +735,7 @@ class ScalaChef {
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
-            /*case AddDry(fn: Function0[Unit]) => {
-                fn();
+            /*case AddDry() => {
                 evaluate(line+1)
             }*/
             case ToUnicode(ingredient: Symbol) => {
@@ -757,8 +759,7 @@ class ScalaChef {
                 mixingStacks(stack).clear()
                 evaluate(line+1)
             }
-            /*case ArrangeStack(fn: Function0[Unit]) => {
-                fn();
+            /*case ArrangeStack() => {
                 evaluate(line+1)
             }*/
             case StackToReturnStack(stack:String, dish:String) => {
