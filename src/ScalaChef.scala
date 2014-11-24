@@ -88,18 +88,18 @@ import java.util.Scanner
 
 class ScalaChef {
     abstract sealed class ChefLine
-    case class Read(fn: () => Unit) extends ChefLine
-    case class PushStack(stack: String, ingredient:Ingredient) extends ChefLine
-    case class PopStack(fn: () => Unit) extends ChefLine
-    case class AddStack(fn: () => Unit) extends ChefLine
+    case class Read(ingredient:Symbol) extends ChefLine
+    case class PushStack(stack: String, ingredient:Symbol) extends ChefLine
+    case class PopStack(stack: String, ingredient:Symbol) extends ChefLine
+    case class AddStack(stack: String, ingredient:Symbol) extends ChefLine
     case class SubtractStack() extends ChefLine
-    case class MultiplyStack(fn: () => Unit) extends ChefLine
-    case class DivideStack(fn: () => Unit) extends ChefLine
+    case class MultiplyStack(stack: String, ingredient:Symbol) extends ChefLine
+    case class DivideStack(stack: String, ingredient:Symbol) extends ChefLine
     case class AddDry() extends ChefLine
-    case class ToUnicode(fn: () => Unit) extends ChefLine
+    case class ToUnicode(ingredient:Symbol) extends ChefLine
     case class StackToUnicode(stack: String) extends ChefLine
-    case class MixStack(fn: () => Unit) extends ChefLine
-    case class EmptyStack(fn: () => Unit) extends ChefLine
+    case class MixStack(stack: String) extends ChefLine
+    case class EmptyStack(stack: String) extends ChefLine
     case class ArrangeStack() extends ChefLine
     case class StackToReturnStack(stack: String, dish: String) extends ChefLine
     /* missing loop case classes; do we need them? */
@@ -615,155 +615,55 @@ class ScalaChef {
                 /* do different things depending on what the operation of the line
                  * is */
                 currentOpType match {
-                   case O_TAKE => {
-                        /* make a function that will push the ingredient copy onto
-                         * the stack */
-                        val fn = {() => {
-                                   val in = new Scanner(System.in)
-                                   val ingredientToAdd = new Ingredient(in.nextInt(), I_EITHER)
-                                   variableBindings(currentIngredient) = ingredientToAdd
-                                   in.close()
-                                 }}
-                        /* assign this function to the current line */
-                        lines(currentLine) = Read(fn)
+                    case O_TAKE => {
+                        /* pass necessary values to the current line */
+                        lines(currentLine) = Read(currentIngredient)
                     }
                     case O_PUT => {
-                        val ingredient = variableBindings(currentIngredient)
-
-                        /* should make getter/setters later */
-                        val ingredientValue = ingredient.number
-                        val ingredientState = ingredient.state
-                        
-                        /* make a copy of the ingredient since you don't want any
-                         * changes to the original ingredient to affect what is on
-                         * the stack */
-                        val ingredientToPush = new Ingredient(ingredientValue,
-                                                              ingredientState)
-                        
                         /* pass necessary values to the current line */
-                        lines(currentLine) = PushStack(currentStack,ingredientToPush)
+                        lines(currentLine) = PushStack(currentStack,currentIngredient)
                     }
                     case O_FOLD => {
-                        /* make a function that will peek from the stack and
-                         * write the result to ingredient */
-                        val fn = {() => {
-                                   variableBindings(currentIngredient) = mixingStacks(currentStack).pop()
-                                 }}
-                        
-                        /* assign this function to the current line */
-                        lines(currentLine) = PopStack(fn)
+                        /* pass necessary values to the current line */
+                        lines(currentLine) = PopStack(currentStack,currentIngredient)
                     }
                     case O_ADD => {
-                        val ingredient = variableBindings(currentIngredient)
-
-                        /* should make getter/setters later */
-                        val ingredientValue = ingredient.number 
-                        val ingredientState = ingredient.state
-                        
-                        /* make a function that will push the new ingredient onto
-                         * the stack */
-                        val fn = {() => {
-                                   /* make a copy of the ingredient since you don't want any
-                                    * changes to the original ingredient to affect what is on
-                                    * the stack */
-                                   val ingredientToPush = new Ingredient((ingredientValue + 
-                                                    mixingStacks(currentStack).peek.asNumber),
-                                                    ingredientState)
-
-                                   mixingStacks(currentStack).push(ingredientToPush)
-                                 }}
-                        
-                        /* assign this function to the current line */
-                        lines(currentLine) = AddStack(fn)
+                        /* pass necessary values to the current line */
+                        lines(currentLine) = AddStack(currentStack,currentIngredient)
                     }
                     case O_COMBINE => {
-                        val ingredient = variableBindings(currentIngredient)
-
-                        /* should make getter/setters later */
-                        val ingredientValue = ingredient.number 
-                        val ingredientState = ingredient.state
-                        
-                        
-                        /* make a function that will push the new ingredient onto
-                         * the stack */
-                        val fn = {() => {
-                                  /* make a copy of the ingredient since you don't want any
-                                   * changes to the original ingredient to affect what is on
-                                   * the stack */
-                                  val ingredientToPush = new Ingredient(ingredientValue
-                                                           * mixingStacks(currentStack).peek.asNumber,
-                                                           ingredientState)
-
-                                   mixingStacks(currentStack).push(ingredientToPush)
-                                 }}
-                        
-                        /* assign this function to the current line */
-                        lines(currentLine) = MultiplyStack(fn)
+                        /* pass necessary values to the current line */
+                        lines(currentLine) = MultiplyStack(currentStack,currentIngredient)
                     }
                     case O_DIVIDE => {
-                        val ingredient = variableBindings(currentIngredient)
-
-                        /* should make getter/setters later */
-                        val ingredientValue = ingredient.number 
-                        val ingredientState = ingredient.state
-                        
-                        
-                        /* make a function that will push the new ingredient onto
-                         * the stack */
-                        val fn = {() => {
-                                   /* make a copy of the ingredient since you don't want any
-                                    * changes to the original ingredient to affect what is on
-                                    * the stack */
-                                   val ingredientToPush = new Ingredient(ingredientValue
-                                                            / mixingStacks(currentStack).peek.asNumber,
-                                                            ingredientState)
-
-                                   mixingStacks(currentStack).push(ingredientToPush)
-                                 }}
-                        
-                        /* assign this function to the current line */
-                        lines(currentLine) = DivideStack(fn)
+                        /* pass necessary values to the current line */
+                        lines(currentLine) = DivideStack(currentStack,currentIngredient)
                     }
                     case O_LIQUEFY => {
-                        val ingredient = variableBindings(currentIngredient)
-
-                        val fn = {() => {
-                                    ingredient.changeInterpretation(I_LIQUID)
-                                 }}
-
-                        /* assign function to current line */
-                        lines(currentLine) = ToUnicode(fn)
+                        /* pass necessary values to the current line */
+                        lines(currentLine) = ToUnicode(currentIngredient)
 
                     }
                     case O_LIQUEFY2 => {
-                        /* assign function to current line */
+                        /* pass necessary values to the current line */
                         lines(currentLine) = StackToUnicode(currentStack)
 
                     }
                     case O_MIX => {
-                        //function that shuffles the stack
-                        val fn = {() => {
-                                   val temp = new ArrayList(mixingStacks(currentStack))
-                                   Collections.shuffle(temp)
-                                   mixingStacks(currentStack) = new ArrayDeque(temp)
-                                 }}
-
-                        /* assign function to current line */
-                        lines(currentLine) = MixStack(fn)
+                        /* pass necessary values to the current line */
+                        lines(currentLine) = MixStack(currentStack)
 
                     }
                     case O_POUR => {
-                        /* assign function to current line */
+                        /* pass necessary values to the current line */
                         lines(currentLine) = StackToReturnStack(currentStack,currentDish)
                     }
                     case O_CLEAN => { 
-                        val fn = {() => {
-                                    mixingStacks(currentStack).clear()
-                                 }}
-                        /* assign function to current line */
-                        lines(currentLine) = EmptyStack(fn)
+                        /* pass necessary values to the current line */
+                        lines(currentLine) = EmptyStack(currentStack)
                     }
                     case O_SERVES => {
+                        /* pass necessary values to the current line */
                         lines(currentLine) = PrintStacks(intArg)
                     }
                     case _ => {
@@ -792,40 +692,52 @@ class ScalaChef {
     val loopStarts = new mutable.HashMap[Int,Symbol];
     def evaluate(line : Int){
         lines(line) match{
-            case Read(fn: Function0[Unit]) => {
-                fn();
+            case Read(ingredient: Symbol) => {
+                val in = new Scanner(System.in)
+                val ingredientToAdd = new Ingredient(in.nextInt(), I_EITHER)
+                variableBindings(ingredient) = ingredientToAdd
+                in.close()
                 evaluate(line+1)
             }
-            case PushStack(stack: String , ingredient: Ingredient) => {
-                mixingStacks(stack).push(ingredient)
+            case PushStack(stack: String , ingredient: Symbol) => {
+                mixingStacks(stack).push(variableBindings(ingredient))
                 evaluate(line+1)
             }
-            case PopStack(fn: Function0[Unit]) => {
-                fn();
+            case PopStack(stack:String, ingredient:Symbol) => {
+                variableBindings(ingredient) = mixingStacks(stack).pop()
                 evaluate(line+1)
             }
-            case AddStack(fn: Function0[Unit]) => {
-                fn();
+            case AddStack(stack: String , ingredient: Symbol) => {
+                val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber + 
+                                                    mixingStacks(stack).peek.asNumber),
+                                                    variableBindings(ingredient).state)
+                mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
             /*case SubtractStack(fn: Function0[Unit]) => {
                 fn();
                 evaluate(line+1)
             }*/
-            case MultiplyStack(fn: Function0[Unit]) => {
-                fn();
+            case MultiplyStack(stack: String , ingredient: Symbol) => {
+                val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber * 
+                                                    mixingStacks(stack).peek.asNumber),
+                                                    variableBindings(ingredient).state)
+                mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
-            case DivideStack(fn: Function0[Unit]) => {
-                fn();
+            case DivideStack(stack: String , ingredient: Symbol) => {
+                val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber / 
+                                                    mixingStacks(stack).peek.asNumber),
+                                                    variableBindings(ingredient).state)
+                mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
             /*case AddDry(fn: Function0[Unit]) => {
                 fn();
                 evaluate(line+1)
             }*/
-            case ToUnicode(fn: Function0[Unit]) => {
-                fn();
+            case ToUnicode(ingredient: Symbol) => {
+                variableBindings(ingredient).changeInterpretation(I_LIQUID)
                 evaluate(line+1)
             }
             case StackToUnicode(stack : String) => {
@@ -835,12 +747,14 @@ class ScalaChef {
                 }
                 evaluate(line+1)
             }
-            case MixStack(fn: Function0[Unit]) => {
-                fn();
+            case MixStack(stack : String) => {
+                val temp = new ArrayList(mixingStacks(stack))
+                Collections.shuffle(temp)
+                mixingStacks(stack) = new ArrayDeque(temp)
                 evaluate(line+1)
             }
-            case EmptyStack(fn: Function0[Unit]) => {
-                fn();
+            case EmptyStack(stack : String) => {
+                mixingStacks(stack).clear()
                 evaluate(line+1)
             }
             /*case ArrangeStack(fn: Function0[Unit]) => {
