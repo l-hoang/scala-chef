@@ -638,8 +638,8 @@ class ScalaChef {
      * the END keyword and calls the object END finish method to finish the
      * line eval. */
     class Ender(e: End) {
-        def END(implicit NULL:Null) = {
-            e.finish
+        def END = {
+            e.finish(NULL)
         }
     }
 
