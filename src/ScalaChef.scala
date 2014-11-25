@@ -965,7 +965,11 @@ class ScalaChef {
                 evaluate(line+1)
             }*/
             case StackToReturnStack(stack:String, dish:String) => {
-                bakingStacks(dish).addAll(mixingStacks(stack))
+                val it = mixingStacks(stack).iterator()
+                while(it.hasNext()){
+                    val ingredient = it.next()
+                    bakingStacks(dish).add(new Ingredient(ingredient.number,ingredient.state))
+                }
                 evaluate(line+1)
             }
             case PrintStacks(num : Int) => {
