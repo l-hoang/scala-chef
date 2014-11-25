@@ -102,7 +102,8 @@ class ScalaChef {
     case class EmptyStack(stack: String) extends ChefLine
     case class ArrangeStack() extends ChefLine
     case class StackToReturnStack(stack: String, dish: String) extends ChefLine
-    /* missing loop case classes; do we need them? */
+    case class LoopStart() extends ChefLine
+    case class LoopEnd() extends ChefLine
     case class Break() extends ChefLine
     case class CallFunction() extends ChefLine
     case class Return() extends ChefLine
@@ -221,6 +222,28 @@ class ScalaChef {
     bakingStacks.put(FIFTH, new ArrayDeque)
 
 
+    /* This class stores loop information */
+    class LoopInfo(ingredient : Symbol, s : Int){
+        var start = s
+        var end = -1
+        var loopIngredient = ingredient
+        var decIngredient: Symbol = null
+        
+        def setEnd(ingredient: Symbol, e : Int) = {
+            end = e
+            decIngredient = ingredient
+        }
+    }
+    
+    /* This structure stores the program's loop stack*/
+    val loopStack = new ArrayDeque[String]
+    
+    /* This structure stores the program's loop info*/
+    val loopBindings = new mutable.HashMap[String, LoopInfo]
+    
+    /* The current verb*/
+    var currentVerb = ""
+    
     /* mode the program parsing is in; starts by parsing a title */
     val M_TITLE = 0
     val M_INGREDIENT = 1
@@ -332,9 +355,41 @@ class ScalaChef {
 
     }
 
-
     implicit def int2IngredientGetter(i: Int) = IngredientGetter(i)
 
+    /* This builds loops*/
+    case class LoopBuilder(verb:String){
+        if(verb.last == 'e'){
+            currentVerb = (verb + "ED").capitalize
+        } else {
+            currentVerb = (verb + "ED").capitalize
+        }
+        
+        def THE(ingredient:Symbol) = {
+            currentIngredient = ingredient
+            new LoopFollow
+        }
+        
+        def UNTIL(verbed:String) = {
+            currentOpType = O_VERBEND
+            new Ender(END)
+        }
+    }
+    
+    class LoopFollow(){
+        def END(){
+            currentOpType = O_VERB
+            ScalaChef.this.END.finish
+        }
+        
+        def UNTIL(verbed: String) = {
+            currentOpType = O_VERBEND
+            new Ender(ScalaChef.this.END)
+        }
+    }
+    
+    implicit def string2LoopBuilder(verb: String) = LoopBuilder(verb);
+    
     /* This def serves to end ingredient mode */
     def END_INGREDIENTS {
         if (currentMode != M_INGREDIENT) {
@@ -642,17 +697,14 @@ class ScalaChef {
                     case O_LIQUEFY => {
                         /* pass necessary values to the current line */
                         lines(currentLine) = ToUnicode(currentIngredient)
-
                     }
                     case O_LIQUEFY2 => {
                         /* pass necessary values to the current line */
                         lines(currentLine) = StackToUnicode(currentStack)
-
                     }
                     case O_MIX => {
                         /* pass necessary values to the current line */
                         lines(currentLine) = MixStack(currentStack)
-
                     }
                     case O_POUR => {
                         /* pass necessary values to the current line */
@@ -689,7 +741,6 @@ class ScalaChef {
     
     
     //evaluator: might need a map to hold loop frames
-    val loopStarts = new mutable.HashMap[Int,Symbol];
     def evaluate(line : Int){
         lines(line) match{
             case Read(ingredient: Symbol) => {
