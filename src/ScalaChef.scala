@@ -639,7 +639,7 @@ class ScalaChef {
      * line eval. */
     class Ender(e: End) {
         def END = {
-            e.finish(NULL)
+            e.finish
         }
     }
 
@@ -647,7 +647,7 @@ class ScalaChef {
     /* This class's purpose is solely to let the object END extend it so that
      * END can be used as an argument/pass type checking. */
     abstract sealed class End {
-        def finish(implicit NULL:Null)
+        def finish
     }
 
     /* The keyword END must be at the end of every line. The finish method of
@@ -657,7 +657,7 @@ class ScalaChef {
      * It extends the abstract class End so that other keywords can take END
      * as an "argument". */
     object END extends End {
-        def finish(implicit NULL:Null) = {
+        def finish = {
             /* this mode = program parsing */
             if (currentMode == M_TITLE) {
                 /* go to ingredient parsing mode */
