@@ -375,14 +375,45 @@ class Tests extends FlatSpec {
 
     // REFRIGERATE
 
-
+    
 
     // test to make sure SERVES prints nothing if the baking dishes (but
     // not the mixing bowls) are empty
 
     // test to make sure SERVES actually prints stuff from all 5 dishes
+    
+    // test to make sure SERVES does not print from mixing bowls
 
     // test to make sure SERVES only prints the specified # of baking dishes
     // (e.g. SERVES (2) END only prints the first 2 and ignores latter 3
 
+    
+    // LOOPS: test cases to consider
+  
+    // Loop with initial ingredient already 0
+    
+    // verbs ending with e vs verbs not ending with e
+    
+    // Loop endings with and without giving an ingredient
+    
+    // loops without ending phrase throw an exception
+    
+    // loops without starting phrase throw an exception
+    
+    // loops with messed up scopes throw an exception 
+    // cook 1 ... bake 2 ... do until cooked ... do until baked
+    
+    // loops with disagreeing verbs throw an exception 
+    //(cook potatoes ... cook potatoes until burned)
+    //(cook potatoes ... cook potatoes until cook)
+    
+    // can't define loops with same verb
+    
+    // breaking works
+    
+    // breaking outside a loop throws an exception
+    
+    // breaking in an inner loop does not break the outer loop
+    
+    // empty loops work
 }
