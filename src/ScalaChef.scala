@@ -252,9 +252,8 @@ class ScalaChef {
 
 
 
-    /*
     /* What follows are structures needed to keep a "function call stack" */
-    /*
+
 
     /* stores return line */
     val returnLineStack = new ArrayDeque[Int]
@@ -422,10 +421,10 @@ class ScalaChef {
 
     /* This builds loops*/
     case class LoopBuilder(verb:String){
-        if(verb.capitalize.last == 'E'){
-            currentVerb = (verb + "D").capitalize
+        if(verb.toUpperCase().last == 'E'){
+            currentVerb = (verb + "D").toUpperCase()
         } else {
-            currentVerb = (verb + "ED").capitalize
+            currentVerb = (verb + "ED").toUpperCase()
         }
         
         def THE(ingredient:Symbol) = {
@@ -446,7 +445,7 @@ class ScalaChef {
         }
         
         def UNTIL(verbed: String) = {
-            currentVerb = (verbed).capitalize
+            currentVerb = (verbed).toUpperCase()
             currentOpType = O_VERBEND
             new Ender(ScalaChef.this.END)
         }
