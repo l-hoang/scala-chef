@@ -177,6 +177,8 @@ class ScalaChef {
     /* this argument is used to hold integer arguments for a line */
     var intArg: Int = -1
 
+    var stringArg: String = ""
+
     /* the number of the stack we want to use; unlike Chef, this code only has
      * a limited # of stacks (at the moment) */
     val NONE = "none"
@@ -251,10 +253,7 @@ class ScalaChef {
     val functionStartEnd = new mutable.HashMap[String, FunctionInfo]
 
 
-
-    /*
     /* What follows are structures needed to keep a "function call stack" */
-    /*
 
     /* stores return line */
     val returnLineStack = new ArrayDeque[Int]
@@ -291,7 +290,7 @@ class ScalaChef {
     /* This structure stores the program's loop info*/
     val loopBindings = new mutable.HashMap[String, LoopInfo]
     
-    /* The current verb*/
+    /* The current verb */
     var currentVerb = ""
     
     /* mode the program parsing is in; starts by parsing a title */
@@ -299,6 +298,7 @@ class ScalaChef {
     val M_INGREDIENT = 1
     val M_PROGRAM =  2
     var currentMode = M_TITLE
+    var newRecipe = false
 
     /* tells you if you can start parsing ingredients */
     var canParseIngredients = 0
@@ -311,6 +311,17 @@ class ScalaChef {
     /* Start evaluating a line that starts with TITLE */
     object TITLE {
         def apply(title: String):Ender = {
+            if (currentMode == M_INGREDIENT) {
+                /* can't declare another recipe before declaring ingredients */
+                throw new RuntimeException("can't parse a title in ingredient mode")
+            }
+
+            if (currentMode == M_PROGRAM) {
+                /* this means you are declaring a new recipe */
+                 newRecipe = true
+            }
+
+            stringArg = title
             new Ender(END)
         }
     }
@@ -707,6 +718,34 @@ class ScalaChef {
         def finish = {
             /* this mode = program parsing */
             if (currentMode == M_TITLE) {
+                /* if it's the first recipe it's the main recipe */
+                if (mainRecipe == "") {
+                    mainRecipe = stringArg
+                    newRecipe = true
+                }
+
+                /* make sure the same title isn't being used */
+                if (startingIngredients.contains(stringArg) ||
+                        functionStartEnd.contains(stringArg)) {
+                    throw new RuntimeException("using the same title for a recipe")
+                }
+
+                if (newRecipe) {
+                    if (currentRecipe != "") {
+                        /* mark end of current recipe as the start of the 
+                           new one */
+                        functionStartEnd(currentRecipe).setEnd(currentLine)
+                    }
+
+                    /* create an entry for it in the function info table */
+                    functionStartEnd(stringArg) = new FunctionInfo
+                    functionStartEnd(stringArg).setStart(currentLine)
+                    currentRecipe = stringArg
+                    newRecipe = false
+                }
+
+                stringArg = ""
+                
                 /* go to ingredient parsing mode */
                 currentMode = M_INGREDIENT
             } else if (currentMode == M_INGREDIENT) {
