@@ -428,6 +428,29 @@ class ScalaChef {
         }
 
         canParseIngredients = 0;
+
+        /* make sure currentRecipe is set */
+        if (currentRecipe == "") {
+            throw new RuntimeException("no recipe specified during ingredient parsing")
+        }
+
+        /* copies the default ingredients of the current recipe */
+        val stuffToGet = variableBindings.iterator
+        val bindingCopy = new mutable.HashMap[Symbol, Ingredient]
+        while (stuffToGet.hasNext) {
+            var pair = stuffToGet.next
+
+            val name = pair._1
+            val oldIngredient = pair._2
+            /* has to make a copy of the ingredients as well */
+            val ingredientCopy = new Ingredient(oldIngredient.number,
+                                        oldIngredient.state)
+
+            bindingCopy(name) = ingredientCopy
+        }
+
+        /* set it as "default ingredients" for the recipe*/
+        startingIngredients(currentRecipe) = bindingCopy
         currentMode = M_PROGRAM;
     }
 
