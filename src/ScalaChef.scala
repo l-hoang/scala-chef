@@ -145,7 +145,6 @@ class ScalaChef {
     }
 
 
-
     /* operation "enum" types */
     var currentOpType = -1
     val O_NOTHING = -1
@@ -198,13 +197,14 @@ class ScalaChef {
     var currentLine = 1
     /* This structure holds the program lines */
     val lines = new mutable.HashMap[Int, ChefLine]
+
     /* This structure holds ingredient bindings */
-    val variableBindings = new mutable.HashMap[Symbol, Ingredient]
+    var variableBindings = new mutable.HashMap[Symbol, Ingredient]
 
     /* This structure holds mixing bowl stacks */
-    val mixingStacks = new mutable.HashMap[String, ArrayDeque[Ingredient]]
+    var mixingStacks = new mutable.HashMap[String, ArrayDeque[Ingredient]]
 
-    /* set up mixingStacks (only 5 set up for now) */
+    /* set up mixingStacks */
     mixingStacks.put(FIRST, new ArrayDeque)
     mixingStacks.put(SECOND, new ArrayDeque)
     mixingStacks.put(THIRD, new ArrayDeque)
@@ -212,14 +212,64 @@ class ScalaChef {
     mixingStacks.put(FIFTH, new ArrayDeque)
 
     /* This structure holds baking dish stacks */
-    val bakingStacks = new mutable.HashMap[String, ArrayDeque[Ingredient]]
+    var bakingStacks = new mutable.HashMap[String, ArrayDeque[Ingredient]]
 
-    /* set up bakingStacks (again only 5 for now) */
+    /* set up bakingStacks */
     bakingStacks.put(FIRST, new ArrayDeque)
     bakingStacks.put(SECOND, new ArrayDeque)
     bakingStacks.put(THIRD, new ArrayDeque)
     bakingStacks.put(FOURTH, new ArrayDeque)
     bakingStacks.put(FIFTH, new ArrayDeque)
+
+
+
+    /* holds the name of the main recipe (i.e. the first one) */
+    var mainRecipe = ""
+
+    /* name of currently running recipe */
+    var currentRecipe = ""
+
+    class FunctionInfo {
+        var startLine = -1
+        var endLine = -1
+
+        def setStart(s: Int) = {
+            startLine = s
+        }
+
+        def setEnd(e: Int) = {
+            endLine = e
+        }
+    }
+
+    /* holds the starting vars for some recipe */
+    val startingIngredients = new mutable.HashMap[String, 
+                                    mutable.HashMap[Symbol, Ingredient]]
+
+    /* maps a function to a class that tells you the line it starts at and the
+     * line it ends at (i.e. the start of the next function) */
+    val functionStartEnd = new mutable.HashMap[String, FunctionInfo]
+
+
+
+    /*
+    /* What follows are structures needed to keep a "function call stack" */
+    /*
+
+    /* stores return line */
+    val returnLineStack = new ArrayDeque[Int]
+    /* stores line to end at */
+    val endLineStack = new ArrayDeque[Int]
+    /* stack that stores loopStacks */
+    val loopStackStack = new ArrayDeque[ArrayDeque[String]]
+    /* stack that stores mixing bowls */
+    val mixingBowlStack = new ArrayDeque[mutable.HashMap[String, 
+                                                         ArrayDeque[Ingredient]]]
+    /* stack that stores baking dishes */
+    val bakingDishStack = new ArrayDeque[mutable.HashMap[String, 
+                                                         ArrayDeque[Ingredient]]]
+    /* stack that stores ingredient bindings */
+    val ingredientStack = new ArrayDeque[mutable.HashMap[Symbol, Ingredient]]
 
 
     /* This class stores loop information */
