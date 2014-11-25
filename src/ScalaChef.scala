@@ -221,7 +221,10 @@ class ScalaChef {
     bakingStacks.put(FOURTH, new ArrayDeque)
     bakingStacks.put(FIFTH, new ArrayDeque)
 
-
+    
+    /* null to bypass suffix notation*/
+    implicit val NULL = null
+    
     /* This class stores loop information */
     class LoopInfo(ingredient : Symbol, s : Int){
         var start = s
@@ -377,7 +380,7 @@ class ScalaChef {
     }
     
     class LoopFollow(){
-        def END() = {
+        def END(implicit NULL:Null) = {
             currentOpType = O_VERB
             ScalaChef.this.END.finish
         }
