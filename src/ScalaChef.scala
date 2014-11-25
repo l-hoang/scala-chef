@@ -417,13 +417,26 @@ class ScalaChef {
     }
 
     implicit def int2IngredientGetter(i: Int) = IngredientGetter(i)
+    
+    /* This def serves to end ingredient mode */
+    def END_INGREDIENTS {
+        if (currentMode != M_INGREDIENT) {
+            throw new RuntimeException("not in ingredient mode")
+        }
+        if (canParseIngredients == 0) {
+            throw new RuntimeException("START_INGREDIENT not called")
+        }
+
+        canParseIngredients = 0;
+        currentMode = M_PROGRAM;
+    }
 
     /* This builds loops*/
     case class LoopBuilder(verb:String){
-        if(verb.capitalize.last == 'E'){
-            currentVerb = (verb + "D").capitalize
+        if(verb.toUpperCase().last == 'E'){
+            currentVerb = (verb + "D").toUpperCase()
         } else {
-            currentVerb = (verb + "ED").capitalize
+            currentVerb = (verb + "ED").toUpperCase()
         }
         
         def THE(ingredient:Symbol) = {
@@ -444,7 +457,7 @@ class ScalaChef {
         }
         
         def UNTIL(verbed: String) = {
-            currentVerb = (verbed).capitalize
+            currentVerb = (verbed).toUpperCase()
             currentOpType = O_VERBEND
             new Ender(ScalaChef.this.END)
         }
@@ -452,17 +465,12 @@ class ScalaChef {
     
     implicit def string2LoopBuilder(verb: String) = LoopBuilder(verb);
     
-    /* This def serves to end ingredient mode */
-    def END_INGREDIENTS {
-        if (currentMode != M_INGREDIENT) {
-            throw new RuntimeException("not in ingredient mode")
+    /* Start evaluating a line that starts with SET*/
+    object SET {
+        def ASIDE(e:End) = {
+            currentOpType = O_SET
+            e.finish
         }
-        if (canParseIngredients == 0) {
-            throw new RuntimeException("START_INGREDIENT not called")
-        }
-
-        canParseIngredients = 0;
-        currentMode = M_PROGRAM;
     }
 
     /* Start evaluating a line that starts with TAKE */
@@ -594,13 +602,15 @@ class ScalaChef {
         }
     }
     class PourBowl {
-        def MIXING_BOWL(into:Into) = {
+        def MIXING_BOWL(into:DummyInto) = {
             stackType = T_BOWL
             new PourThe2
         }
     }
-    object INTO extends Into{
-    }
+    
+    sealed abstract class DummyInto;
+    object INTO extends DummyInto;
+    
     class PourThe2 {
         def THE(stack: String) = {
             currentDish = stack
@@ -829,6 +839,9 @@ class ScalaChef {
                         loopBindings(currentVerb).setEnd(currentIngredient,currentLine)
                         lines(currentLine) = LoopEnd(currentVerb)
                     }
+                    case O_SET => {
+                        lines(currentLine) = Break()
+                    }
                     case _ => {
                         throw new RuntimeException("currentOpType invalid")
                     }
@@ -854,6 +867,9 @@ class ScalaChef {
     
     //evaluator: might need a map to hold loop frames
     def evaluate(line : Int){
+        if(!lines.contains(line)){
+            return
+        }
         lines(line) match{
             case Read(ingredient: Symbol) => {
                 val in = new Scanner(System.in)
@@ -934,7 +950,7 @@ class ScalaChef {
                                                      FIFTH)
                 var i = 0
                 for (i <- 0 to num) {
-                    val stackToUse = mixingStacks(stackNumbers(i))
+                    val stackToUse = bakingStacks(stackNumbers(i))
                     while (stackToUse.size != 0) {
                         val ingredient = stackToUse.pop
                         if (ingredient.state == I_DRY ||
@@ -974,6 +990,15 @@ class ScalaChef {
                 else{
                     evaluate(loop.start+1)
                 }
+            }
+            case Break() => {
+                if(loopStack.isEmpty()){
+                    throw new RuntimeException("Not in Loop")
+                }
+                
+                val verb = loopStack.pop()
+                val loop = loopBindings(verb)
+                evaluate(loop.end + 1)
             }
         }
     }
