@@ -102,8 +102,8 @@ class ScalaChef {
     case class EmptyStack(stack: String) extends ChefLine
     case class ArrangeStack() extends ChefLine
     case class StackToReturnStack(stack: String, dish: String) extends ChefLine
-    case class LoopStart() extends ChefLine
-    case class LoopEnd() extends ChefLine
+    case class LoopStart(verb: String) extends ChefLine
+    case class LoopEnd(verb: String) extends ChefLine
     case class Break() extends ChefLine
     case class CallFunction() extends ChefLine
     case class Return() extends ChefLine
@@ -359,8 +359,8 @@ class ScalaChef {
 
     /* This builds loops*/
     case class LoopBuilder(verb:String){
-        if(verb.last == 'e'){
-            currentVerb = (verb + "ED").capitalize
+        if(verb.capitalize.last == 'E'){
+            currentVerb = (verb + "D").capitalize
         } else {
             currentVerb = (verb + "ED").capitalize
         }
@@ -377,12 +377,13 @@ class ScalaChef {
     }
     
     class LoopFollow(){
-        def END(){
+        def END() = {
             currentOpType = O_VERB
             ScalaChef.this.END.finish
         }
         
         def UNTIL(verbed: String) = {
+            currentVerb = (verbed).capitalize
             currentOpType = O_VERBEND
             new Ender(ScalaChef.this.END)
         }
@@ -716,7 +717,28 @@ class ScalaChef {
                     }
                     case O_SERVES => {
                         /* pass necessary values to the current line */
+                        if(!loopStack.isEmpty()){
+                            throw new RuntimeException("Malformed Loop")
+                        }
                         lines(currentLine) = PrintStacks(intArg)
+                    }
+                    case O_VERB => {
+                        /* create a LoopInfo object*/
+                        if(loopBindings.contains(currentVerb)){
+                            throw new RuntimeException("Loop "+currentVerb +" already defined")
+                        }
+                        loopStack.push(currentVerb)
+                        loopBindings(currentVerb) = new LoopInfo(currentIngredient,currentLine)
+                        lines(currentLine) = LoopStart(currentVerb)
+                    }
+                    case O_VERBEND => {
+                        /* edit the LoopInfo object*/
+                        if(loopStack.isEmpty() || loopStack.pop() != currentVerb){
+                            throw new RuntimeException("Malformed Loop")
+                        }
+                        
+                        loopBindings(currentVerb).setEnd(currentIngredient,currentLine)
+                        lines(currentLine) = LoopEnd(currentVerb)
                     }
                     case _ => {
                         throw new RuntimeException("currentOpType invalid")
@@ -729,6 +751,7 @@ class ScalaChef {
                 currentIngredient = null
                 currentStack = NONE
                 currentDish = NONE
+                currentVerb = null
                 stackType = T_NOTHING
                 intArg = -1
                 currentLine += 1
@@ -832,6 +855,35 @@ class ScalaChef {
                             printf("%c", ingredient.asChar)
                         }
                     }
+                }
+            }
+            case LoopStart(verb: String) => {
+                if(!loopBindings.contains(verb)){
+                    throw new RuntimeException("Loop "+verb +" not defined")
+                }
+                val loop = loopBindings(verb)
+                if(variableBindings(loop.loopIngredient).number==0){
+                    evaluate(loop.end + 1)
+                }
+                else{
+                    loopStack.push(verb)
+                    evaluate(line+1)
+                }
+            }
+            case LoopEnd(verb: String) => {
+                if(loopStack.isEmpty() || loopStack.peekLast() != verb){
+                    throw new RuntimeException("Malformed Loop")
+                }
+                
+                val loop = loopBindings(verb)
+                variableBindings(loop.decIngredient).number -= 1;
+                
+                if(variableBindings(loop.loopIngredient).number == 0){
+                    loopStack.pop()
+                    evaluate(line+1)
+                }
+                else{
+                    evaluate(loop.start+1)
                 }
             }
         }

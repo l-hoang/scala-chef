@@ -46,6 +46,14 @@ object DoesItCompile extends ScalaChef {
 
         LIQUEFY ('potatoes) END
 
+        "COOK" THE ('potatoes) END
+        
+        "COOK" UNTIL "COOKED" END
+        
+        "BAKE" THE ('potatoes) END
+        
+        "BAKE" THE ('potatoes) UNTIL "BAKED" END
+
         CLEAN (FIRST) MIXING_BOWL END
 
         SERVES (1) END
