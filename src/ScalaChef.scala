@@ -53,7 +53,7 @@ SOFTWARE.
  * Liquefy : make an var interpreted as unicode
  * Liquefy contents : entire stack interpreted as unicode
  *
- * Stir for (number) minutes :  ???
+ * Stir for (number) minutes :  
  * Stir ingredient : ???
  *
  * Mix : randomize a stack
@@ -544,7 +544,19 @@ class ScalaChef {
 
     /* Start evaluating a line that starts with REMOVE */
     object REMOVE {
-        // MISSING
+        def apply(ingredient: Symbol) = {
+            currentOpType = O_REMOVE
+            currentIngredient = ingredient
+            new From
+        }
+    }
+
+    /* This class exists to read the keyword FROM for REMOVE */
+    class From {
+        def FROM(stack: String) = {
+            currentStack = stack
+            new BowlOrDish
+        }
     }
     
     /* Start evaluating a line that starts with COMBINE */
@@ -811,6 +823,10 @@ class ScalaChef {
                         /* pass necessary values to the current line */
                         lines(currentLine) = AddDry(currentStack)
                     }
+                    case O_REMOVE => {
+                        lines(currentLine) = SubtractStack(currentStack,
+                                                currentIngredient)
+                    }
                     case O_COMBINE => {
                         /* pass necessary values to the current line */
                         lines(currentLine) = MultiplyStack(currentStack,currentIngredient)
@@ -892,9 +908,11 @@ class ScalaChef {
     
     //evaluator: might need a map to hold loop frames
     def evaluate(line : Int){
+        /* end of program */
         if(!lines.contains(line)){
             return
         }
+
         lines(line) match{
             case Read(ingredient: Symbol) => {
                 val in = new Scanner(System.in)
@@ -911,14 +929,14 @@ class ScalaChef {
                 variableBindings(ingredient) = mixingStacks(stack).pop()
                 evaluate(line+1)
             }
-            case AddStack(stack: String , ingredient: Symbol) => {
+            case AddStack(stack: String, ingredient: Symbol) => {
                 val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber + 
                                                     mixingStacks(stack).peek.asNumber),
                                                     variableBindings(ingredient).state)
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
-            case SubtractStack(stack: String , ingredient: Symbol) => {
+            case SubtractStack(stack: String, ingredient: Symbol) => {
                 val ingredientToPush = new Ingredient((mixingStacks(stack).peek.asNumber - 
                                                     variableBindings(ingredient).asNumber),
                                                     variableBindings(ingredient).state)
@@ -997,6 +1015,7 @@ class ScalaChef {
                 var i = 0
                 for (i <- 0 to num) {
                     val stackToUse = bakingStacks(stackNumbers(i))
+
                     while (stackToUse.size != 0) {
                         val ingredient = stackToUse.pop
                         if (ingredient.state == I_DRY ||
