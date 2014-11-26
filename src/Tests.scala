@@ -125,7 +125,7 @@ class Tests extends FlatSpec {
                 3 ('cakes) END
         
                 END_INGREDIENTS
-        
+
 
                 PUT ('potatoes) INTO FIRST MIXING_BOWL END
         
@@ -133,7 +133,6 @@ class Tests extends FlatSpec {
         
                 SERVES (1) END
 
-                // commented out for now since it won't compile otherwise
                 RUN
             }
         }
@@ -205,88 +204,87 @@ class Tests extends FlatSpec {
     // test to make sure REMOVE subtracts from something already on a stack and
     // pushes that new value to the stack (while leaving the other one
     // intact)
-    // "Remove test 1" should "print 12" in {
-    //     object RemoveTest1 extends ScalaChef {
-    //         def run(): Unit = {
-    //             TITLE ("Remove 1") END
+    "Remove test 1" should "print 12" in {
+        object RemoveTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Remove 1") END
 
 
-    //             START_INGREDIENTS
+                START_INGREDIENTS
 
-    //             1 ('water) END
+                1 ('water) END
 
-    //             2 ('milk) END
+                2 ('milk) END
 
-    //             END_INGREDIENTS
-
-
-    //             PUT ('milk) INTO FIRST MIXING_BOWL END
-
-    //             REMOVE ('water) FROM FIRST MIXING_BOWL END
-
-    //             SERVES (1) END
+                END_INGREDIENTS
 
 
-    //             // RUN
-    //         }
-    //     }
+                PUT ('milk) INTO FIRST MIXING_BOWL END
 
-    //     RemoveTest1.run()
-    // }
+                REMOVE ('water) FROM FIRST MIXING_BOWL END
+
+                SERVES (1) END
+
+                RUN
+            }
+        }
+
+        RemoveTest1.run()
+    }
 
     // test to make sure you can REMOVE from all 5 bowls
-    // "Remove test 2" should "print 1626364656" in {
-    //     object RemoveTest2 extends ScalaChef {
-    //         def run(): Unit = {
-    //             TITLE ("Remove 2") END
+    "Remove test 2" should "print 1626364656" in {
+        object RemoveTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Remove 2") END
 
 
-    //             START_INGREDIENTS
+                START_INGREDIENTS
 
-    //             6 ('doughnuts) END
+                6 ('doughnuts) END
 
-    //             5 ('glaze) END
+                5 ('glaze) END
 
-    //             4 ('chocolate) END
+                4 ('chocolate) END
 
-    //             3 ('creme) END
+                3 ('creme) END
 
-    //             2 ('maple) END
+                2 ('maple) END
 
-    //             1 ('sugar) END
+                1 ('sugar) END
 
-    //             END_INGREDIENTS
-
-
-    //             PUT ('doughnuts) INTO FIRST MIXING_BOWL END
-
-    //             PUT ('doughnuts) INTO SECOND MIXING_BOWL END
-
-    //             PUT ('doughnuts) INTO THIRD MIXING_BOWL END
-
-    //             PUT ('doughnuts) INTO FOURTH MIXING_BOWL END
-
-    //             PUT ('doughnuts) INTO FIFTH MIXING_BOWL END
-
-    //             REMOVE ('glaze) FROM FIRST MIXING_BOWL END
-
-    //             REMOVE ('chocolate) FROM SECOND MIXING_BOWL END
-
-    //             REMOVE ('creme) FROM THIRD MIXING_BOWL END
-
-    //             REMOVE ('maple) FROM FOURTH MIXING_BOWL END
-
-    //             REMOVE ('sugar) FROM FIFTH MIXING_BOWL END
-
-    //             SERVES (5) END
+                END_INGREDIENTS
 
 
-    //             // RUN
-    //         }
-    //     }
+                PUT ('doughnuts) INTO FIRST MIXING_BOWL END
 
-    //     RemoveTest2.run()
-    // }
+                PUT ('doughnuts) INTO SECOND MIXING_BOWL END
+
+                PUT ('doughnuts) INTO THIRD MIXING_BOWL END
+
+                PUT ('doughnuts) INTO FOURTH MIXING_BOWL END
+
+                PUT ('doughnuts) INTO FIFTH MIXING_BOWL END
+
+                REMOVE ('glaze) FROM FIRST MIXING_BOWL END
+
+                REMOVE ('chocolate) FROM SECOND MIXING_BOWL END
+
+                REMOVE ('creme) FROM THIRD MIXING_BOWL END
+
+                REMOVE ('maple) FROM FOURTH MIXING_BOWL END
+
+                REMOVE ('sugar) FROM FIFTH MIXING_BOWL END
+
+                SERVES (5) END
+
+
+                RUN
+            }
+        }
+
+        RemoveTest2.run()
+    }
 
     // test to make sure REMOVE doesn't take a non-existent ingredient
 
