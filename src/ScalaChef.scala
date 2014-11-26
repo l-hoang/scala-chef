@@ -100,7 +100,7 @@ class ScalaChef {
     case class StackToUnicode(stack: String) extends ChefLine
     case class MixStack(stack: String) extends ChefLine
     case class EmptyStack(stack: String) extends ChefLine
-    case class ArrangeStack() extends ChefLine
+    case class ArrangeStack(stack: String, num: Int) extends ChefLine
     case class StackToReturnStack(stack: String, dish: String) extends ChefLine
     case class LoopStart(verb: String) extends ChefLine
     case class LoopEnd(verb: String) extends ChefLine
@@ -531,7 +531,6 @@ class ScalaChef {
         }
 
         def DRY(ingredients: DummyIngredient) {
-            // MISSING
             currentOpType = O_ADDDRY
             new To
         }
@@ -596,16 +595,38 @@ class ScalaChef {
     /* Start evaluating a line that starts with STIR */
     object STIR {
         /* Stir the nth mixing.... */
-        def THE(stack: String) {
-            // MISSING
+        def THE(stack: String):StirBowl = {
+            currentStack = stack
+            new StirBowl
         }
 
         /* Stir ingredient ... */
         def apply(ingredient: Symbol) = {
             // MISSING
         }
+    }
+    class StirBowl {
+        def MIXING_BOWL(f: DummyFor):NumGet = {
+            stackType = T_BOWL
+            new NumGet
+        }
+    }
+    class NumGet {
+        def apply(num: Int) {
+            intArg = num
+            new Minutes(END)
+        }
 
     }
+
+    class Minutes(e:End) {
+        def END {
+            e.finish
+        }
+
+    }
+    abstract sealed class DummyFor{}
+    object FOR extends DummyFor{}
 
     /* Start evaluating a line that starts with MIX */
     object MIX {
@@ -842,6 +863,12 @@ class ScalaChef {
                     case O_LIQUEFY2 => {
                         /* pass necessary values to the current line */
                         lines(currentLine) = StackToUnicode(currentStack)
+                    }
+                    case O_STIR => {
+                        /* pass necessary values to line */
+                        println(currentStack)
+                        println(intArg)
+                        lines(currentLine) = ArrangeStack(currentStack, intArg)
                     }
                     case O_MIX => {
                         /* pass necessary values to the current line */
