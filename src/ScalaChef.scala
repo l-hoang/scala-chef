@@ -1025,9 +1025,47 @@ class ScalaChef {
                 mixingStacks(stack).clear()
                 evaluate(line+1)
             }
-            /*case ArrangeStack() => {
+            case ArrangeStack(stack: String, num: Int) => {
+                val theStack = mixingStacks(stack)
+                val stackSize = theStack.size
+
+                if (stackSize > 1) {
+                    if (num >= stackSize) {
+                        /* this means the top will go to the bottom */
+                        val popped = theStack.pop
+                        /* add adds to the end of the stack */
+                        theStack.add(popped)
+                    } else {
+                        val stackElements = theStack.iterator
+                        val first = stackElements.next
+                        var left = num
+                        val newStack = new ArrayDeque[Ingredient]
+
+                        /* calling next num times will work since this
+                         * only goes to this section of code when num is 
+                         * less than stackSize; in worst case, you will
+                         * iterate through the entire thing */
+                        while (num > 0) {
+                            newStack.add(stackElements.next)
+                            num--
+                        }
+
+                        /* add the first element in at this point */
+                        newStack.add(first)
+                        
+                        /* add the rest of the elements in the old stack
+                         * iterator */
+                        while (stackElements.hasNext) {
+                            newStack.add(stackElements.next)
+                        }
+                    }
+                } else if (stackSize == 1 || stackSize == 0) {
+                    /* no matter what the number is, nothing is going to 
+                     * happen; do nothing
+                }
+
                 evaluate(line+1)
-            }*/
+            }
             case StackToReturnStack(stack:String, dish:String) => {
                 val it = mixingStacks(stack).iterator()
                 while(it.hasNext()){
@@ -1095,5 +1133,8 @@ class ScalaChef {
         }
     }
     
-    def RUN() = evaluate(1)
+    def RUN() = {
+        variableBindings = 
+        evaluate(1)
+    }
 }
