@@ -95,7 +95,7 @@ class ScalaChef {
     case class SubtractStack(stack: String, ingredient:Symbol) extends ChefLine
     case class MultiplyStack(stack: String, ingredient:Symbol) extends ChefLine
     case class DivideStack(stack: String, ingredient:Symbol) extends ChefLine
-    case class AddDry() extends ChefLine
+    case class AddDry(stack: String) extends ChefLine
     case class ToUnicode(ingredient:Symbol) extends ChefLine
     case class StackToUnicode(stack: String) extends ChefLine
     case class MixStack(stack: String) extends ChefLine
@@ -143,7 +143,6 @@ class ScalaChef {
             number.toChar
         }
     }
-
 
     /* operation "enum" types */
     var currentOpType = -1
@@ -531,12 +530,17 @@ class ScalaChef {
             new To
         }
 
-        def DRY(ingredients: String) {
+        def DRY(ingredients: DummyIngredient) {
             // MISSING
             currentOpType = O_ADDDRY
             new To
         }
     }
+    /* the only purpose of these classes is to let DRY take
+     * INGREDIENTS as an argument */
+    abstract sealed class DummyIngredient {}
+    object INGREDIENTS extends DummyIngredient {}
+    
 
     /* Start evaluating a line that starts with REMOVE */
     object REMOVE {
@@ -574,10 +578,8 @@ class ScalaChef {
             new The
         }
     }    
-    abstract sealed class Of{
-    }
-    object OF extends Of{
-    }
+    abstract sealed class Of{}
+    object OF extends Of{}
 
     /* Start evaluating a line that starts with STIR */
     object STIR {
@@ -668,10 +670,8 @@ class ScalaChef {
     }
     
     /* Object to read keyword REFRIGERATOR*/ 
-    abstract sealed class refrigerator {
-    }
-    object REFRIGERATOR extends refrigerator{
-    }
+    abstract sealed class refrigerator {}
+    object REFRIGERATOR extends refrigerator {}
     
     /* This class reads the keyword INTO in a line */
     class Into {
@@ -703,10 +703,8 @@ class ScalaChef {
             new Ender(END);
         }
     }
-    abstract sealed class well {
-    }
-    object WELL extends well{
-    }
+    abstract sealed class well {}
+    object WELL extends well{}
 
     /* This class will evaluate MIXING_BOWL or BAKING_DISH in a line.
      * It sets the line stack type, then calls END's finish method */
@@ -808,6 +806,10 @@ class ScalaChef {
                     case O_ADD => {
                         /* pass necessary values to the current line */
                         lines(currentLine) = AddStack(currentStack,currentIngredient)
+                    }
+                    case O_ADDDRY => {
+                        /* pass necessary values to the current line */
+                        lines(currentLine) = AddDry(currentStack)
                     }
                     case O_COMBINE => {
                         /* pass necessary values to the current line */
@@ -937,9 +939,26 @@ class ScalaChef {
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
-            /*case AddDry() => {
+            case AddDry(stack: String) => {
+                var currentSum = 0
+                val stuff =  variableBindings.valuesIterator
+
+                while (stuff.hasNext) {
+                    /* if the ingredient is dry, then get its value and add it
+                     * to the sum */
+                    val ingr = stuff.next
+                    if (ingr.state == I_DRY) {
+                        currentSum += ingr.number
+                    }
+                }
+
+                /* create a new ingredient with the value sum */
+                val ingredientToPush = new Ingredient(currentSum, I_EITHER)
+                /* push on stack */
+                mixingStacks(stack).push(ingredientToPush)
+
                 evaluate(line+1)
-            }*/
+            }
             case ToUnicode(ingredient: Symbol) => {
                 variableBindings(ingredient).changeInterpretation(I_LIQUID)
                 evaluate(line+1)
