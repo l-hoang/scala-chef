@@ -54,6 +54,8 @@ object DoesItCompile extends ScalaChef {
         
         "BAKE" THE ('potatoes) UNTIL "BAKED" END
 
+        STIR THE FIRST MIXING_BOWL FOR (3) MINUTES END
+
         CLEAN (FIRST) MIXING_BOWL END
 
         SERVES (1) END
