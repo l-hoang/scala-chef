@@ -596,12 +596,15 @@ class ScalaChef {
     object STIR {
         /* Stir the nth mixing.... */
         def THE(stack: String):StirBowl = {
+            currentOpType = O_STIR
             currentStack = stack
             new StirBowl
         }
 
         /* Stir ingredient ... */
         def apply(ingredient: Symbol) = {
+            currentOpType = O_STIR2
+            new IntoThe
             // MISSING
         }
     }
@@ -866,9 +869,14 @@ class ScalaChef {
                     }
                     case O_STIR => {
                         /* pass necessary values to line */
-                        println(currentStack)
-                        println(intArg)
                         lines(currentLine) = ArrangeStack(currentStack, intArg)
+                    }
+                    case O_STIR2 => {
+                        val num = currentIngredient.asNumber
+                        /* note that the second variant of STIR is exactly the
+                         * same as the first except for the fact that the #
+                         * comes from an ingredient */
+                        lines(currentLine) = ArrangeStack(currentStack, num)
                     }
                     case O_MIX => {
                         /* pass necessary values to the current line */
