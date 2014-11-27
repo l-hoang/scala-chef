@@ -106,7 +106,7 @@ class ScalaChef {
     case class LoopStart(verb: String) extends ChefLine
     case class LoopEnd(verb: String) extends ChefLine
     case class Break() extends ChefLine
-    case class CallFunction() extends ChefLine
+    case class CallFunction(title: String) extends ChefLine
     case class Return() extends ChefLine
     case class PrintStacks(num : Int) extends ChefLine
 
@@ -327,6 +327,10 @@ class ScalaChef {
                  newRecipe = true
             }
 
+            if (title == "") {
+                throw new RuntimeException("can't make a recipe title blank")
+            }
+
             stringArg = title
             currentOpType = O_TITLE
             new Ender(END)
@@ -518,10 +522,12 @@ class ScalaChef {
             new Ender(END)
         }
     }
+
     /* Object to read keyword REFRIGERATOR*/ 
     abstract sealed class refrigerator {}
     object REFRIGERATOR extends refrigerator {}
 
+    
     /* Start evaluating a line that starts with PUT */
     object PUT {
         def apply(ingredient: Symbol) = {
@@ -531,6 +537,7 @@ class ScalaChef {
         }
     }
     
+
     /* Start evaluating a line that starts with FOLD */
     object FOLD {
         def apply(ingredient: Symbol) = {
@@ -539,6 +546,7 @@ class ScalaChef {
             new Into
         }
     }
+
 
     /* Start evaluating a line that starts with ADD */
     object ADD {
@@ -575,6 +583,7 @@ class ScalaChef {
             new BowlOrDish
         }
     }
+
     
     /* Start evaluating a line that starts with COMBINE */
     object COMBINE {
@@ -584,6 +593,7 @@ class ScalaChef {
             new Into
         }
     }
+    
     
     /* Start evaluating a line that starts with DIVIDE */
     object DIVIDE {
@@ -609,6 +619,7 @@ class ScalaChef {
     }    
     abstract sealed class Of{}
     object OF extends Of{}
+
 
     /* Start evaluating a line that starts with STIR */
     object STIR {
@@ -700,10 +711,23 @@ class ScalaChef {
             e.finish
         }
     }
+
+    /* start parsing line that starts with SERVE (function call) */
+    object SERVE {
+        def WITH(recipe: String) {
+            currentOpType = O_SERVE
+            if (recipe == "") {
+                throw new RuntimeException("can't parse blank recipes")
+            }
+            stringArg = recipe
+            new Ender(END)
+        }
+    }
    
     /* Start evaluating a line that starts with SERVES (the last line) */
     object SERVES {
         def apply(numberOfDiners: Int) = {
+            /* note in this implementation SERVES must be in the main recipe */
             if (oneServes) {
                 throw new RuntimeException("There can only be 1 SERVES in a " +
                                             "program")
@@ -911,6 +935,9 @@ class ScalaChef {
                         /* pass necessary values to the current line */
                         lines(currentLine) = EmptyStack(currentStack)
                     }
+                    case O_SERVE => {
+                        lines(currentLine) = CallFunction(stringArg)
+                    }
                     case O_SERVES => {
                         /* pass necessary values to the current line */
                         if(!loopStack.isEmpty()){
@@ -953,6 +980,7 @@ class ScalaChef {
                 currentVerb = null
                 stackType = T_NOTHING
                 intArg = -1
+                stringArg = ""
                 currentLine += 1
             } else {
                 /* no right mode specified; die */
@@ -1141,7 +1169,9 @@ class ScalaChef {
 
                 evaluate(line+1)
             }
+            case CallFunction(title: String) => {
 
+            }
             case StackToReturnStack(stack:String, dish:String) => {
                 /* get an iterator that starts at the bottom of the stack */
                 val it = mixingStacks(stack).descendingIterator()
