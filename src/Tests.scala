@@ -297,7 +297,7 @@ class Tests extends FlatSpec {
             }
         }
 
-        AddTest3.run()
+        //AddTest3.run()
     }
 
     // test to make sure ADD fails if nothing is in the specified stack
