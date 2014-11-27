@@ -114,6 +114,7 @@ class Tests extends FlatSpec {
             def run(): Unit = {
                 TITLE ("General test 4") END
 
+
                 START_INGREDIENTS
 
                 intercept[RuntimeException] {
@@ -131,6 +132,7 @@ class Tests extends FlatSpec {
             def run(): Unit = {
                 TITLE ("General test 5") END
 
+
                 START_INGREDIENTS
 
                 1 ('potatoes) END
@@ -147,12 +149,65 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure you can't start a program with just ingredients
+    "General test 6" should "not start with just ingredients" in {
+        object GeneralTest6 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("General test 6") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                END_INGREDIENTS
+
+                // Need clarification
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        GeneralTest6.run();
+    }
 
     // test to make sure you can't start a program with Chef statements
+    "General test 7" should "not start with Chef statements" in {
+        object GeneralTest7 extends ScalaChef {
+            def run(): Unit = { 
+                // Need clarification
+
+                assert(false)
+            }
+        }
+
+        GeneralTest7.run();
+    }
+
 
     // test to make sure declaring an ingredient with the same name more
     // than once will take the latest declaration
+    "General test 8" should "make sure latest declaration of variable is used" in {
+        object GeneralTest8 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("General test 8") END
 
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                assert(variableBindings('potatoes).asNumber == 2);
+            }
+        }
+
+        GeneralTest8.run();
+    }
 
     // test to make sure PUT puts stuff in a stack
 
