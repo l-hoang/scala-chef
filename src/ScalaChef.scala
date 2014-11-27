@@ -314,6 +314,12 @@ class ScalaChef {
     /* Here begins keywords for Chef */
     /*********************************/
 
+    /* Dummy Tokens for taking up keywords*/
+    object INGREDIENTS;
+    object OF;
+    object INTO;
+    object WELL;
+    
     /* Start evaluating a line that starts with TITLE */
     object TITLE {
         def apply(title: String):Ender = {
@@ -557,16 +563,11 @@ class ScalaChef {
             new To
         }
 
-        def DRY(ingredients: DummyIngredient) {
+        def DRY(ingredients: INGREDIENTS.type) {
             currentOpType = O_ADDDRY
             new To
         }
     }
-    /* the only purpose of these classes is to let DRY take
-     * INGREDIENTS as an argument */
-    abstract sealed class DummyIngredient {}
-    object INGREDIENTS extends DummyIngredient {}
-    
 
     /* Start evaluating a line that starts with REMOVE */
     object REMOVE {
@@ -613,14 +614,11 @@ class ScalaChef {
             currentIngredient = ingredient
             new Ender(END)
         }
-        def CONTENTS(of: Of) = {
+        def CONTENTS(of: OF.type) = {
             currentOpType = O_LIQUEFY2
             new The
         }
     }    
-    abstract sealed class Of{}
-    object OF extends Of{}
-
 
     /* Start evaluating a line that starts with STIR */
     object STIR {
@@ -638,27 +636,25 @@ class ScalaChef {
         }
     }
     class StirBowl {
-        def MIXING_BOWL(f: DummyFor):NumGet = {
+        def MIXING_BOWL(f: STIR_FOR.type) = {
             stackType = T_BOWL
-            new NumGet
+            new Minutes
         }
     }
-    class NumGet {
-        def apply(num: Int) {
-            intArg = num
-            new Minutes(END)
-        }
-
+    
+    class Minutes{
+         def MINUTES(e:End) = {
+             e.finish
+         } 
     }
-
-    class Minutes(e:End) {
-        def END {
-            e.finish
+   
+    // dummy return value so that StirBowl requires FOR to take an arg
+    object STIR_FOR;
+    object FOR{
+        def apply(num: Int) = {
+            STIR_FOR
         }
-
     }
-    abstract sealed class DummyFor{}
-    object FOR extends DummyFor{}
 
     /* Start evaluating a line that starts with MIX */
     object MIX {
@@ -680,7 +676,7 @@ class ScalaChef {
 
     /* Start evaluating a line that starts with POUR */
     object POUR {
-        def CONTENTS(of: Of) = {
+        def CONTENTS(of: OF.type) = {
             currentOpType = O_POUR
             new PourThe
         }
@@ -692,15 +688,11 @@ class ScalaChef {
         }
     }
     class PourBowl {
-        def MIXING_BOWL(into:DummyInto) = {
+        def MIXING_BOWL(into:INTO.type) = {
             stackType = T_BOWL
             new PourThe2
         }
     }
-    
-    sealed abstract class DummyInto;
-    object INTO extends DummyInto;
-    
     class PourThe2 {
         def THE(stack: String) = {
             currentDish = stack
@@ -775,14 +767,12 @@ class ScalaChef {
         }
     }
     
-    /* Classes to read keywords MIXING_BOWL WELL*/
+    /* Class to read keywords MIXING_BOWL WELL*/
     class mixWell{
-        def MIXING_BOWL(w:well) = {
+        def MIXING_BOWL(w:WELL.type) = {
             new Ender(END);
         }
     }
-    abstract sealed class well {}
-    object WELL extends well{}
 
     /* This class will evaluate MIXING_BOWL or BAKING_DISH in a line.
      * It sets the line stack type, then calls END's finish method */
