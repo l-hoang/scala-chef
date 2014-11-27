@@ -1412,7 +1412,8 @@ class ScalaChef {
         if (mainRecipe == "") {
             throw new RuntimeException("no main recipe even declared yet")
         }
-
+        
+        functionStartEnd(currentRecipe).setEnd(currentLine)
             
         /* load the main recipe's var bindings */
         variableBindings = startingIngredients(mainRecipe)
