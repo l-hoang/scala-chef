@@ -124,48 +124,43 @@ function in the HashMap of lines for runtime evaluation.
 
 ### How loops work
 
-**NEEDS TO BE IMPLEMENTED**
-
 Loops in Chef consist of these 2 statements:
 
 *Verb the ingredient.* (loop declaration)
-*Verb the ingredient until verbed.* (loop end)
+*Verb [the ingredient] until verbed.* (loop end)
 
 The first checks to see if the value of the ingredient is non-zero. If it is,
-it does everything until the *Verb the ingredient until verbed.*. *verbed* must
+it does everything until the *Verb [the ingredient] until verbed.*. *verbed* must
 match the *Verb* in the loop declaration. Also, the loop end statement will
 decrement the value of the ingredient specified by 1 every time it hits it.
+Specifying an ingredient in the loop end is optional.
 
-When the parsing hits a loop start statement, END.finish will need to do these
-things:
+When the parsing hits a loop start statement, END.finish will do these things:
 
-* Create an entry for the verb being used in the LoopStart hashmap, and assign
-it to the current line number.
-* Create an entry for the verb being used in the LoopEnd hashmap. It will be
-assigned by the "until" statement.
+* Add "D" or "ED" to the end of the verb for indexing
+* Create a LoopInfo entry for the verb being used in the loopBindings hashmap.
+* Assign the Ingredient and Starting line to the LoopInfo entry
 * Create a LoopStart class and save it to the hash map of lines and their
 functions.
 
 The runtime evaluator will need to grab the values from the hashmaps itself
-when it sees that a line is a LoopStart line. (i.e. this doesn't create a
-function to use) It also needs to check if the condition (non-zero value)
-holds: if it doesn't, it will get the LoopEnd value of this verb and jump
-there. Otherwise, it'll "enter the loop" by going into the next line.
+when it sees that a line is a LoopStart line.It also needs to check if the 
+condition (non-zero value) holds: if it doesn't, it will get the LoopEnd value
+of this verb and jump there. Otherwise, it'll "enter the loop" by going into
+the next line and pushing the current verb onto a loop stack to keep track of
+the current loop frame.
 
 When parsing hits the loop end/until statement, these things need to be done:
 
-* Create a function that will decrement the ingredient value that was provided.
-* Take 'verbed' and take the -d off the end. Use that to index into the LoopEnd
-hashmap, and assign that entry the line number of the line that this statement
-is on PLUS 1 (so it can jump to the point after this statement).
+* Update the end line and ingredient value to be decremented in the hashtable
 * Create a LoopEnd class and save it to the hashmap of lines and their
-functions for the runtime evaluator to use later. Also be sure to pass in the
-function that decrements the ingredient value.
+functions for the runtime evaluator to use later.
 
 The runtime evaluator will need to grab the values from the hashmaps itself
-when it sees that a line is a LoopStart line. From there, the runtime 
-evaluator needs to jump back to the beginning of the loop where the condition
-will be evaluated once more.
+when it sees that a line is a LoopEnd line. From there, the runtime 
+evaluator checks the initial loop condition and jumps back to the beginning 
+of the loop if the condition is met. Otherwise, it exits the loop by popping
+the verb from the stack and continuing evaluation on the next line.
 
 ### How function calls work
 
