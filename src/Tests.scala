@@ -61,22 +61,90 @@ class Tests extends FlatSpec {
 
 
     // tests to make sure a program must start with a title
-    "Start test" should "start with a title" in {
-        object StartTest extends ScalaChef {
+    "General test 1" should "start with a title" in {
+        object GeneralTest1 extends ScalaChef {
             def run(): Unit = {
-                // TODO
+                intercept[RuntimeException] {
+                    START_INGREDIENTS
+
+                    1 ('potatoes) END
+
+                    END_INGREDIENTS
+                }
             }
         }
+
+        GeneralTest1.run()
     }
 
     // test to make sure you can't declare a title twice in a row
+    "General test 2" should "not allow declaration of a title twice in a row" in {
+        object GeneralTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("General test 2") END
+
+                intercept[RuntimeException] {
+                    TITLE ("This is bad") END
+                }
+            }
+        }
+
+        GeneralTest2.run();
+    }
 
     // test to make sure a program must have ingredients after the
     // title declaration
+    "General test 3" should "require ingredients immediately after title" in {
+        object GeneralTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("General test 3") END
+
+                intercept[RuntimeException] {
+                    CLEAN (FIRST) MIXING_BOWL END
+                }
+            }
+        }
+
+        GeneralTest3.run();
+    }
 
     // test to make sure you can't have 2 START_INGREDIENTS
+    "General test 4" should "not allow two START_INGREDIENTS" in {
+        object GeneralTest4 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("General test 4") END
+
+                START_INGREDIENTS
+
+                intercept[RuntimeException] {
+                    START_INGREDIENTS
+                }
+            }
+        }
+
+        GeneralTest4.run();
+    }
 
     // test to make sure you can't have 2 END_INGREDIENTS
+    "General test 5" should "not allow two END_INGREDIENTS" in {
+        object GeneralTest5 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("General test 5") END
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                END_INGREDIENTS
+
+                intercept[RuntimeException] {
+                    END_INGREDIENTS
+                }
+            }
+        }
+
+        GeneralTest5.run();
+    }
 
     // test to make sure you can't start a program with just ingredients
 
@@ -112,10 +180,10 @@ class Tests extends FlatSpec {
     // test to make sure ADD adds to something already on a stack and
     // pushes that new value to the stack (while leaving the other one
     // intact)
-    "Add test 1" should "print 52" in {
+    "Add test 1" should "do a simple ADD in first mixing bowl" in {
         object AddTest1 extends ScalaChef {
             def run(): Unit = {       
-                TITLE ("Add 1") END
+                TITLE ("Add test 1") END
         
 
                 START_INGREDIENTS
@@ -131,9 +199,12 @@ class Tests extends FlatSpec {
         
                 ADD ('cakes) TO FIRST MIXING_BOWL END
         
-                SERVES (1) END
 
                 RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 5)
+                assert(mixingStacks(FIRST).peek.asNumber == 2)
             }
         }
 
@@ -141,10 +212,10 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure you can ADD to all 5 bowls
-    "Add test 2" should "print 3141516171" in {
+    "Add test 2" should "ADD to all mixing bowls" in {
         object AddTest2 extends ScalaChef {
             def run(): Unit = {
-                TITLE ("Add 2") END
+                TITLE ("Add test 2") END
 
 
                 START_INGREDIENTS
@@ -184,10 +255,20 @@ class Tests extends FlatSpec {
 
                 ADD ('pears) TO FIFTH MIXING_BOWL END
 
-                SERVES (5) END
-
 
                 RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 3)
+                assert(mixingStacks(FIRST).peek.asNumber == 1)
+                assert(mixingStacks(SECOND).pop.asNumber == 4)
+                assert(mixingStacks(SECOND).peek.asNumber == 1)
+                assert(mixingStacks(THIRD).pop.asNumber == 5)
+                assert(mixingStacks(THIRD).peek.asNumber == 1)
+                assert(mixingStacks(FOURTH).pop.asNumber == 6)
+                assert(mixingStacks(FOURTH).peek.asNumber == 1)
+                assert(mixingStacks(FIFTH).pop.asNumber == 7)
+                assert(mixingStacks(FIFTH).peek.asNumber == 1)
             }
         }
 
@@ -195,6 +276,29 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure ADD doesn't take a non-existent ingredient
+    "Add test 3" should "make sure ADD doesn't take a non-existent ingredient" in {
+        object AddTest3 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Add test 3") END
+        
+
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+        
+                intercept[RuntimeException] {    
+                    ADD ('cakes) TO FIRST MIXING_BOWL END
+                }
+            }
+        }
+
+        AddTest3.run()
+    }
 
     // test to make sure ADD fails if nothing is in the specified stack
 
@@ -204,10 +308,10 @@ class Tests extends FlatSpec {
     // test to make sure REMOVE subtracts from something already on a stack and
     // pushes that new value to the stack (while leaving the other one
     // intact)
-    "Remove test 1" should "print 12" in {
+    "Remove test 1" should "do a simple REMOVE in first mixing bowl" in {
         object RemoveTest1 extends ScalaChef {
             def run(): Unit = {
-                TITLE ("Remove 1") END
+                TITLE ("Remove test 1") END
 
 
                 START_INGREDIENTS
@@ -223,9 +327,12 @@ class Tests extends FlatSpec {
 
                 REMOVE ('water) FROM FIRST MIXING_BOWL END
 
-                SERVES (1) END
 
                 RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 1)
+                assert(mixingStacks(FIRST).peek.asNumber == 2)
             }
         }
 
@@ -233,10 +340,10 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure you can REMOVE from all 5 bowls
-    "Remove test 2" should "print 1626364656" in {
+    "Remove test 2" should "REMOVE from all mixing bowls" in {
         object RemoveTest2 extends ScalaChef {
             def run(): Unit = {
-                TITLE ("Remove 2") END
+                TITLE ("Remove test 2") END
 
 
                 START_INGREDIENTS
@@ -276,10 +383,20 @@ class Tests extends FlatSpec {
 
                 REMOVE ('sugar) FROM FIFTH MIXING_BOWL END
 
-                SERVES (5) END
-
 
                 RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 1)
+                assert(mixingStacks(FIRST).peek.asNumber == 6)
+                assert(mixingStacks(SECOND).pop.asNumber == 2)
+                assert(mixingStacks(SECOND).peek.asNumber == 6)
+                assert(mixingStacks(THIRD).pop.asNumber == 3)
+                assert(mixingStacks(THIRD).peek.asNumber == 6)
+                assert(mixingStacks(FOURTH).pop.asNumber == 4)
+                assert(mixingStacks(FOURTH).peek.asNumber == 6)
+                assert(mixingStacks(FIFTH).pop.asNumber == 5)
+                assert(mixingStacks(FIFTH).peek.asNumber == 6)
             }
         }
 
