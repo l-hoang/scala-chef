@@ -720,6 +720,11 @@ class ScalaChef {
             if (recipe == "") {
                 throw new RuntimeException("can't parse blank recipes")
             }
+
+            if (recipe == mainRecipe) {
+                throw new RuntimeException("can't SERVE main recipe")
+            }
+
             stringArg = recipe
             new Ender(END)
         }
