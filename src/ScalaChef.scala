@@ -286,7 +286,7 @@ class ScalaChef {
     }
     
     /* This structure stores the program's loop stack*/
-    val loopStack = new ArrayDeque[String]
+    var loopStack = new ArrayDeque[String]
     
     /* This structure stores the program's loop info*/
     val loopBindings = new mutable.HashMap[String, LoopInfo]
@@ -333,6 +333,7 @@ class ScalaChef {
 
             stringArg = title
             currentOpType = O_TITLE
+            currentMode = M_TITLE
             new Ender(END)
         }
     }
@@ -714,7 +715,7 @@ class ScalaChef {
 
     /* start parsing line that starts with SERVE (function call) */
     object SERVE {
-        def WITH(recipe: String) {
+        def WITH(recipe: String): Ender = {
             currentOpType = O_SERVE
             if (recipe == "") {
                 throw new RuntimeException("can't parse blank recipes")
@@ -967,6 +968,7 @@ class ScalaChef {
                         lines(currentLine) = Break()
                     }
                     case _ => {
+                        println(currentOpType)
                         throw new RuntimeException("currentOpType invalid")
                     }
                 }
@@ -992,6 +994,39 @@ class ScalaChef {
     
     //evaluator: might need a map to hold loop frames
     def evaluate(line : Int){
+        /* check to see if this function has finished */
+        if (line == endLineStack.peek) {
+            /* function done; restore previous state */
+
+            /* get line to jump back to */
+            val jumpBack = returnLineStack.pop
+
+            /* pop the endLine off of the stack */
+            endLineStack.pop
+            /* restore loop stack */
+            loopStack = loopStackStack.pop
+
+            /* throw everything in this current function's mixing bowl into
+             * the mixing bowl of the function being returned to */
+            val mixingBowlToCopy = mixingStacks(FIRST)
+            mixingStacks = mixingBowlStack.pop
+
+            val copyIter = mixingBowlToCopy.descendingIterator
+            /* push the auxiliary recipe's first bowl to the caller's
+             * bowl */
+            while (copyIter.hasNext) {
+                mixingStacks(FIRST).push(copyIter.next)
+            }
+
+            /* restore baking dishes */
+            bakingStacks = bakingDishStack.pop
+
+            /* restore var bindings */
+            variableBindings = ingredientStack.pop
+
+            /* jump back */
+            evaluate(jumpBack)
+        }
         /* end of program */
         if(!lines.contains(line)){
             programFinished = true
@@ -1170,7 +1205,93 @@ class ScalaChef {
                 evaluate(line+1)
             }
             case CallFunction(title: String) => {
+                if (!functionStartEnd.contains(title)) {
+                    throw new RuntimeException("calling non-existent recipe")
+                }
+                val functionInfo = functionStartEnd(title)
+                if (functionInfo.startLine == -1 || functionInfo.endLine == -1) {
+                    throw new RuntimeException("recipe trying to serve not " +
+                                               "fully parsed")
+                }
 
+                if (!startingIngredients.contains(title)) {
+                     throw new RuntimeException("recipe has no default ingre.")
+                }                  
+
+                /* push stuff to data structures for function return later */
+                returnLineStack.push(line + 1)
+                endLineStack.push(functionInfo.endLine)
+                loopStackStack.push(loopStack)
+                mixingBowlStack.push(mixingStacks)
+                bakingDishStack.push(bakingStacks)
+                ingredientStack.push(variableBindings)
+
+                /* make a copy of all the ingredients in all of the mixing
+                 * and baking stacks for the function to use */
+                val stackNumbers = Array(FIRST, SECOND, THIRD, FOURTH,
+                                                     FIFTH)
+                var i = 0
+                val mixingStacksCopy = new mutable.HashMap[String,
+                                        ArrayDeque[Ingredient]]
+                /* copy mixing stacks */
+                for (i <- 0 to 4) {
+                    val theStack = mixingStacks(stackNumbers(i))
+                    val stackIter = theStack.descendingIterator
+
+                    val stackCopy = new ArrayDeque[Ingredient]
+                    while (stackIter.hasNext) {
+                        val ingredient = stackIter.next
+                        stackCopy.push(new Ingredient(ingredient.number,
+                                            ingredient.state))
+                    }
+                    mixingStacksCopy.put(stackNumbers(i), stackCopy)
+                }
+                mixingStacks = mixingStacksCopy
+
+                /* copy baking stacks */
+                i = 0
+                val bakingStacksCopy = new mutable.HashMap[String,
+                                        ArrayDeque[Ingredient]]
+                for (i <- 0 to 4) {
+                    val theStack = bakingStacks(stackNumbers(i))
+                    val stackIter = theStack.descendingIterator
+
+                    val stackCopy = new ArrayDeque[Ingredient]
+                    while (stackIter.hasNext) {
+                        val ingredient = stackIter.next
+                        stackCopy.push(new Ingredient(ingredient.number,
+                                            ingredient.state))
+                    }
+                    bakingStacksCopy.put(stackNumbers(i), stackCopy)
+                }
+                bakingStacks = bakingStacksCopy
+
+
+                /* load the default var bindings for the function being
+                 * called */
+                val defaultIngredients = startingIngredients(title)
+                val functionBindings = new mutable.HashMap[Symbol, Ingredient]
+
+                val keyIter = defaultIngredients.keysIterator
+
+                /* make a copy of the default ingredients and assign it to the
+                 * bindings the function will use */
+                while (keyIter.hasNext) {
+                    val key = keyIter.next
+                    val defaultIngredient = defaultIngredients(key)
+                    val ingredientCopy = new Ingredient(
+                                           defaultIngredient.number,
+                                           defaultIngredient.state)
+                    functionBindings.put(key, ingredientCopy)
+                }
+
+                variableBindings = functionBindings
+
+                /* create a new loop stack for the function */
+                loopStack = new ArrayDeque[String]
+
+                /* jump to the line that the function starts at */
+                evaluate(functionInfo.startLine)
             }
             case StackToReturnStack(stack:String, dish:String) => {
                 /* get an iterator that starts at the bottom of the stack */
@@ -1260,7 +1381,6 @@ class ScalaChef {
             
         /* load the main recipe's var bindings */
         variableBindings = startingIngredients(mainRecipe)
-        currentRecipe = mainRecipe
         evaluate(1)
     }
 }
