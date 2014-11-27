@@ -385,6 +385,40 @@ class Tests extends FlatSpec {
     // test to make sure SERVES only prints the specified # of baking dishes
     // (e.g. SERVES (2) END only prints the first 2 and ignores latter 3
 
+    // test to make sure only 1 SERVES can exist in a program
+
+    // test to make sure SERVES only works in the main recipe
+
+
+    // function related tests
+
+    // can't declare a new function (i.e. start a new TITLE declaration)
+    // while parsing ingredients
+
+    // can't declare a new function until ingredients have been declared (even
+    // if the ingredients are empty)
+
+    // SERVE/function calls
+
+    // I'm only listing some corner casey things you might need to consider:
+    // please test basic functionality and other things (basic functionality
+    // = copy first mixing bowl to calling function, make sure it returns to
+    // the right spot, make sure it gets a copy of caller's bowls/dishes
+    // BUT NOT ingredients, can't call non-existing things, etc.)
+
+    // make sure a function call always loads its default ingredients and
+    // not the ingredients of a function call to the same recipe that have
+    // already altered it 
+    // for example, if recipe "a" has ingredient 11 potatoes, and a call to
+    // it changes it to 13 potatoes IN THAT CALL, then a new call to it 
+    // should load 11 potatoes
+
+
+    // make sure nested function calls work
+
+
+    // make sure you can't call the main recipe (i.e. the first one)
+
     
     // LOOPS: test cases to consider
   
