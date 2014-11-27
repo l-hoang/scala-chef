@@ -101,6 +101,7 @@ class ScalaChef {
     case class MixStack(stack: String) extends ChefLine
     case class EmptyStack(stack: String) extends ChefLine
     case class ArrangeStack(stack: String, num: Int) extends ChefLine
+    case class ArrangeStack2(stack: String, ingredient: Symbol) extends ChefLine
     case class StackToReturnStack(stack: String, dish: String) extends ChefLine
     case class LoopStart(verb: String) extends ChefLine
     case class LoopEnd(verb: String) extends ChefLine
@@ -168,6 +169,7 @@ class ScalaChef {
     val O_SERVE = 18
     val O_REFRIDGE = 19
     val O_SERVES = 20
+    val O_TITLE = 21
 
 
     /* ingredient in use; tracks the ingredient that is being used in some line */  
@@ -303,6 +305,11 @@ class ScalaChef {
     var canParseIngredients = 0
     var ingredientType = -1
 
+    /* tells if there has been a SERVES line yet */
+    var oneServes = false
+    /* tells if RUN has finished running */
+    var programFinished = false
+
     /*********************************/
     /* Here begins keywords for Chef */
     /*********************************/
@@ -321,6 +328,7 @@ class ScalaChef {
             }
 
             stringArg = title
+            currentOpType = O_TITLE
             new Ender(END)
         }
     }
@@ -504,6 +512,16 @@ class ScalaChef {
         }
     }
 
+    /* This class reads the keyword FROM in a line with REFRIGERATOR */
+    class fromRefr {
+        def FROM(r:refrigerator) = {
+            new Ender(END)
+        }
+    }
+    /* Object to read keyword REFRIGERATOR*/ 
+    abstract sealed class refrigerator {}
+    object REFRIGERATOR extends refrigerator {}
+
     /* Start evaluating a line that starts with PUT */
     object PUT {
         def apply(ingredient: Symbol) = {
@@ -604,7 +622,6 @@ class ScalaChef {
         /* Stir ingredient ... */
         def apply(ingredient: Symbol) = {
             currentOpType = O_STIR2
-            new IntoThe
             // MISSING
         }
     }
@@ -687,27 +704,22 @@ class ScalaChef {
     /* Start evaluating a line that starts with SERVES (the last line) */
     object SERVES {
         def apply(numberOfDiners: Int) = {
+            if (oneServes) {
+                throw new RuntimeException("There can only be 1 SERVES in a " +
+                                            "program")
+            }
+
             currentOpType = O_SERVES
             if (numberOfDiners <= 0 || numberOfDiners > 5) {
                 throw new RuntimeException("You can only serve 5 people and " +
                                             "you need to serve at least 1")
             }   
             intArg = (numberOfDiners - 1)
-            new Ender(END)
-        }
-
-    }
-
-    /* This class reads the keyword FROM in a line with REFRIGERATOR */
-    class fromRefr {
-        def FROM(r:refrigerator) = {
+            oneServes = true
             new Ender(END)
         }
     }
-    
-    /* Object to read keyword REFRIGERATOR*/ 
-    abstract sealed class refrigerator {}
-    object REFRIGERATOR extends refrigerator {}
+
     
     /* This class reads the keyword INTO in a line */
     class Into {
@@ -783,8 +795,20 @@ class ScalaChef {
      * as an "argument". */
     object END extends End {
         def finish = {
+            if (programFinished) {
+                throw new RuntimeException("trying to parse after program " +
+                                           "has already run")
+            }
+
             /* this mode = program parsing */
             if (currentMode == M_TITLE) {
+                if (currentOpType != O_TITLE) {
+                    throw new RuntimeException(
+                            "doing something besides declaring " +
+                            "a title or running a program in " +
+                            "title mode")
+                }
+
                 /* if it's the first recipe it's the main recipe */
                 if (mainRecipe == "") {
                     mainRecipe = stringArg
@@ -872,11 +896,8 @@ class ScalaChef {
                         lines(currentLine) = ArrangeStack(currentStack, intArg)
                     }
                     case O_STIR2 => {
-                        val num = currentIngredient.asNumber
-                        /* note that the second variant of STIR is exactly the
-                         * same as the first except for the fact that the #
-                         * comes from an ingredient */
-                        lines(currentLine) = ArrangeStack(currentStack, num)
+                        lines(currentLine) = ArrangeStack2(currentStack, 
+                                             currentIngredient)
                     }
                     case O_MIX => {
                         /* pass necessary values to the current line */
@@ -945,6 +966,7 @@ class ScalaChef {
     def evaluate(line : Int){
         /* end of program */
         if(!lines.contains(line)){
+            programFinished = true
             return
         }
 
@@ -1053,9 +1075,9 @@ class ScalaChef {
                          * only goes to this section of code when num is 
                          * less than stackSize; in worst case, you will
                          * iterate through the entire thing */
-                        while (num > 0) {
+                        while (left > 0) {
                             newStack.add(stackElements.next)
-                            num--
+                            left -= 1
                         }
 
                         /* add the first element in at this point */
@@ -1069,11 +1091,57 @@ class ScalaChef {
                     }
                 } else if (stackSize == 1 || stackSize == 0) {
                     /* no matter what the number is, nothing is going to 
-                     * happen; do nothing
+                     * happen; do nothing */
                 }
 
                 evaluate(line+1)
             }
+            case ArrangeStack2(stack: String, ingredient: Symbol) => {
+                /* get the number */
+                val num = variableBindings(ingredient).asNumber
+
+                /* proceed exactly as ArrangeStack above */
+                val theStack = mixingStacks(stack)
+                val stackSize = theStack.size
+
+                if (stackSize > 1) {
+                    if (num >= stackSize) {
+                        /* this means the top will go to the bottom */
+                        val popped = theStack.pop
+                        /* add adds to the end of the stack */
+                        theStack.add(popped)
+                    } else {
+                        val stackElements = theStack.iterator
+                        val first = stackElements.next
+                        var left = num
+                        val newStack = new ArrayDeque[Ingredient]
+
+                        /* calling next num times will work since this
+                         * only goes to this section of code when num is 
+                         * less than stackSize; in worst case, you will
+                         * iterate through the entire thing */
+                        while (left > 0) {
+                            newStack.add(stackElements.next)
+                            left -= 1
+                        }
+
+                        /* add the first element in at this point */
+                        newStack.add(first)
+                        
+                        /* add the rest of the elements in the old stack
+                         * iterator */
+                        while (stackElements.hasNext) {
+                            newStack.add(stackElements.next)
+                        }
+                    }
+                } else if (stackSize == 1 || stackSize == 0) {
+                    /* no matter what the number is, nothing is going to 
+                     * happen; do nothing */
+                }
+
+                evaluate(line+1)
+            }
+
             case StackToReturnStack(stack:String, dish:String) => {
                 /* get an iterator that starts at the bottom of the stack */
                 val it = mixingStacks(stack).descendingIterator()
@@ -1104,6 +1172,9 @@ class ScalaChef {
                         }
                     }
                 }
+
+                /* program is finished after a SERVES call */
+                programFinished = true
             }
             case LoopStart(verb: String) => {
                 if(!loopBindings.contains(verb)){
@@ -1147,7 +1218,19 @@ class ScalaChef {
     }
     
     def RUN() = {
-        variableBindings = 
+        if (currentMode == M_INGREDIENT) {
+            throw new RuntimeException("can't call RUN during ingredient " +
+                                        "parsing")
+        }
+
+        if (mainRecipe == "") {
+            throw new RuntimeException("no main recipe even declared yet")
+        }
+
+            
+        /* load the main recipe's var bindings */
+        variableBindings = startingIngredients(mainRecipe)
+        currentRecipe = mainRecipe
         evaluate(1)
     }
 }
