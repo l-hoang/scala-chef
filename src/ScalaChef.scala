@@ -486,7 +486,9 @@ class ScalaChef {
         }
         
         def UNTIL(verbed:String) = {
+            currentVerb = (verbed).toUpperCase()
             currentOpType = O_VERBEND
+            currentIngredient = null
             new Ender(END)
         }
     }
@@ -1342,7 +1344,9 @@ class ScalaChef {
                 }
                 
                 val loop = loopBindings(verb)
-                variableBindings(loop.decIngredient).number -= 1;
+                
+                if(loop.decIngredient != null)
+                    variableBindings(loop.decIngredient).number -= 1;
                 
                 if(variableBindings(loop.loopIngredient).number == 0){
                     loopStack.pop()
