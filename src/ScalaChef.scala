@@ -652,6 +652,7 @@ class ScalaChef {
     object STIR_FOR;
     object FOR{
         def apply(num: Int) = {
+            intArg = num
             STIR_FOR
         }
     }
