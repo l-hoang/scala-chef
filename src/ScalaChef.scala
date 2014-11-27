@@ -375,6 +375,13 @@ class ScalaChef {
             new Ender(END)
         }
 
+        def PINCH(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_DRY
+            intArg = num
+            new Ender(END)
+        }
+        
         def PINCHES(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_DRY
@@ -395,10 +402,24 @@ class ScalaChef {
             intArg = num
             new Ender(END)
         }
+        
+        def DASH(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_LIQUID
+            intArg = num
+            new Ender(END)
+        }
 
         def DASHES(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_LIQUID
+            intArg = num
+            new Ender(END)
+        }
+        
+        def CUP(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_EITHER
             intArg = num
             new Ender(END)
         }
@@ -409,8 +430,22 @@ class ScalaChef {
             intArg = num
             new Ender(END)
         }
+        
+        def TEASPOON(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_EITHER
+            intArg = num
+            new Ender(END)
+        }
 
         def TEASPOONS(ingredient: Symbol) = {
+            currentIngredient = ingredient
+            ingredientType = I_EITHER
+            intArg = num
+            new Ender(END)
+        }
+        
+        def TABLESPOON(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_EITHER
             intArg = num
