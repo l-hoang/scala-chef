@@ -689,6 +689,10 @@ class ScalaChef {
     object STIR_FOR;
     object FOR{
         def apply(num: Int) = {
+            if (intArg < 0) {
+                throw new RuntimeException("can't STIR a negative amount")
+            }
+
             intArg = num
             STIR_FOR
         }
@@ -769,6 +773,10 @@ class ScalaChef {
         
         def FOR(num : Int){
             currentOpType = O_REFR
+            /* must refrigerate for a number 0 through 5 */
+            if (num < 0 || num > 5) {
+                throw new RuntimeException("REFRIGERATE needs # from 0 - 5")
+            }
             intArg = num
             new Hours    
         }
@@ -917,6 +925,10 @@ class ScalaChef {
                 /* go to ingredient parsing mode */
                 currentMode = M_INGREDIENT
             } else if (currentMode == M_INGREDIENT) {
+                if (intArg < 0) {
+                    throw new RuntimeException("negative ingredient values " +
+                                               "not allowed)
+                }
                 /* save an ingredient var into the bindings */
                 val ingredientToAdd = new Ingredient(intArg, ingredientType)
                 variableBindings(currentIngredient) = ingredientToAdd
@@ -1102,7 +1114,10 @@ class ScalaChef {
                 evaluate(line+1)
             }
             case PopStack(stack:String, ingredient:Symbol) => {
-                variableBindings(ingredient) = mixingStacks(stack).pop()
+                /* get the ingredient */
+                val poppedIngredient = mixingStacks(stack).pop
+                /* it only gets the value of the ingredient */
+                variableBindings(ingredient).number = poppedIngredient.number
                 evaluate(line+1)
             }
             case AddStack(stack: String, ingredient: Symbol) => {
