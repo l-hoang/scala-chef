@@ -89,7 +89,7 @@ class Tests extends FlatSpec {
             }
         }
 
-        GeneralTest2.run();
+        GeneralTest2.run()
     }
 
     // test to make sure a program must have ingredients after the
@@ -105,7 +105,7 @@ class Tests extends FlatSpec {
             }
         }
 
-        GeneralTest3.run();
+        GeneralTest3.run()
     }
 
     // test to make sure you can't have 2 START_INGREDIENTS
@@ -123,7 +123,7 @@ class Tests extends FlatSpec {
             }
         }
 
-        GeneralTest4.run();
+        GeneralTest4.run()
     }
 
     // test to make sure you can't have 2 END_INGREDIENTS
@@ -145,54 +145,29 @@ class Tests extends FlatSpec {
             }
         }
 
-        GeneralTest5.run();
+        GeneralTest5.run()
     }
 
-    // test to make sure you can't start a program with just ingredients
-    "General test 6" should "not start with just ingredients" in {
+    // test to make sure you can't start a program with Chef statements
+    "General test 6" should "not start without necessary Chef statements" in {
         object GeneralTest6 extends ScalaChef {
-            def run(): Unit = {
-                TITLE ("General test 6") END
-
-
-                START_INGREDIENTS
-
-                1 ('potatoes) END
-
-                END_INGREDIENTS
-
-                // Need clarification
+            def run(): Unit = { 
                 intercept[RuntimeException] {
                     RUN
                 }
             }
         }
 
-        printf("Incomplete test\n")
-        //GeneralTest6.run();
-    }
-
-    // test to make sure you can't start a program with Chef statements
-    "General test 7" should "not start with Chef statements" in {
-        object GeneralTest7 extends ScalaChef {
-            def run(): Unit = { 
-                // Need clarification
-
-                assert(false)
-            }
-        }
-
-        printf("Incomplete test\n")
-        //GeneralTest7.run();
+        GeneralTest6.run()
     }
 
 
     // test to make sure declaring an ingredient with the same name more
     // than once will take the latest declaration
-    "General test 8" should "make sure latest declaration of variable is used" in {
-        object GeneralTest8 extends ScalaChef {
+    "General test 7" should "make sure latest declaration of variable is used" in {
+        object GeneralTest7 extends ScalaChef {
             def run(): Unit = { 
-                TITLE ("General test 8") END
+                TITLE ("General test 7") END
 
 
                 START_INGREDIENTS
@@ -204,11 +179,11 @@ class Tests extends FlatSpec {
                 END_INGREDIENTS
 
 
-                assert(variableBindings('potatoes).asNumber == 2);
+                assert(variableBindings('potatoes).asNumber == 2)
             }
         }
 
-        GeneralTest8.run();
+        GeneralTest7.run()
     }
 
 
@@ -239,7 +214,7 @@ class Tests extends FlatSpec {
             }
         }
 
-        PutTest1.run();
+        PutTest1.run()
     }
 
     // test to make sure you can put to all 5 mixing bowls
@@ -286,7 +261,7 @@ class Tests extends FlatSpec {
             }
         }
 
-        PutTest2.run();
+        PutTest2.run()
     }
 
     // test to make sure PUT doesn't take a non-existent ingredient
@@ -309,12 +284,12 @@ class Tests extends FlatSpec {
             }
         }
 
-        printf("Incomplete test\n");
-        //PutTest3.run();
+        printf("Incomplete test\n")
+        //PutTest3.run()
     }
 
     // test to make sure you can't PUT into a baking dish
-    "Put test 4" should "make you can't PUT into a baking dish" in {
+    "Put test 4" should "make sureyou can't PUT into a baking dish" in {
         object PutTest4 extends ScalaChef {
             def run(): Unit = { 
                 TITLE ("Put test 4") END
@@ -333,13 +308,79 @@ class Tests extends FlatSpec {
             }
         }
 
-        PutTest4.run();
+        PutTest4.run()
     }
 
     // test to make sure FOLD actually removes the value from a mixing bowl
+    "Fold test 1" should "make sure FOLD actually removes the value from a mixing bowl" in {
+        object FoldTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Fold test 1") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                3 ('fruit) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                FOLD ('fruit) INTO FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).peek.asNumber == 1)
+            }
+        }
+
+        FoldTest1.run()
+    }
 
     // test to make sure FOLD assigns the value it removed from a mixing bowl
     // to the ingredient you specified
+    "Fold test 2" should "make sure FOLD assigns removed value to specified ingredient" in {
+        object FoldTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Fold test 2") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                3 ('fruit) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                FOLD ('fruit) INTO FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(variableBindings('fruit).asNumber == 2)
+            }
+        }
+
+        FoldTest2.run()
+    }
 
     // test to make sure FOLD doesn't take a non-existent ingredient
 
@@ -476,7 +517,7 @@ class Tests extends FlatSpec {
             }
         }
         
-        printf("Incomplete Test");
+        printf("Incomplete Test")
         //AddTest3.run()
     }
 
