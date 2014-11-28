@@ -996,16 +996,200 @@ class Tests extends FlatSpec {
     }
     
     // loops with disagreeing verbs throw an exception 
-    //(cook potatoes ... cook potatoes until burned)
+    //(cook potatoes ... cook potatoes until baked)
+    "Loop test 9" should "throw an exception" in {
+        object LoopTest9 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 9") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                "COOK" THE ('potatoes) END 
+
+                intercept[RuntimeException] {
+                     "COOK" THE ('beans) UNTIL "BAKED" END
+                }
+            }
+        }
+    }
+    
     //(cook potatoes ... cook potatoes until cook)
+    "Loop test 10" should "throw an exception" in {
+        object LoopTest10 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 10") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                "COOK" THE ('potatoes) END 
+
+                intercept[RuntimeException] {
+                     "COOK" THE ('beans) UNTIL "COOK" END
+                }
+            }
+        }
+    }
     
     // can't define loops with same verb
+    "Loop test 11" should "throw an exception" in {
+        object LoopTest11 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 11") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                "COOK" THE ('potatoes) END 
+                
+                "COOK" THE ('potatoes) UNTIL "COOKED" END
+
+                intercept[RuntimeException] {
+                     "COOK" THE ('beans) END
+                }
+            }
+        }
+    }
+    
+    // nested loops work
+    "Loop test 12" should "loop properly" in {
+        object LoopTest12 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 12") END
+
+
+                START_INGREDIENTS
+
+                5 ('potatoes) END
+                
+                2 ('beans) END
+                
+
+                END_INGREDIENTS
+
+                "COOK" THE ('beans) END
+                
+                "BAKE" THE ('potatoes) END
+                
+                PUT ('beans) INTO FIRST MIXING_BOWL END
+                
+                "BAKE" THE ('potatoes) UNTIL "BAKED" END
+
+                "COOK" THE ('beans) UNTIL "COOKED" END
+
+                RUN
+                
+
+                assert(mixingStacks(FIRST).size() == 10)
+            }
+        }
+    }
     
     // breaking works
+    "Loop test 13" should "break out of the loop" in {
+        object LoopTest13 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 13") END
+
+
+                START_INGREDIENTS
+
+                5 ('potatoes) END
+                
+                2 ('beans) END
+                
+
+                END_INGREDIENTS
+                
+                "BAKE" THE ('potatoes) END
+                
+                PUT ('beans) INTO FIRST MIXING_BOWL END
+                
+                SET ASIDE END
+                
+                "BAKE" THE ('potatoes) UNTIL "BAKED" END
+
+
+                RUN
+                
+
+                assert(mixingStacks(FIRST).size() == 1)
+                assert(mixingStacks(FIRST).peek().number == 2)
+            }
+        }
+    }
     
     // breaking outside a loop throws an exception
+    "Loop test 14" should "throw an exception" in {
+        object LoopTest14 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 14") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                "COOK" THE ('potatoes) END 
+                
+                "COOK" THE ('potatoes) UNTIL "COOKED" END
+
+                intercept[RuntimeException] {
+                     SET ASIDE END
+                }
+            }
+        }
+    }
+    
     
     // breaking in an inner loop does not break the outer loop
-    
-    // empty loops work
+    "Loop test 15" should "not break outer loop" in {
+        object LoopTest15 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 15") END
+
+
+                START_INGREDIENTS
+
+                5 ('potatoes) END
+                
+                3 ('beans) END
+                
+
+                END_INGREDIENTS
+
+                "COOK" THE ('beans) END
+                
+                "BAKE" THE ('potatoes) END
+                
+                PUT ('beans) INTO FIRST MIXING_BOWL END
+                
+                SET ASIDE END
+                
+                "BAKE" THE ('potatoes) UNTIL "BAKED" END
+
+                "COOK" THE ('beans) UNTIL "COOKED" END
+
+                RUN
+                
+
+                assert(mixingStacks(FIRST).size() == 5)
+            }
+        }
+    }
 }
