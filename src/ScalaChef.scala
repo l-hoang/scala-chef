@@ -341,7 +341,7 @@ class ScalaChef {
                  newRecipe = true
             }
 
-            if (title == "") {
+            if (title.equals("")) {
                 throw new RuntimeException("can't make a recipe title blank")
             }
 
@@ -491,7 +491,7 @@ class ScalaChef {
         canParseIngredients = 0;
 
         /* make sure currentRecipe is set */
-        if (currentRecipe == "") {
+        if (currentRecipe.equals("")) {
             throw new RuntimeException("no recipe specified during ingredient parsing")
         }
 
@@ -759,11 +759,11 @@ class ScalaChef {
     object SERVE {
         def WITH(recipe: String): Ender = {
             currentOpType = O_SERVE
-            if (recipe == "") {
+            if (recipe.equals("")) {
                 throw new RuntimeException("can't parse blank recipes")
             }
 
-            if (recipe == mainRecipe) {
+            if (recipe.equals(mainRecipe)) {
                 throw new RuntimeException("can't SERVE main recipe")
             }
 
@@ -903,7 +903,7 @@ class ScalaChef {
                 }
 
                 /* if it's the first recipe it's the main recipe */
-                if (mainRecipe == "") {
+                if (mainRecipe.equals("")) {
                     mainRecipe = stringArg
                     newRecipe = true
                 }
@@ -1564,7 +1564,7 @@ class ScalaChef {
                                         "parsing")
         }
 
-        if (mainRecipe == "") {
+        if (mainRecipe.equals("")) {
             throw new RuntimeException("no main recipe even declared yet")
         }
         
@@ -1574,7 +1574,7 @@ class ScalaChef {
         variableBindings = startingIngredients(mainRecipe)
 
         /* load main recipe's loop bindings */
-        if (!currentRecipe.equals( mainRecipe)) {
+        if (!currentRecipe.equals(mainRecipe)) {
             // check needed as they'll only be in the table if another recipe was
             // declared
             loopBindings = allLoopBindings(mainRecipe)
