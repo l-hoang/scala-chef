@@ -211,6 +211,10 @@ class Tests extends FlatSpec {
         GeneralTest8.run();
     }
 
+
+
+    // TAKE
+
     // test to make sure PUT puts stuff in a stack
     "Put test 1" should "do a simple PUT into first mixing bowl" in {
         object PutTest1 extends ScalaChef {
@@ -344,6 +348,12 @@ class Tests extends FlatSpec {
     // test to make sure FOLD works on all 5 mixing bowls
 
     // test to make sure you can't FOLD on a baking dish
+
+    // test to make sure FOLD DOESN'T change the state of the ingredient that
+    // you specify to the state of the ingredient that you pop on the stack
+    // (i.e. you fold and get a liquid ingredient, but the ingredient you assign
+    // to is a dry ingredient; according to the spec, only the value should be
+    // copied)
 
 
     // test to make sure ADD adds to something already on a stack and
@@ -579,6 +589,9 @@ class Tests extends FlatSpec {
 
     // test to make sure you can't REMOVE on a baking dish
 
+    // test to make sure you can't do a remove that will result in an ingredient
+    // with a negative value
+
 
     // test to make sure COMBINE multiplies to something already on a stack and
     // pushes that new value to the stack (while leaving the other one
@@ -606,6 +619,7 @@ class Tests extends FlatSpec {
     // test to make sure you can't DIVIDE on a baking dish
 
 
+
     // test to make sure ADD DRY INGREDIENTS adds all of the dry ingredients
     // together (i.e. does it work basically)
 
@@ -622,6 +636,8 @@ class Tests extends FlatSpec {
     // test to make sure you can't ADD DRY INGREDIENTS on a baking dish
 
 
+
+
     // test to make sure LIQUEFY ingredient changes a dry or non-specified
     // ingredient to a liqued (i.e. when it outputs it outputs a character)
 
@@ -629,6 +645,7 @@ class Tests extends FlatSpec {
 
     // test to make sure LIQUEFY on an already liquid ingredient doesn't do
     // anything (i.e. succeed, but it shouldn't change the value or anything)
+
 
 
     // test to make sure LIQUEFY CONTENTS makes everything in the bowl a liquid
@@ -642,7 +659,25 @@ class Tests extends FlatSpec {
     // test to make sure LIQUEFY CONTENTS fails on a baking dish
 
 
-    // STIR
+    // STIR NTH MIXING BOWL
+
+    // test general functionality (moves top ingredient down some # )
+
+    // test to make sure it moves top ingredient to bottom if you stir
+    // a # greater than the # of things in the stack
+
+    // test to make sure you can't stir a negative # of minutes 
+
+    // test to make sure you can't stir 0 minutes
+
+    // test to make sure it works on all 5 mixing bowls
+    
+    // test to make sure can't work on baking dishes
+
+
+
+
+    // STIR INGREDIENT
 
 
 
@@ -651,6 +686,14 @@ class Tests extends FlatSpec {
 
 
     // CLEAN 
+
+    // test general funcitonality
+
+    // test to make sure cleaning a mixing bowl will NOT affect the ingredients
+    // not in the mixing bowl
+
+    // test to see if it works on all 5 bowls
+
 
 
 
@@ -685,6 +728,10 @@ class Tests extends FlatSpec {
     // can't declare a new function until ingredients have been declared (even
     // if the ingredients are empty)
 
+
+
+
+
     // SERVE/function calls
 
     // I'm only listing some corner casey things you might need to consider:
@@ -705,6 +752,11 @@ class Tests extends FlatSpec {
 
 
     // make sure you can't call the main recipe (i.e. the first one)
+
+
+
+
+
 
     
     // LOOPS: test cases to consider
