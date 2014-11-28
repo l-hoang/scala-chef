@@ -401,8 +401,11 @@ class Tests extends FlatSpec {
 
                 PUT ('cakes) INTO FIRST MIXING_BOWL END
 
+                FOLD ('vegetable) INTO FIRST MIXING_BOWL END
+
+
                 intercept[RuntimeException] {
-                    FOLD ('vegetable) INTO FIRST MIXING_BOWL END
+                    RUN
                 }
             }
         }
@@ -425,8 +428,11 @@ class Tests extends FlatSpec {
                 END_INGREDIENTS
 
 
+                FOLD ('potatoes) INTO FIRST MIXING_BOWL END
+
+
                 intercept[RuntimeException] {
-                    FOLD ('potatoes) INTO FIRST MIXING_BOWL END
+                    RUN
                 }
             }
         }
@@ -669,8 +675,11 @@ class Tests extends FlatSpec {
                 END_INGREDIENTS
 
 
+                ADD ('potatoes) TO FIRST MIXING_BOWL END
+
+
                 intercept[RuntimeException] {
-                    ADD ('potatoes) TO FIRST MIXING_BOWL END
+                    RUN
                 }
             }
         }
@@ -817,8 +826,11 @@ class Tests extends FlatSpec {
                 END_INGREDIENTS
 
 
+                REMOVE ('potatoes) FROM FIRST MIXING_BOWL END
+
+
                 intercept[RuntimeException] {
-                    REMOVE ('potatoes) FROM FIRST MIXING_BOWL END
+                    RUN
                 }
             }
         }
