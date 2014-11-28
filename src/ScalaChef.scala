@@ -913,11 +913,18 @@ class ScalaChef {
                         functionStartEnd(currentRecipe).setEnd(currentLine)
                     }
 
-                    /* create an entry for it in the function info table */
+                    /* create an entry for new recipe in the function info table */
                     functionStartEnd(stringArg) = new FunctionInfo
                     functionStartEnd(stringArg).setStart(currentLine)
                     currentRecipe = stringArg
                     newRecipe = false
+
+                    /* save the loop info of this recipe */
+
+                    /* clear the ingredient bindings */
+                    variableBindings = new mutable.HashMap[Symbol, Ingredient]
+
+                    /* clear loop info of this recipe */
                 }
 
                 stringArg = ""
