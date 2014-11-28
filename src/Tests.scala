@@ -704,7 +704,7 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure you can't ADD on a baking dish
-    "Add test 5" should "make sure you can't ADD to a baking dish" in {
+    "Add test 5" should "make sure you can't ADD into a baking dish" in {
         object AddTest5 extends ScalaChef {
             def run(): Unit = {       
                 TITLE ("Add test 5") END
@@ -1055,7 +1055,7 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure you can't COMBINE on a baking dish
-    "Combine test 5" should "make sure you can't COMBINE from a baking dish" in {
+    "Combine test 5" should "make sure you can't COMBINE into a baking dish" in {
         object CombineTest5 extends ScalaChef {
             def run(): Unit = {       
                 TITLE ("Combine test 5") END
@@ -1229,7 +1229,7 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure you can't DIVIDE on a baking dish
-    "Divide test 5" should "make sure you can't DIVIDE from a baking dish" in {
+    "Divide test 5" should "make sure you can't DIVIDE into a baking dish" in {
         object DivideTest5 extends ScalaChef {
             def run(): Unit = {       
                 TITLE ("Divide test 5") END
@@ -1254,6 +1254,37 @@ class Tests extends FlatSpec {
 
     // test to make sure ADD DRY INGREDIENTS adds all of the dry ingredients
     // together (i.e. does it work basically)
+    // "Add dry ingredients test 1" should "make sure it works" in {
+    //     object AddDryTest1 extends ScalaChef {
+    //         def run(): Unit = {
+    //             TITLE ("Add dry ingredients test 1") END
+
+
+    //             START_INGREDIENTS
+
+    //             2 G ('potatoes) END
+
+    //             3 KG ('turkey) END
+
+    //             4 G ('stuffing) END
+
+    //             0 G ('corn) END
+
+    //             END_INGREDIENTS
+
+
+    //             ADD DRY INGREDIENTS TO FIRST MIXING_BOWL END
+
+
+    //             RUN
+
+
+    //             assert(mixingStacks(FIRST).peek.asNumber == 9)
+    //         }
+    //     }
+
+    //     AddDryTest1.run()
+    // }
 
     // test to make sure ADD DRY INGREDIENTS ignores liquid/either ingredients
 
@@ -1272,13 +1303,86 @@ class Tests extends FlatSpec {
 
     // test to make sure LIQUEFY ingredient changes a dry or non-specified
     // ingredient to a liqued (i.e. when it outputs it outputs a character)
+    // TODO
+    "Liquefy test 1" should "make sure it works" in {
+        object LiquefyTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Liquefy test 1") END
+
+
+                START_INGREDIENTS
+
+                1 G ('salt) END
+
+                END_INGREDIENTS
+
+
+                LIQUEFY ('salt) END
+
+
+                RUN
+
+
+                assert(variableBindings('salt).state == I_LIQUID)
+            }
+        }
+
+        LiquefyTest1.run()
+    }
 
     // test to make sure LIQUEFY can't work on unspecified ingredients
+    "Liquefy test 2" should "make sure LIQUEFY doesn't work on unspecified ingredients" in {
+        object LiquefyTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Liquefy test 2") END
+
+
+                START_INGREDIENTS
+
+                1 G ('salt) END
+
+                END_INGREDIENTS
+
+
+                LIQUEFY ('pepper) END
+
+
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        LiquefyTest2.run()
+    }
 
     // test to make sure LIQUEFY on an already liquid ingredient doesn't do
     // anything (i.e. succeed, but it shouldn't change the value or anything)
+    "Liquefy test 3" should "make sure LIQUEFY doesn't do anything to liquid ingredient" in {
+        object LiquefyTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Liquefy test 3") END
 
 
+                START_INGREDIENTS
+
+                1 ML ('juice) END
+
+                END_INGREDIENTS
+
+
+                LIQUEFY ('juice) END
+
+
+                RUN
+
+
+                assert(variableBindings('juice).state == I_LIQUID)
+            }
+        }
+
+        LiquefyTest3.run()
+    }
 
     // test to make sure LIQUEFY CONTENTS makes everything in the bowl a liquid
     
