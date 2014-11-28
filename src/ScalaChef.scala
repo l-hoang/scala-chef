@@ -315,6 +315,8 @@ class ScalaChef {
     var oneServes = false
     /* tells if RUN has finished running */
     var programFinished = false
+    /* tells if run has been called */
+    var calledRun = false
 
     /*********************************/
     /* Here begins keywords for Chef */
@@ -693,9 +695,9 @@ class ScalaChef {
    
     // dummy return value so that StirBowl requires FOR to take an arg
     object STIR_FOR;
-    object FOR{
+    object FOR {
         def apply(num: Int) = {
-            if (intArg <= 0) {
+            if (num <= 0) {
                 throw new RuntimeException("can't STIR non-positive")
             }
 
@@ -777,7 +779,7 @@ class ScalaChef {
             e.finish
         }
         
-        def FOR(num : Int){
+        def FOR(num: Int): Hours = {
             currentOpType = O_REFR
             /* must refrigerate for a number 0 through 5 */
             if (num < 0 || num > 5) {
@@ -1075,6 +1077,7 @@ class ScalaChef {
     
     //evaluator: might need a map to hold loop frames
     def evaluate(line : Int){
+//        println(line)
         /* check to see if this function has finished */
         if (line == endLineStack.peek) {
             /* function done; restore previous state */
@@ -1151,10 +1154,12 @@ class ScalaChef {
                 val ingredientToPush = new Ingredient((mixingStacks(stack).peek.asNumber - 
                                                     variableBindings(ingredient).asNumber),
                                                     variableBindings(ingredient).state)
+                /*
                 if (ingredientToPush.number < 0) {
                     throw new RuntimeException("an ingredient can't have a " +
                                                "negative value after REMOVE")
                 }
+                */
 
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
@@ -1315,6 +1320,7 @@ class ScalaChef {
                 }                  
 
                 if (!allLoopBindings.contains(title)) {
+                    println(title)
                     throw new RuntimeException("recipe has no entry in loop bindings")
                 }
 
@@ -1408,6 +1414,7 @@ class ScalaChef {
                     bakingStacks(dish).push(new Ingredient(ingredient.number,
                                             ingredient.state))
                 }
+                println("made it here")
                 evaluate(line+1)
             }
             case PrintStacks(num : Int) => {
@@ -1482,7 +1489,7 @@ class ScalaChef {
                         }
                     }
                 }
-                if (endLineStack.size != 0) {
+                if (endLineStack.size == 0) {
                     /* no function to return from; this is the main recipe */
                     programFinished = true
                     return
@@ -1535,6 +1542,18 @@ class ScalaChef {
     }
     
     def RUN() = {
+        if (!allLoopBindings.contains(currentRecipe)) {
+            /* save the loop info of this recipe since it hasn't been saved yet
+             * (they get saved during a title switch) */
+            allLoopBindings(currentRecipe) = loopBindings
+        }
+
+        if (calledRun) {
+            throw new RuntimeException("can't call RUN twice")
+        }
+
+        calledRun = true
+
         if (currentMode == M_INGREDIENT) {
             throw new RuntimeException("can't call RUN during ingredient " +
                                         "parsing")
