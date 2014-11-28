@@ -167,7 +167,7 @@ class ScalaChef {
     val O_VERBEND = 16
     val O_SET = 17
     val O_SERVE = 18
-    val O_REFRIDGE = 19
+    val O_REFR = 19
     val O_SERVES = 20
     val O_TITLE = 21
 
@@ -760,7 +760,27 @@ class ScalaChef {
         }
     }
    
-    /* Start evaluating a line that starts with SERVES (the last line) */
+    /* Start parsing a line that starts with REFRIGERATE */
+    object REFRIGERATE {
+        def apply(e:End) = {
+            currentOpType = O_REFR
+            e.finish
+        }
+        
+        def FOR(num : Int){
+            currentOpType = O_REFR
+            intArg = num
+            new Hours    
+        }
+    }
+    
+    class Hours {
+        def HOURS(e:End) = {
+            e.finish
+        }
+    }
+    
+    /* Start parsing a line that starts with SERVES (the last line) */
     object SERVES {
         def apply(numberOfDiners: Int) = {
             /* note in this implementation SERVES must be in the main recipe */
@@ -779,7 +799,6 @@ class ScalaChef {
             new Ender(END)
         }
     }
-
     
     /* This class reads the keyword INTO in a line */
     class Into {
