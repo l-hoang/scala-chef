@@ -107,7 +107,7 @@ class ScalaChef {
     case class LoopEnd(verb: String) extends ChefLine
     case class Break() extends ChefLine
     case class CallFunction(title: String) extends ChefLine
-    case class Return() extends ChefLine
+    case class Return(dishes: Int) extends ChefLine
     case class PrintStacks(num : Int) extends ChefLine
 
     /* ways to intrepret an ingredient */
@@ -1045,6 +1045,9 @@ class ScalaChef {
                     case O_SET => {
                         lines(currentLine) = Break()
                     }
+                    case O_REFR => {
+                        lines(currentLine) = Return(intArg)
+                    }
                     case _ => {
                         println(currentOpType)
                         throw new RuntimeException("currentOpType invalid")
@@ -1457,6 +1460,66 @@ class ScalaChef {
                 }
                 else{
                     evaluate(loop.start+1)
+                }
+            }
+            case Return(dishes: Int) => {
+                if (dishes > 0) {
+                    /* print however many baking dishes specified */
+                    val stackNumbers = Array(FIRST, SECOND, THIRD, FOURTH,
+                                                     FIFTH)
+                    var i = 0
+                    for (i <- 0 to (dishes - 1)) {
+                        val stackToUse = bakingStacks(stackNumbers(i))
+    
+                        while (stackToUse.size != 0) {
+                            val ingredient = stackToUse.pop
+                            if (ingredient.state == I_DRY ||
+                                    ingredient.state == I_EITHER) {
+                                printf("%d", ingredient.asNumber)
+                            } else if (ingredient.state == I_LIQUID) {
+                                printf("%c", ingredient.asChar)
+                            }
+                        }
+                    }
+                }
+                if (endLineStack.size != 0) {
+                    /* no function to return from; this is the main recipe */
+                    programFinished = true
+                    return
+                } else {
+                    /* function done; restore previous state */
+
+                    /* get line to jump back to */
+                    val jumpBack = returnLineStack.pop
+
+                    /* pop the endLine off of the stack */
+                    endLineStack.pop
+                    /* restore loop stack */
+                    loopStack = loopStackStack.pop
+
+                    /* throw everything in this current function's mixing bowl into
+                     * the mixing bowl of the function being returned to */
+                    val mixingBowlToCopy = mixingStacks(FIRST)
+                    mixingStacks = mixingBowlStack.pop
+
+                    val copyIter = mixingBowlToCopy.descendingIterator
+                    /* push the auxiliary recipe's first bowl to the caller's
+                     * bowl */
+                    while (copyIter.hasNext) {
+                        mixingStacks(FIRST).push(copyIter.next)
+                    }
+
+                    /* restore baking dishes */
+                    bakingStacks = bakingDishStack.pop
+
+                    /* restore var bindings */
+                    variableBindings = ingredientStack.pop
+
+                    /* restore loop bindings */
+                    loopBindings = loopBindingsStack.pop
+
+                    /* jump back */
+                    evaluate(jumpBack)
                 }
             }
             case Break() => {
