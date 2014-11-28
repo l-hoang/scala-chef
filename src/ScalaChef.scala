@@ -934,7 +934,7 @@ class ScalaChef {
             } else if (currentMode == M_INGREDIENT) {
                 if (intArg < 0) {
                     throw new RuntimeException("negative ingredient values " +
-                                               "not allowed)
+                                               "not allowed")
                 }
                 /* save an ingredient var into the bindings */
                 val ingredientToAdd = new Ingredient(intArg, ingredientType)
