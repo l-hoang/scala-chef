@@ -943,6 +943,12 @@ class Tests extends FlatSpec {
 
     // MIX
 
+    // general functionality
+
+    // works on all 5 bowls
+
+    // fails on a dish
+
 
 
     // CLEAN 
@@ -958,6 +964,20 @@ class Tests extends FlatSpec {
 
 
     // POUR
+
+    // general functionality
+
+    // test to make sure you can pour to the same dish twice with
+    // expected behavior
+
+    // make sure order of mixing bowl that is poured is preserved
+    // (i.e. the top of the mixing bowl should be the top of the 
+    // baking dish after pour)
+
+    // make sure editing the mixing bowl after a POUR doesn't alter
+    // the same ingredient in the baking dish
+
+
 
 
 

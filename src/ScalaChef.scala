@@ -1238,7 +1238,7 @@ class ScalaChef {
                     } else {
                         val stackElements = theStack.iterator
                         val first = stackElements.next
-                        var left = num
+                        var left = num 
                         val newStack = new ArrayDeque[Ingredient]
 
                         /* calling next num times will work since this
@@ -1258,6 +1258,8 @@ class ScalaChef {
                         while (stackElements.hasNext) {
                             newStack.add(stackElements.next)
                         }
+
+                        mixingStacks(stack) = newStack
                     }
                 } else if (stackSize == 1 || stackSize == 0) {
                     /* no matter what the number is, nothing is going to 
@@ -1303,6 +1305,8 @@ class ScalaChef {
                         while (stackElements.hasNext) {
                             newStack.add(stackElements.next)
                         }
+
+                        mixingStacks(stack) = newStack
                     }
                 } else if (stackSize == 1 || stackSize == 0) {
                     /* no matter what the number is, nothing is going to 
@@ -1420,7 +1424,6 @@ class ScalaChef {
                     bakingStacks(dish).push(new Ingredient(ingredient.number,
                                             ingredient.state))
                 }
-                println("made it here")
                 evaluate(line+1)
             }
             case PrintStacks(num : Int) => {
