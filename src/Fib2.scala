@@ -1,12 +1,11 @@
-object ChefFibonacci extends ScalaChef {
+object Fib2 extends ScalaChef {
     def main(args: Array[String]): Unit = {
-
         TITLE ("Fibonacci Numbers With Caramel Sauce") END
         
 
         START_INGREDIENTS
         
-        1 G ('flour) END
+        8 G ('flour) END
         
         250 G ('butter) END
         
@@ -15,19 +14,11 @@ object ChefFibonacci extends ScalaChef {
         END_INGREDIENTS
 
 
-        "SIFT" THE ('flour) END
-        
         PUT ('flour) INTO FIRST MIXING_BOWL END
         
         SERVE WITH "Caramel Sauce" END
         
-        STIR THE FIRST MIXING_BOWL FOR (2) MINUTES END
-        
-        REMOVE ('egg) FROM FIRST MIXING_BOWL END
-        
-        "RUB" THE ('flour) UNTIL "SIFTED" END
-        
-        STIR THE FIRST MIXING_BOWL FOR (2) MINUTES END
+        STIR THE FIRST MIXING_BOWL FOR (1) MINUTES END
         
         FOLD ('butter) INTO FIRST MIXING_BOWL END
         

@@ -1147,6 +1147,7 @@ class ScalaChef {
                 val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber + 
                                                     mixingStacks(stack).peek.asNumber),
                                                     variableBindings(ingredient).state)
+                mixingStacks(stack).pop
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
@@ -1154,12 +1155,12 @@ class ScalaChef {
                 val ingredientToPush = new Ingredient((mixingStacks(stack).peek.asNumber - 
                                                     variableBindings(ingredient).asNumber),
                                                     variableBindings(ingredient).state)
-                /*
                 if (ingredientToPush.number < 0) {
                     throw new RuntimeException("an ingredient can't have a " +
                                                "negative value after REMOVE")
                 }
-                */
+                mixingStacks(stack).pop
+
 
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
@@ -1168,6 +1169,8 @@ class ScalaChef {
                 val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber * 
                                                     mixingStacks(stack).peek.asNumber),
                                                     variableBindings(ingredient).state)
+                mixingStacks(stack).pop
+
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
@@ -1175,6 +1178,8 @@ class ScalaChef {
                 val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber / 
                                                     mixingStacks(stack).peek.asNumber),
                                                     variableBindings(ingredient).state)
+                mixingStacks(stack).pop
+
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
