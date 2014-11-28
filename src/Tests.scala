@@ -753,6 +753,8 @@ class Tests extends FlatSpec {
 
     // make sure you can't call the main recipe (i.e. the first one)
 
+    // make sure you can't refer to another recipe's ingredients
+
 
 
 
