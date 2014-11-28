@@ -753,8 +753,6 @@ class Tests extends FlatSpec {
 
     // make sure you can't call the main recipe (i.e. the first one)
 
-    // make sure you can't refer to another recipe's ingredients
-
 
 
 
@@ -1100,6 +1098,8 @@ class Tests extends FlatSpec {
                 5 ('potatoes) END
                 
                 2 ('beans) END
+                
+                5 ('onions) END
 
                 END_INGREDIENTS
 
@@ -1110,6 +1110,10 @@ class Tests extends FlatSpec {
                 PUT ('beans) INTO FIRST MIXING_BOWL END
                 
                 "BAKE" THE ('potatoes) UNTIL "BAKED" END
+                
+                PUT ('onions) INTO FIRST MIXING_BOWL END
+                
+                FOLD ('potatoes) INTO FIRST MIXING_BOWL END
 
                 "COOK" THE ('beans) UNTIL "COOKED" END
 
