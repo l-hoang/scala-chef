@@ -189,7 +189,21 @@ class Tests extends FlatSpec {
 
 
     // TAKE
-    // TODO
+
+    // note you'll have to provide input to these tests when you run them
+
+    // general functionality (input int, it saves it to an ingredient)
+
+    // TAKE on an existing ingredient does not alter it's state (i.e. if you
+    // take on a potato which is I_DRY, it won't change to I_EITHER, which is
+    // the default for new ingredients
+
+    // can't TAKE negative values
+
+    // can't TAKE non numbers
+
+    // can't TAKE floats
+
 
     // test to make sure PUT puts stuff in a stack
     "Put test 1" should "do a simple PUT into first mixing bowl" in {
@@ -531,9 +545,7 @@ class Tests extends FlatSpec {
     // TODO
 
 
-    // test to make sure ADD adds to something already on a stack and
-    // pushes that new value to the stack (while leaving the other one
-    // intact)
+    // test to make sure ADD adds to something already on a stack 
     "Add test 1" should "do a simple ADD in first mixing bowl" in {
         object AddTest1 extends ScalaChef {
             def run(): Unit = {       
@@ -558,7 +570,6 @@ class Tests extends FlatSpec {
 
 
                 assert(mixingStacks(FIRST).pop.asNumber == 5)
-                // assert(mixingStacks(FIRST).peek.asNumber == 2)
             }
         }
 
@@ -614,15 +625,10 @@ class Tests extends FlatSpec {
 
 
                 assert(mixingStacks(FIRST).pop.asNumber == 3)
-                // assert(mixingStacks(FIRST).peek.asNumber == 1)
                 assert(mixingStacks(SECOND).pop.asNumber == 4)
-                // assert(mixingStacks(SECOND).peek.asNumber == 1)
                 assert(mixingStacks(THIRD).pop.asNumber == 5)
-                // assert(mixingStacks(THIRD).peek.asNumber == 1)
                 assert(mixingStacks(FOURTH).pop.asNumber == 6)
-                // assert(mixingStacks(FOURTH).peek.asNumber == 1)
                 assert(mixingStacks(FIFTH).pop.asNumber == 7)
-                // assert(mixingStacks(FIFTH).peek.asNumber == 1)
             }
         }
 
@@ -702,9 +708,7 @@ class Tests extends FlatSpec {
     }
 
 
-    // test to make sure REMOVE subtracts from something already on a stack and
-    // pushes that new value to the stack (while leaving the other one
-    // intact)
+    // test to make sure REMOVE subtracts from something already on a stack 
     "Remove test 1" should "do a simple REMOVE in first mixing bowl" in {
         object RemoveTest1 extends ScalaChef {
             def run(): Unit = {
@@ -853,9 +857,7 @@ class Tests extends FlatSpec {
     // with a negative value
     // TODO 
 
-    // test to make sure COMBINE multiplies to something already on a stack and
-    // pushes that new value to the stack (while leaving the other one
-    // intact)
+    // test to make sure COMBINE multiplies to something already on a stack 
 
     // test to make sure you can COMBINE to all 5 bowls
 
@@ -866,9 +868,7 @@ class Tests extends FlatSpec {
     // test to make sure you can't COMBINE on a baking dish
 
 
-    // test to make sure add DIVIDE divides something already on a stack and
-    // pushes that new value to the stack (while leaving the other one
-    // intact)
+    // test to make sure add DIVIDE divides something already on a stack
 
     // test to make sure you can DIVIDE to all 5 bowls
 
@@ -1051,21 +1051,6 @@ class Tests extends FlatSpec {
 
 
 
-    // TAKE
-
-    // note you'll have to provide input to these tests when you run them
-
-    // general functionality (input int, it saves it to an ingredient)
-
-    // TAKE on an existing ingredient does not alter it's state (i.e. if you
-    // take on a potato which is I_DRY, it won't change to I_EITHER, which is
-    // the default for new ingredients
-
-    // can't TAKE negative values
-
-    // can't TAKE non numbers
-
-    // can't TAKE floats
 
 
 
