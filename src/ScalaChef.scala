@@ -915,7 +915,7 @@ class ScalaChef {
                 }
 
                 if (newRecipe) {
-                    if (currentRecipe != "") {
+                    if (!currentRecipe.equals("")) {
                         /* mark end of current recipe as the start of the 
                            new one */
                         functionStartEnd(currentRecipe).setEnd(currentLine)
@@ -1037,7 +1037,7 @@ class ScalaChef {
                     }
                     case O_VERBEND => {
                         /* edit the LoopInfo object*/
-                        if(loopStack.isEmpty() || loopStack.pop() != currentVerb){
+                        if(loopStack.isEmpty() || !loopStack.pop().equals(currentVerb)){
                             throw new RuntimeException("Malformed Loop")
                         }
                         
@@ -1452,7 +1452,7 @@ class ScalaChef {
                 }
             }
             case LoopEnd(verb: String) => {
-                if(loopStack.isEmpty() || loopStack.peekLast() != verb){
+                if(loopStack.isEmpty() || !loopStack.peek().equals(verb) ){
                     throw new RuntimeException("Malformed Loop")
                 }
                 
@@ -1569,7 +1569,7 @@ class ScalaChef {
         variableBindings = startingIngredients(mainRecipe)
 
         /* load main recipe's loop bindings */
-        if (currentRecipe != mainRecipe) {
+        if (!currentRecipe.equals( mainRecipe)) {
             // check needed as they'll only be in the table if another recipe was
             // declared
             loopBindings = allLoopBindings(mainRecipe)
