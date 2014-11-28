@@ -764,29 +764,434 @@ class Tests extends FlatSpec {
     // LOOPS: test cases to consider
   
     // Loop with initial ingredient already 0
+    "Loop test 1" should "jump to end of loop" in {
+        object LoopTest1 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 1") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                0 ('beans) END
+
+                END_INGREDIENTS
+
+                "COOK" THE ('beans) END
+                
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                "COOK" THE ('beans) UNTIL "COOKED" END
+
+                RUN
+                
+
+                assert(mixingStacks(FIRST).isEmpty())
+            }
+        }
+    }
     
-    // verbs ending with e vs verbs not ending with e
+    // verbs ending with ^e work
+    "Loop test 2" should "loop properly" in {
+        object LoopTest2 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 2") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                3 ('beans) END
+
+                END_INGREDIENTS
+
+                "COOK" THE ('beans) END
+                
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                "COOK" THE ('beans) UNTIL "COOKED" END
+
+                RUN
+                
+
+                assert(mixingStacks(FIRST).size() == 3)
+            }
+        }
+    }
     
-    // Loop endings with and without giving an ingredient
+    // verbs ending with e work
+    "Loop test 3" should "loop properly" in {
+        object LoopTest3 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 3") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                3 ('beans) END
+
+                END_INGREDIENTS
+
+                "BAKE" THE ('beans) END
+                
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                "BAKE" THE ('beans) UNTIL "BAKED" END
+
+                RUN
+                
+
+                assert(mixingStacks(FIRST).size() == 3)
+            }
+        }
+    }
+    
+    // Loop endings without giving an ingredient work
+    "Loop test 4" should "loop properly" in {
+        object LoopTest4 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 4") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                3 ('beans) END
+                
+                0 ('onions)
+
+                END_INGREDIENTS
+
+                "COOK" THE ('beans) END
+                
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+                
+                PUT ('onions) INTO FIRST MIXING_BOWL END
+                
+                FOLD ('beans) INTO FIRST MIXING_BOWL END
+
+                "COOK" UNTIL "COOKED" END
+
+                RUN
+                
+
+                assert(mixingStacks(FIRST).size() == 1)
+                assert(variableBindings('potatoes).number == 1)
+            }
+        }
+    }
+    
+    // Loop endings with different ingredient work
+    "Loop test 5" should "loop properly" in {
+        object LoopTest5 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 5") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                3 ('beans) END
+                
+                0 ('onions)
+
+                END_INGREDIENTS
+
+                "COOK" THE ('beans) END
+                
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+                
+                PUT ('onions) INTO FIRST MIXING_BOWL END
+                
+                FOLD ('beans) INTO FIRST MIXING_BOWL END
+
+                "COOK" THE ('potatoes) UNTIL "COOKED" END
+
+                RUN
+                
+                assert(mixingStacks(FIRST).size() == 1)
+                assert(variableBindings('potatoes).number == 0)
+            }
+        }
+    }
     
     // loops without ending phrase throw an exception
+    "Loop test 6" should "throw an exception" in {
+        object LoopTest6 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 6") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                END_INGREDIENTS
+                
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+                
+                intercept[RuntimeException] {
+                    "COOK" THE ('beans) UNTIL "COOKED" END
+                }
+            }
+        }
+    }
+    
     
     // loops without starting phrase throw an exception
+    "Loop test 7" should "throw an exception" in {
+        object LoopTest7 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 7") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                END_INGREDIENTS
+
+                "COOK" THE ('beans) END
+                
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+                
+                intercept[RuntimeException] {
+                    SERVES (1) END
+                }
+            }
+        }
+    }
     
     // loops with messed up scopes throw an exception 
     // cook 1 ... bake 2 ... do until cooked ... do until baked
+    "Loop test 8" should "throw an exception" in {
+        object LoopTest8 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 8") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                "BAKE" THE ('beans) END
+                
+                "COOK" THE ('potatoes) END 
+
+                intercept[RuntimeException] {
+                     "BAKE" THE ('beans) UNTIL "BAKED" END
+                }
+            }
+        }
+    }
     
     // loops with disagreeing verbs throw an exception 
-    //(cook potatoes ... cook potatoes until burned)
+    //(cook potatoes ... cook potatoes until baked)
+    "Loop test 9" should "throw an exception" in {
+        object LoopTest9 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 9") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                "COOK" THE ('potatoes) END 
+
+                intercept[RuntimeException] {
+                     "COOK" THE ('beans) UNTIL "BAKED" END
+                }
+            }
+        }
+    }
+    
     //(cook potatoes ... cook potatoes until cook)
+    "Loop test 10" should "throw an exception" in {
+        object LoopTest10 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 10") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                "COOK" THE ('potatoes) END 
+
+                intercept[RuntimeException] {
+                     "COOK" THE ('beans) UNTIL "COOK" END
+                }
+            }
+        }
+    }
     
     // can't define loops with same verb
+    "Loop test 11" should "throw an exception" in {
+        object LoopTest11 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 11") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                "COOK" THE ('potatoes) END 
+                
+                "COOK" THE ('potatoes) UNTIL "COOKED" END
+
+                intercept[RuntimeException] {
+                     "COOK" THE ('beans) END
+                }
+            }
+        }
+    }
+    
+    // nested loops work
+    "Loop test 12" should "loop properly" in {
+        object LoopTest12 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 12") END
+
+
+                START_INGREDIENTS
+
+                5 ('potatoes) END
+                
+                2 ('beans) END
+                
+
+                END_INGREDIENTS
+
+                "COOK" THE ('beans) END
+                
+                "BAKE" THE ('potatoes) END
+                
+                PUT ('beans) INTO FIRST MIXING_BOWL END
+                
+                "BAKE" THE ('potatoes) UNTIL "BAKED" END
+
+                "COOK" THE ('beans) UNTIL "COOKED" END
+
+                RUN
+                
+
+                assert(mixingStacks(FIRST).size() == 10)
+            }
+        }
+    }
     
     // breaking works
+    "Loop test 13" should "break out of the loop" in {
+        object LoopTest13 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 13") END
+
+
+                START_INGREDIENTS
+
+                5 ('potatoes) END
+                
+                2 ('beans) END
+                
+
+                END_INGREDIENTS
+                
+                "BAKE" THE ('potatoes) END
+                
+                PUT ('beans) INTO FIRST MIXING_BOWL END
+                
+                SET ASIDE END
+                
+                "BAKE" THE ('potatoes) UNTIL "BAKED" END
+
+
+                RUN
+                
+
+                assert(mixingStacks(FIRST).size() == 1)
+                assert(mixingStacks(FIRST).peek().number == 2)
+            }
+        }
+    }
     
     // breaking outside a loop throws an exception
+    "Loop test 14" should "throw an exception" in {
+        object LoopTest14 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 14") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+                
+                1 ('beans) END
+
+                "COOK" THE ('potatoes) END 
+                
+                "COOK" THE ('potatoes) UNTIL "COOKED" END
+
+                intercept[RuntimeException] {
+                     SET ASIDE END
+                }
+            }
+        }
+    }
+    
     
     // breaking in an inner loop does not break the outer loop
-    
-    // empty loops work
+    "Loop test 15" should "not break outer loop" in {
+        object LoopTest15 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Loop test 15") END
+
+
+                START_INGREDIENTS
+
+                5 ('potatoes) END
+                
+                3 ('beans) END
+                
+
+                END_INGREDIENTS
+
+                "COOK" THE ('beans) END
+                
+                "BAKE" THE ('potatoes) END
+                
+                PUT ('beans) INTO FIRST MIXING_BOWL END
+                
+                SET ASIDE END
+                
+                "BAKE" THE ('potatoes) UNTIL "BAKED" END
+
+                "COOK" THE ('beans) UNTIL "COOKED" END
+
+                RUN
+                
+
+                assert(mixingStacks(FIRST).size() == 5)
+            }
+        }
+    }
 }
