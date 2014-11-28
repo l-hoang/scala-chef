@@ -1094,7 +1094,11 @@ class ScalaChef {
                 evaluate(line+1)
             }
             case PushStack(stack: String , ingredient: Symbol) => {
-                mixingStacks(stack).push(variableBindings(ingredient))
+                /* make a copy of the ingredient */
+                val ingredientToCopy = variableBindings(ingredient)
+                val ingredientCopy = new Ingredient(ingredientToCopy.number,
+                                                    ingredientToCopy.state)
+                mixingStacks(stack).push(ingredientCopy)
                 evaluate(line+1)
             }
             case PopStack(stack:String, ingredient:Symbol) => {
