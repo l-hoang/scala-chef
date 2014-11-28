@@ -189,6 +189,7 @@ class Tests extends FlatSpec {
 
 
     // TAKE
+    // TODO
 
     // test to make sure PUT puts stuff in a stack
     "Put test 1" should "do a simple PUT into first mixing bowl" in {
@@ -265,28 +266,28 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure PUT doesn't take a non-existent ingredient
-    "Put test 3" should "make sure PUT doesn't take a non-existent ingredient" in {
-        object PutTest3 extends ScalaChef {
-            def run(): Unit = { 
-                TITLE ("Put test 3") END
+    // TODO
+    // "Put test 3" should "make sure PUT doesn't take a non-existent ingredient" in {
+    //     object PutTest3 extends ScalaChef {
+    //         def run(): Unit = { 
+    //             TITLE ("Put test 3") END
 
 
-                START_INGREDIENTS
+    //             START_INGREDIENTS
 
-                1 ('potatoes) END
+    //             1 ('potatoes) END
 
-                END_INGREDIENTS
+    //             END_INGREDIENTS
 
 
-                intercept[RuntimeException] {
-                    PUT ('cakes) INTO FIRST MIXING_BOWL END
-                }
-            }
-        }
+    //             intercept[RuntimeException] {
+    //                 PUT ('cakes) INTO FIRST MIXING_BOWL END
+    //             }
+    //         }
+    //     }
 
-        printf("Incomplete test\n")
-        //PutTest3.run()
-    }
+    //     PutTest3.run()
+    // }
 
     // test to make sure you can't PUT into a baking dish
     "Put test 4" should "make sureyou can't PUT into a baking dish" in {
@@ -527,6 +528,7 @@ class Tests extends FlatSpec {
     // (i.e. you fold and get a liquid ingredient, but the ingredient you assign
     // to is a dry ingredient; according to the spec, only the value should be
     // copied)
+    // TODO
 
 
     // test to make sure ADD adds to something already on a stack and
@@ -628,6 +630,7 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure ADD doesn't take a non-existent ingredient
+    // TODO
     // "Add test 3" should "make sure ADD doesn't take a non-existent ingredient" in {
     //     object AddTest3 extends ScalaChef {
     //         def run(): Unit = {       
@@ -676,7 +679,7 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure you can't ADD on a baking dish
-    "Add test 5" should "make sure you can't ADD on a baking dish" in {
+    "Add test 5" should "make sure you can't ADD to a baking dish" in {
         object AddTest5 extends ScalaChef {
             def run(): Unit = {       
                 TITLE ("Add test 5") END
@@ -798,10 +801,53 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure REMOVE doesn't take a non-existent ingredient
+    // TODO
 
     // test to make sure REMOVE fails if nothing is in the specified stack
+    "Remove test 4" should "make sure REMOVE fails if nothing is in the specified stack" in {
+        object RemoveTest4 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Remove test 4") END
+        
+
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+
+                intercept[RuntimeException] {
+                    REMOVE ('potatoes) FROM FIRST MIXING_BOWL END
+                }
+            }
+        }
+
+        RemoveTest4.run()
+    }
 
     // test to make sure you can't REMOVE on a baking dish
+    "Remove test 5" should "make sure you can't REMOVE from a baking dish" in {
+        object RemoveTest5 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Remove test 5") END
+        
+
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+
+                intercept[RuntimeException] {
+                    REMOVE ('potatoes) FROM FIRST BAKING_DISH END
+                }
+            }
+        }
+
+        RemoveTest5.run()
+    }
 
     // test to make sure you can't do a remove that will result in an ingredient
     // with a negative value
