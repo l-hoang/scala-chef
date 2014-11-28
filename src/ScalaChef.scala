@@ -774,9 +774,10 @@ class ScalaChef {
    
     /* Start parsing a line that starts with REFRIGERATE */
     object REFRIGERATE {
-        def apply(e:End) = {
+        def END() = {
             currentOpType = O_REFR
-            e.finish
+            intArg = 0
+            ScalaChef.this.END.finish
         }
         
         def FOR(num: Int): Hours = {
