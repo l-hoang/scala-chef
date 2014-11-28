@@ -324,22 +324,18 @@ class Tests extends FlatSpec {
 
                 2 ('cakes) END
 
-                3 ('fruit) END
-
                 END_INGREDIENTS
 
 
                 PUT ('potatoes) INTO FIRST MIXING_BOWL END
 
-                PUT ('cakes) INTO FIRST MIXING_BOWL END
-
-                FOLD ('fruit) INTO FIRST MIXING_BOWL END
+                FOLD ('cakes) INTO FIRST MIXING_BOWL END
 
 
                 RUN
 
 
-                assert(mixingStacks(FIRST).peek.asNumber == 1)
+                assert(mixingStacks(FIRST).isEmpty)
             }
         }
 
@@ -383,12 +379,148 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure FOLD doesn't take a non-existent ingredient
+    "Fold test 3" should "make sure FOLD doesnt take a non-existent ingredient" in {
+        object FoldTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Fold test 3") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                3 ('fruit) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                intercept[RuntimeException] {
+                    FOLD ('vegetable) INTO FIRST MIXING_BOWL END
+                }
+            }
+        }
+
+        FoldTest3.run()
+    }
+
 
     // test to make sure FOLD fails if the mixing bowl specified is empty
+    "Fold test 4" should "make sure FOLD fails if the specified mixing bowl is empty" in {
+        object FoldTest4 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Fold test 4") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                intercept[RuntimeException] {
+                    FOLD ('potatoes) INTO FIRST MIXING_BOWL END
+                }
+            }
+        }
+
+        FoldTest4.run()
+    }
 
     // test to make sure FOLD works on all 5 mixing bowls
+    "Fold test 5" should "make sure FOLD works on all 5 mixing bowls" in {
+        object FoldTest5 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Fold test 5") END
+
+
+                START_INGREDIENTS
+
+                1 ('flour) END
+
+                2 ('blueberries) END
+
+                3 ('strawberries) END
+
+                4 ('bananas) END
+
+                5 ('apples) END
+
+                6 ('pears) END
+
+                7 ('pie) END
+
+                END_INGREDIENTS
+
+
+                PUT ('flour) INTO FIRST MIXING_BOWL END
+
+                PUT ('flour) INTO SECOND MIXING_BOWL END
+
+                PUT ('flour) INTO THIRD MIXING_BOWL END
+
+                PUT ('flour) INTO FOURTH MIXING_BOWL END
+
+                PUT ('flour) INTO FIFTH MIXING_BOWL END
+
+                FOLD ('blueberries) INTO FIRST MIXING_BOWL END
+
+                FOLD ('strawberries) INTO SECOND MIXING_BOWL END
+
+                FOLD ('bananas) INTO THIRD MIXING_BOWL END
+
+                FOLD ('apples) INTO FOURTH MIXING_BOWL END
+
+                FOLD ('pears) INTO FIFTH MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).isEmpty)
+                assert(mixingStacks(SECOND).isEmpty)
+                assert(mixingStacks(THIRD).isEmpty)
+                assert(mixingStacks(FOURTH).isEmpty)
+                assert(mixingStacks(FIFTH).isEmpty)
+                assert(variableBindings('blueberries).asNumber == 1)
+                assert(variableBindings('strawberries).asNumber == 1)
+                assert(variableBindings('bananas).asNumber == 1)
+                assert(variableBindings('apples).asNumber == 1)
+                assert(variableBindings('pears).asNumber == 1)
+            }
+        }
+
+        FoldTest5.run()
+    }
 
     // test to make sure you can't FOLD on a baking dish
+    "Fold test 6" should "make sure you can't FOLD into a baking dish" in {
+        object FoldTest6 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Fold test 6") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                intercept[RuntimeException] {
+                    FOLD ('potatoes) INTO FIRST BAKING_DISH END
+                }
+            }
+        }
+
+        FoldTest6.run()
+    }
 
     // test to make sure FOLD DOESN'T change the state of the ingredient that
     // you specify to the state of the ingredient that you pop on the stack
@@ -496,10 +628,35 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure ADD doesn't take a non-existent ingredient
-    "Add test 3" should "make sure ADD doesn't take a non-existent ingredient" in {
-        object AddTest3 extends ScalaChef {
+    // "Add test 3" should "make sure ADD doesn't take a non-existent ingredient" in {
+    //     object AddTest3 extends ScalaChef {
+    //         def run(): Unit = {       
+    //             TITLE ("Add test 3") END
+        
+
+    //             START_INGREDIENTS
+        
+    //             2 ('potatoes) END
+        
+    //             END_INGREDIENTS
+
+
+    //             PUT ('potatoes) INTO FIRST MIXING_BOWL END
+        
+    //             intercept[RuntimeException] {    
+    //                 ADD ('cakes) TO FIRST MIXING_BOWL END
+    //             }
+    //         }
+    //     }
+        
+    //     AddTest3.run()
+    // }
+
+    // test to make sure ADD fails if nothing is in the specified stack
+    "Add test 4" should "make sure ADD fails if nothing is in the specified stack" in {
+        object AddTest4 extends ScalaChef {
             def run(): Unit = {       
-                TITLE ("Add test 3") END
+                TITLE ("Add test 4") END
         
 
                 START_INGREDIENTS
@@ -509,21 +666,37 @@ class Tests extends FlatSpec {
                 END_INGREDIENTS
 
 
-                PUT ('potatoes) INTO FIRST MIXING_BOWL END
-        
-                intercept[RuntimeException] {    
-                    ADD ('cakes) TO FIRST MIXING_BOWL END
+                intercept[RuntimeException] {
+                    ADD ('potatoes) TO FIRST MIXING_BOWL END
                 }
             }
         }
-        
-        printf("Incomplete Test")
-        //AddTest3.run()
+
+        AddTest4.run()
     }
 
-    // test to make sure ADD fails if nothing is in the specified stack
-
     // test to make sure you can't ADD on a baking dish
+    "Add test 5" should "make sure you can't ADD on a baking dish" in {
+        object AddTest5 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Add test 5") END
+        
+
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+                
+                intercept[RuntimeException] {
+                    ADD ('potatoes) TO FIRST BAKING_DISH END
+                }
+            }
+        }
+
+        AddTest5.run()
+    }
 
 
     // test to make sure REMOVE subtracts from something already on a stack and
