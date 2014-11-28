@@ -1001,7 +1001,7 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure COMBINE doesn't take a non-existent ingredient
-    "COMBINE test 3" should "make sure COMBINE doesn't take a non-existent ingredient" in {
+    "Combine test 3" should "make sure COMBINE doesn't take a non-existent ingredient" in {
         object CombineTest3 extends ScalaChef {
             def run(): Unit = {       
                 TITLE ("Combine test 3") END
@@ -1079,15 +1079,177 @@ class Tests extends FlatSpec {
 
 
     // test to make sure add DIVIDE divides something already on a stack
+    "Divide test 1" should "do a simple DIVIDE in first mixing bowl" in {
+        object DivideTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Divide test 1") END
+
+
+                START_INGREDIENTS
+
+                2 ('chocolate) END
+
+                6 ('milk) END
+
+                END_INGREDIENTS
+
+
+                PUT ('milk) INTO FIRST MIXING_BOWL END
+
+                DIVIDE ('chocolate) INTO FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 3)
+                // assert(mixingStacks(FIRST).peek.asNumber == 3)
+            }
+        }
+
+        DivideTest1.run()
+    } 
 
     // test to make sure you can DIVIDE to all 5 bowls
+    "Divide test 2" should "DIVIDE into all mixing bowls" in {
+        object DivideTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Divide test 2") END
+
+
+                START_INGREDIENTS
+
+                20 ('doughnuts) END
+
+                10 ('glaze) END
+
+                5 ('chocolate) END
+
+                4 ('creme) END
+
+                2 ('maple) END
+
+                1 ('sugar) END
+
+                END_INGREDIENTS
+
+
+                PUT ('doughnuts) INTO FIRST MIXING_BOWL END
+
+                PUT ('doughnuts) INTO SECOND MIXING_BOWL END
+
+                PUT ('doughnuts) INTO THIRD MIXING_BOWL END
+
+                PUT ('doughnuts) INTO FOURTH MIXING_BOWL END
+
+                PUT ('doughnuts) INTO FIFTH MIXING_BOWL END
+
+                DIVIDE ('glaze) INTO FIRST MIXING_BOWL END
+
+                DIVIDE ('chocolate) INTO SECOND MIXING_BOWL END
+
+                DIVIDE ('creme) INTO THIRD MIXING_BOWL END
+
+                DIVIDE ('maple) INTO FOURTH MIXING_BOWL END
+
+                DIVIDE ('sugar) INTO FIFTH MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 2)
+                // assert(mixingStacks(FIRST).peek.asNumber == 5)
+                assert(mixingStacks(SECOND).pop.asNumber == 4)
+                // assert(mixingStacks(SECOND).peek.asNumber == 5)
+                assert(mixingStacks(THIRD).pop.asNumber == 5)
+                // assert(mixingStacks(THIRD).peek.asNumber == 5)
+                assert(mixingStacks(FOURTH).pop.asNumber == 10)
+                // assert(mixingStacks(FOURTH).peek.asNumber == 5)
+                assert(mixingStacks(FIFTH).pop.asNumber == 20)
+                // assert(mixingStacks(FIFTH).peek.asNumber == 5)
+            }
+        }
+
+        DivideTest2.run()
+    }
 
     // test to make sure DIVIDE doesn't take a non-existent ingredient
+    "Divide test 3" should "make sure DIVIDE doesn't take a non-existent ingredient" in {
+        object DivideTest3 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Divide test 3") END
+        
+
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                DIVIDE ('cakes) INTO FIRST MIXING_BOWL END
+        
+
+                intercept[RuntimeException] {
+                    RUN   
+                }
+            }
+        }
+        
+        DivideTest3.run()
+    }
 
     // test to make sure DIVIDE fails if nothing is in the specified stack
+    "Divide test 4" should "make sure DIVIDE fails if nothing is in the specified stack" in {
+        object DivideTest4 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Divide test 4") END
+        
+
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+
+                DIVIDE ('potatoes) INTO FIRST MIXING_BOWL END
+
+
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        DivideTest4.run()
+    }
 
     // test to make sure you can't DIVIDE on a baking dish
+    "Divide test 5" should "make sure you can't DIVIDE from a baking dish" in {
+        object DivideTest5 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Divide test 5") END
+        
 
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+
+                intercept[RuntimeException] {
+                    DIVIDE ('potatoes) INTO FIRST BAKING_DISH END
+                }
+            }
+        }
+
+        DivideTest5.run()
+    }
 
 
     // test to make sure ADD DRY INGREDIENTS adds all of the dry ingredients

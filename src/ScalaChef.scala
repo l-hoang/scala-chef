@@ -1226,8 +1226,8 @@ class ScalaChef {
                 evaluate(line+1)
             }
             case DivideStack(stack: String , ingredient: Symbol) => {
-                val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber / 
-                                                    mixingStacks(stack).pop.asNumber),
+                val ingredientToPush = new Ingredient((mixingStacks(stack).pop.asNumber / 
+                                                    variableBindings(ingredient).asNumber),
                                                     variableBindings(ingredient).state)
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
