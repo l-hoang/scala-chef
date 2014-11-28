@@ -753,8 +753,6 @@ class Tests extends FlatSpec {
 
     // make sure you can't call the main recipe (i.e. the first one)
 
-    // make sure you can't refer to another recipe's ingredients
-
 
 
 
@@ -790,6 +788,8 @@ class Tests extends FlatSpec {
                 assert(mixingStacks(FIRST).isEmpty())
             }
         }
+        
+        LoopTest1.run()
     }
     
     // verbs ending with ^e work
@@ -819,6 +819,7 @@ class Tests extends FlatSpec {
                 assert(mixingStacks(FIRST).size() == 3)
             }
         }
+        LoopTest2.run()
     }
     
     // verbs ending with e work
@@ -848,6 +849,7 @@ class Tests extends FlatSpec {
                 assert(mixingStacks(FIRST).size() == 3)
             }
         }
+        LoopTest3.run()
     }
     
     // Loop endings without giving an ingredient work
@@ -863,7 +865,7 @@ class Tests extends FlatSpec {
                 
                 3 ('beans) END
                 
-                0 ('onions)
+                0 ('onions) END
 
                 END_INGREDIENTS
 
@@ -884,6 +886,8 @@ class Tests extends FlatSpec {
                 assert(variableBindings('potatoes).number == 1)
             }
         }
+        
+        LoopTest4.run()
     }
     
     // Loop endings with different ingredient work
@@ -899,7 +903,7 @@ class Tests extends FlatSpec {
                 
                 3 ('beans) END
                 
-                0 ('onions)
+                0 ('onions) END
 
                 END_INGREDIENTS
 
@@ -919,6 +923,8 @@ class Tests extends FlatSpec {
                 assert(variableBindings('potatoes).number == 0)
             }
         }
+        
+        LoopTest5.run()
     }
     
     // loops without ending phrase throw an exception
@@ -942,7 +948,8 @@ class Tests extends FlatSpec {
                     "COOK" THE ('beans) UNTIL "COOKED" END
                 }
             }
-        }
+        }     
+        LoopTest6.run()
     }
     
     
@@ -970,6 +977,7 @@ class Tests extends FlatSpec {
                 }
             }
         }
+        LoopTest7.run()
     }
     
     // loops with messed up scopes throw an exception 
@@ -985,6 +993,8 @@ class Tests extends FlatSpec {
                 1 ('potatoes) END
                 
                 1 ('beans) END
+                
+                END_INGREDIENTS
 
                 "BAKE" THE ('beans) END
                 
@@ -995,6 +1005,7 @@ class Tests extends FlatSpec {
                 }
             }
         }
+        LoopTest8.run()
     }
     
     // loops with disagreeing verbs throw an exception 
@@ -1010,6 +1021,8 @@ class Tests extends FlatSpec {
                 1 ('potatoes) END
                 
                 1 ('beans) END
+                
+                END_INGREDIENTS
 
                 "COOK" THE ('potatoes) END 
 
@@ -1018,6 +1031,7 @@ class Tests extends FlatSpec {
                 }
             }
         }
+        LoopTest9.run()
     }
     
     //(cook potatoes ... cook potatoes until cook)
@@ -1032,6 +1046,8 @@ class Tests extends FlatSpec {
                 1 ('potatoes) END
                 
                 1 ('beans) END
+                
+                END_INGREDIENTS
 
                 "COOK" THE ('potatoes) END 
 
@@ -1040,6 +1056,7 @@ class Tests extends FlatSpec {
                 }
             }
         }
+        LoopTest10.run()
     }
     
     // can't define loops with same verb
@@ -1054,6 +1071,8 @@ class Tests extends FlatSpec {
                 1 ('potatoes) END
                 
                 1 ('beans) END
+                
+                END_INGREDIENTS
 
                 "COOK" THE ('potatoes) END 
                 
@@ -1064,6 +1083,7 @@ class Tests extends FlatSpec {
                 }
             }
         }
+        LoopTest11.run()
     }
     
     // nested loops work
@@ -1079,6 +1099,7 @@ class Tests extends FlatSpec {
                 
                 2 ('beans) END
                 
+                5 ('onions) END
 
                 END_INGREDIENTS
 
@@ -1089,6 +1110,10 @@ class Tests extends FlatSpec {
                 PUT ('beans) INTO FIRST MIXING_BOWL END
                 
                 "BAKE" THE ('potatoes) UNTIL "BAKED" END
+                
+                PUT ('onions) INTO FIRST MIXING_BOWL END
+                
+                FOLD ('potatoes) INTO FIRST MIXING_BOWL END
 
                 "COOK" THE ('beans) UNTIL "COOKED" END
 
@@ -1098,6 +1123,7 @@ class Tests extends FlatSpec {
                 assert(mixingStacks(FIRST).size() == 10)
             }
         }
+        LoopTest12.run()
     }
     
     // breaking works
@@ -1113,7 +1139,6 @@ class Tests extends FlatSpec {
                 
                 2 ('beans) END
                 
-
                 END_INGREDIENTS
                 
                 "BAKE" THE ('potatoes) END
@@ -1132,6 +1157,7 @@ class Tests extends FlatSpec {
                 assert(mixingStacks(FIRST).peek().number == 2)
             }
         }
+        LoopTest13.run()
     }
     
     // breaking outside a loop throws an exception
@@ -1146,16 +1172,21 @@ class Tests extends FlatSpec {
                 1 ('potatoes) END
                 
                 1 ('beans) END
+                
+                END_INGREDIENTS
 
                 "COOK" THE ('potatoes) END 
                 
                 "COOK" THE ('potatoes) UNTIL "COOKED" END
+                
+                SET ASIDE END
 
                 intercept[RuntimeException] {
-                     SET ASIDE END
+                    RUN
                 }
             }
         }
+        LoopTest14.run()
     }
     
     
@@ -1171,7 +1202,6 @@ class Tests extends FlatSpec {
                 5 ('potatoes) END
                 
                 3 ('beans) END
-                
 
                 END_INGREDIENTS
 
@@ -1190,8 +1220,9 @@ class Tests extends FlatSpec {
                 RUN
                 
 
-                assert(mixingStacks(FIRST).size() == 5)
+                assert(mixingStacks(FIRST).size() == 3)
             }
         }
+        LoopTest15.run()
     }
 }
