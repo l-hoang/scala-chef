@@ -270,6 +270,8 @@ class ScalaChef {
                                                          ArrayDeque[Ingredient]]]
     /* stack that stores ingredient bindings */
     val ingredientStack = new ArrayDeque[mutable.HashMap[Symbol, Ingredient]]
+    /* stack that stores loop binding info */
+    val loopBindingsStack = new ArrayDeque[mutable.HashMap[String, LoopInfo]]
 
 
     /* This class stores loop information */
@@ -289,7 +291,11 @@ class ScalaChef {
     var loopStack = new ArrayDeque[String]
     
     /* This structure stores the program's loop info*/
-    val loopBindings = new mutable.HashMap[String, LoopInfo]
+    var loopBindings = new mutable.HashMap[String, LoopInfo]
+
+    /* This structure holds the loop info for a particular recipe */
+    val allLoopBindings = new mutable.HashMap[String,
+                                    mutable.HashMap[String, LoopInfo]]
     
     /* The current verb */
     var currentVerb = ""
@@ -911,6 +917,14 @@ class ScalaChef {
                         /* mark end of current recipe as the start of the 
                            new one */
                         functionStartEnd(currentRecipe).setEnd(currentLine)
+
+                        /* clear the ingredient bindings */
+                        variableBindings = new mutable.HashMap[Symbol, Ingredient]
+
+                        /* save the loop info of this recipe before switch */
+                        allLoopBindings(currentRecipe) = loopBindings
+                        /* clear loop info of old recipe by creating new struct */
+                        loopBindings = new mutable.HashMap[String, LoopInfo]
                     }
 
                     /* create an entry for new recipe in the function info table */
@@ -918,13 +932,6 @@ class ScalaChef {
                     functionStartEnd(stringArg).setStart(currentLine)
                     currentRecipe = stringArg
                     newRecipe = false
-
-                    /* save the loop info of this recipe */
-
-                    /* clear the ingredient bindings */
-                    variableBindings = new mutable.HashMap[Symbol, Ingredient]
-
-                    /* clear loop info of this recipe */
                 }
 
                 stringArg = ""
@@ -934,7 +941,7 @@ class ScalaChef {
             } else if (currentMode == M_INGREDIENT) {
                 if (intArg < 0) {
                     throw new RuntimeException("negative ingredient values " +
-                                               "not allowed)
+                                               "not allowed")
                 }
                 /* save an ingredient var into the bindings */
                 val ingredientToAdd = new Ingredient(intArg, ingredientType)
@@ -1094,6 +1101,9 @@ class ScalaChef {
 
             /* restore var bindings */
             variableBindings = ingredientStack.pop
+
+            /* restore loop bindings */
+            loopBindings = loopBindingsStack.pop
 
             /* jump back */
             evaluate(jumpBack)
@@ -1298,8 +1308,12 @@ class ScalaChef {
                 }
 
                 if (!startingIngredients.contains(title)) {
-                     throw new RuntimeException("recipe has no default ingre.")
+                    throw new RuntimeException("recipe has no default ingre.")
                 }                  
+
+                if (!allLoopBindings.contains(title)) {
+                    throw new RuntimeException("recipe has no entry in loop bindings")
+                }
 
                 /* push stuff to data structures for function return later */
                 returnLineStack.push(line + 1)
@@ -1308,6 +1322,7 @@ class ScalaChef {
                 mixingBowlStack.push(mixingStacks)
                 bakingDishStack.push(bakingStacks)
                 ingredientStack.push(variableBindings)
+                loopBindingsStack.push(loopBindings)
 
                 /* make a copy of all the ingredients in all of the mixing
                  * and baking stacks for the function to use */
@@ -1372,6 +1387,9 @@ class ScalaChef {
 
                 /* create a new loop stack for the function */
                 loopStack = new ArrayDeque[String]
+
+                /* load this function's loop bindings */
+                loopBindings = allLoopBindings(title)
 
                 /* jump to the line that the function starts at */
                 evaluate(functionInfo.startLine)
@@ -1467,6 +1485,14 @@ class ScalaChef {
             
         /* load the main recipe's var bindings */
         variableBindings = startingIngredients(mainRecipe)
+
+        /* load main recipe's loop bindings */
+        if (currentRecipe != mainRecipe) {
+            // check needed as they'll only be in the table if another recipe was
+            // declared
+            loopBindings = allLoopBindings(mainRecipe)
+        }
+
         evaluate(1)
     }
 }
