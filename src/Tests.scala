@@ -1385,14 +1385,172 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure LIQUEFY CONTENTS makes everything in the bowl a liquid
+    "Liquefy test 4" should "make sure LIQUEFY CONTENTS makes everything in the bowl a liquid" in {
+        object LiquefyTest4 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Liquefy test 4") END
+
+
+                START_INGREDIENTS
+
+                1 G ('apples) END
+
+                5 G ('bananas) END
+
+                6 KG ('pears) END
+
+                END_INGREDIENTS
+
+
+                PUT ('apples) INTO FIRST MIXING_BOWL END
+
+                PUT ('bananas) INTO FIRST MIXING_BOWL END
+
+                PUT ('pears) INTO FIRST MIXING_BOWL END
+
+                LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).pop.state == I_LIQUID)
+                assert(mixingStacks(FIRST).pop.state == I_LIQUID)
+                assert(mixingStacks(FIRST).pop.state == I_LIQUID)
+            }
+        }
+
+        LiquefyTest4.run()
+    }
     
     // test to make sure LIQUIFY CONTENTS DOESN'T affect the original ingredients
     // but only the ingredients in the bowl (i.e. if 'potatoes are in a bowl,
     // and you liquify the bowl, the original potatoes don't get liquified
+    "Liquefy test 5" should "make sure LIQUEFY CONTENTS doesn't affect original ingredients" in {
+        object LiquefyTest5 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Liquefy test 5") END
+
+
+                START_INGREDIENTS
+
+                1 G ('apples) END
+
+                5 G ('bananas) END
+
+                6 KG ('pears) END
+
+                END_INGREDIENTS
+
+
+                PUT ('apples) INTO FIRST MIXING_BOWL END
+
+                PUT ('bananas) INTO FIRST MIXING_BOWL END
+
+                PUT ('pears) INTO FIRST MIXING_BOWL END
+
+                LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(variableBindings('apples).state == I_DRY)
+                assert(variableBindings('bananas).state == I_DRY)
+                assert(variableBindings('pears).state == I_DRY)
+            }
+        }
+
+        LiquefyTest5.run()
+    }
 
     // test LIQUEFY CONTENTS on all 5 bowls
+    "Liquefy test 6" should "make sure LIQUEFY CONTENTS doesn't affect original ingredients" in {
+        object LiquefyTest6 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Liquefy test 6") END
+
+
+                START_INGREDIENTS
+
+                1 G ('apples) END
+
+                5 G ('bananas) END
+
+                END_INGREDIENTS
+
+
+                PUT ('apples) INTO FIRST MIXING_BOWL END
+
+                PUT ('bananas) INTO FIRST MIXING_BOWL END
+
+                PUT ('apples) INTO SECOND MIXING_BOWL END
+
+                PUT ('bananas) INTO SECOND MIXING_BOWL END
+
+                PUT ('apples) INTO THIRD MIXING_BOWL END
+
+                PUT ('bananas) INTO THIRD MIXING_BOWL END
+
+                PUT ('apples) INTO FOURTH MIXING_BOWL END
+
+                PUT ('bananas) INTO FOURTH MIXING_BOWL END
+
+                PUT ('apples) INTO FIFTH MIXING_BOWL END
+
+                PUT ('bananas) INTO FIFTH MIXING_BOWL END
+
+
+                LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
+
+                LIQUEFY CONTENTS OF THE SECOND MIXING_BOWL END
+
+                LIQUEFY CONTENTS OF THE THIRD MIXING_BOWL END
+
+                LIQUEFY CONTENTS OF THE FOURTH MIXING_BOWL END
+
+                LIQUEFY CONTENTS OF THE FIFTH MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).pop.state == I_LIQUID)
+                assert(mixingStacks(FIRST).pop.state == I_LIQUID)
+                assert(mixingStacks(SECOND).pop.state == I_LIQUID)
+                assert(mixingStacks(SECOND).pop.state == I_LIQUID)
+                assert(mixingStacks(THIRD).pop.state == I_LIQUID)
+                assert(mixingStacks(THIRD).pop.state == I_LIQUID)
+                assert(mixingStacks(FOURTH).pop.state == I_LIQUID)
+                assert(mixingStacks(FOURTH).pop.state == I_LIQUID)
+                assert(mixingStacks(FIFTH).pop.state == I_LIQUID)
+                assert(mixingStacks(FIFTH).pop.state == I_LIQUID)
+            }
+        }
+
+        LiquefyTest6.run()
+    }
     
     // test to make sure LIQUEFY CONTENTS fails on a baking dish
+    "Liquefy test 7" should "make sure LIQUEFY CONTENTS fails on a baking dish" in {
+        object LiquefyTest7 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Liquefy test 7") END
+
+                START_INGREDIENTS
+
+                1 G ('potatoes) END
+
+                END_INGREDIENTS
+
+                intercept[RuntimeException] {
+                    LIQUEFY CONTENTS OF THE FIRST BAKING_DISH END
+                }
+            }
+        }
+
+        LiquefyTest7.run()
+    }
 
 
     // STIR NTH MIXING BOWL
