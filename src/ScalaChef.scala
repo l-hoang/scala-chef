@@ -1125,6 +1125,18 @@ class ScalaChef {
             case Read(ingredient: Symbol) => {
                 val in = new Scanner(System.in)
                 val ingredientToAdd = new Ingredient(in.nextInt(), I_EITHER)
+
+                if (ingredientToAdd.number < 0) {
+                    throw new RuntimeException("ingredients can't be <0")
+                }
+
+                /* if the ingredient exists already, then take the existing
+                 * ingredient's interpretation */
+                if (variableBindings.contains(ingredient)) {
+                    ingredientToAdd.changeInterpretation(variableBindings(
+                                                ingredient).state)
+                }
+
                 variableBindings(ingredient) = ingredientToAdd
                 in.close()
                 evaluate(line+1)
