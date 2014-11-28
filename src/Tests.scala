@@ -983,7 +983,22 @@ class Tests extends FlatSpec {
 
     // REFRIGERATE
 
+    // general functionality
+
+    // test to make sure it passes back the called function's first
+    // mixing bowl if it's called in a sub-recipe
+
+    // test to make sure the default version works (REFRIGERATE END)
+
+    // test to make sure REFRIGERATE FOR 0-5 HOURS works for all of the
+    // numbers specified here (even 0)
+
+    // test to make sure it prints baking stacks even if it's not the
+    // main program
     
+
+
+    // SERVES
 
     // test to make sure SERVES prints nothing if the baking dishes (but
     // not the mixing bowls) are empty
@@ -1036,9 +1051,25 @@ class Tests extends FlatSpec {
 
 
 
+    // TAKE
+
+    // note you'll have to provide input to these tests when you run them
+
+    // general functionality (input int, it saves it to an ingredient)
+
+    // TAKE on an existing ingredient does not alter it's state (i.e. if you
+    // take on a potato which is I_DRY, it won't change to I_EITHER, which is
+    // the default for new ingredients
+
+    // can't TAKE negative values
+
+    // can't TAKE non numbers
+
+    // can't TAKE floats
 
 
-    
+
+
     // LOOPS: test cases to consider
   
     // Loop with initial ingredient already 0
