@@ -280,28 +280,30 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure PUT doesn't take a non-existent ingredient
-    // TODO
-    // "Put test 3" should "make sure PUT doesn't take a non-existent ingredient" in {
-    //     object PutTest3 extends ScalaChef {
-    //         def run(): Unit = { 
-    //             TITLE ("Put test 3") END
+    "Put test 3" should "make sure PUT doesn't take a non-existent ingredient" in {
+        object PutTest3 extends ScalaChef {
+            def run(): Unit = { 
+                TITLE ("Put test 3") END
 
 
-    //             START_INGREDIENTS
+                START_INGREDIENTS
 
-    //             1 ('potatoes) END
+                1 ('potatoes) END
 
-    //             END_INGREDIENTS
+                END_INGREDIENTS
 
 
-    //             intercept[RuntimeException] {
-    //                 PUT ('cakes) INTO FIRST MIXING_BOWL END
-    //             }
-    //         }
-    //     }
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
 
-    //     PutTest3.run()
-    // }
+
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        PutTest3.run()
+    }
 
     // test to make sure you can't PUT into a baking dish
     "Put test 4" should "make sureyou can't PUT into a baking dish" in {
@@ -415,8 +417,11 @@ class Tests extends FlatSpec {
 
                 PUT ('cakes) INTO FIRST MIXING_BOWL END
 
+                FOLD ('vegetable) INTO FIRST MIXING_BOWL END
+
+
                 intercept[RuntimeException] {
-                    FOLD ('vegetable) INTO FIRST MIXING_BOWL END
+                    RUN
                 }
             }
         }
@@ -439,8 +444,11 @@ class Tests extends FlatSpec {
                 END_INGREDIENTS
 
 
+                FOLD ('potatoes) INTO FIRST MIXING_BOWL END
+
+
                 intercept[RuntimeException] {
-                    FOLD ('potatoes) INTO FIRST MIXING_BOWL END
+                    RUN
                 }
             }
         }
@@ -636,30 +644,32 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure ADD doesn't take a non-existent ingredient
-    // TODO
-    // "Add test 3" should "make sure ADD doesn't take a non-existent ingredient" in {
-    //     object AddTest3 extends ScalaChef {
-    //         def run(): Unit = {       
-    //             TITLE ("Add test 3") END
+    "Add test 3" should "make sure ADD doesn't take a non-existent ingredient" in {
+        object AddTest3 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Add test 3") END
         
 
-    //             START_INGREDIENTS
+                START_INGREDIENTS
         
-    //             2 ('potatoes) END
+                2 ('potatoes) END
         
-    //             END_INGREDIENTS
+                END_INGREDIENTS
 
 
-    //             PUT ('potatoes) INTO FIRST MIXING_BOWL END
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                ADD ('cakes) TO FIRST MIXING_BOWL END
         
-    //             intercept[RuntimeException] {    
-    //                 ADD ('cakes) TO FIRST MIXING_BOWL END
-    //             }
-    //         }
-    //     }
+
+                intercept[RuntimeException] {
+                    RUN   
+                }
+            }
+        }
         
-    //     AddTest3.run()
-    // }
+        AddTest3.run()
+    }
 
     // test to make sure ADD fails if nothing is in the specified stack
     "Add test 4" should "make sure ADD fails if nothing is in the specified stack" in {
@@ -675,8 +685,11 @@ class Tests extends FlatSpec {
                 END_INGREDIENTS
 
 
+                ADD ('potatoes) TO FIRST MIXING_BOWL END
+
+
                 intercept[RuntimeException] {
-                    ADD ('potatoes) TO FIRST MIXING_BOWL END
+                    RUN
                 }
             }
         }
@@ -805,7 +818,32 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure REMOVE doesn't take a non-existent ingredient
-    // TODO
+    "Remove test 3" should "make sure REMOVE doesn't take a non-existent ingredient" in {
+        object RemoveTest3 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Remove test 3") END
+        
+
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                REMOVE ('cakes) FROM FIRST MIXING_BOWL END
+        
+
+                intercept[RuntimeException] {
+                    RUN   
+                }
+            }
+        }
+        
+        RemoveTest3.run()
+    }
 
     // test to make sure REMOVE fails if nothing is in the specified stack
     "Remove test 4" should "make sure REMOVE fails if nothing is in the specified stack" in {
@@ -821,8 +859,11 @@ class Tests extends FlatSpec {
                 END_INGREDIENTS
 
 
+                REMOVE ('potatoes) FROM FIRST MIXING_BOWL END
+
+
                 intercept[RuntimeException] {
-                    REMOVE ('potatoes) FROM FIRST MIXING_BOWL END
+                    RUN
                 }
             }
         }
@@ -857,15 +898,178 @@ class Tests extends FlatSpec {
     // with a negative value
     // TODO 
 
-    // test to make sure COMBINE multiplies to something already on a stack 
+    // test to make sure COMBINE multiplies to something already on a stack
+    "Combine test 1" should "do a simple COMBINE in first mixing bowl" in {
+        object CombineTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Combine test 1") END
+
+
+                START_INGREDIENTS
+
+                2 ('chocolate) END
+
+                3 ('milk) END
+
+                END_INGREDIENTS
+
+
+                PUT ('milk) INTO FIRST MIXING_BOWL END
+
+                COMBINE ('chocolate) INTO FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 6)
+                // assert(mixingStacks(FIRST).peek.asNumber == 3)
+            }
+        }
+
+        CombineTest1.run()
+    } 
 
     // test to make sure you can COMBINE to all 5 bowls
+    "Combine test 2" should "COMBINE into all mixing bowls" in {
+        object CombineTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Combine test 2") END
+
+
+                START_INGREDIENTS
+
+                5 ('doughnuts) END
+
+                4 ('glaze) END
+
+                3 ('chocolate) END
+
+                2 ('creme) END
+
+                1 ('maple) END
+
+                0 ('sugar) END
+
+                END_INGREDIENTS
+
+
+                PUT ('doughnuts) INTO FIRST MIXING_BOWL END
+
+                PUT ('doughnuts) INTO SECOND MIXING_BOWL END
+
+                PUT ('doughnuts) INTO THIRD MIXING_BOWL END
+
+                PUT ('doughnuts) INTO FOURTH MIXING_BOWL END
+
+                PUT ('doughnuts) INTO FIFTH MIXING_BOWL END
+
+                COMBINE ('glaze) INTO FIRST MIXING_BOWL END
+
+                COMBINE ('chocolate) INTO SECOND MIXING_BOWL END
+
+                COMBINE ('creme) INTO THIRD MIXING_BOWL END
+
+                COMBINE ('maple) INTO FOURTH MIXING_BOWL END
+
+                COMBINE ('sugar) INTO FIFTH MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 20)
+                // assert(mixingStacks(FIRST).peek.asNumber == 5)
+                assert(mixingStacks(SECOND).pop.asNumber == 15)
+                // assert(mixingStacks(SECOND).peek.asNumber == 5)
+                assert(mixingStacks(THIRD).pop.asNumber == 10)
+                // assert(mixingStacks(THIRD).peek.asNumber == 5)
+                assert(mixingStacks(FOURTH).pop.asNumber == 5)
+                // assert(mixingStacks(FOURTH).peek.asNumber == 5)
+                assert(mixingStacks(FIFTH).pop.asNumber == 0)
+                // assert(mixingStacks(FIFTH).peek.asNumber == 5)
+            }
+        }
+
+        CombineTest2.run()
+    }
 
     // test to make sure COMBINE doesn't take a non-existent ingredient
+    "COMBINE test 3" should "make sure COMBINE doesn't take a non-existent ingredient" in {
+        object CombineTest3 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Combine test 3") END
+        
+
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                COMBINE ('cakes) INTO FIRST MIXING_BOWL END
+        
+
+                intercept[RuntimeException] {
+                    RUN   
+                }
+            }
+        }
+        
+        CombineTest3.run()
+    }
 
     // test to make sure COMBINE fails if nothing is in the specified stack
+    "Combine test 4" should "make sure COMBINE fails if nothing is in the specified stack" in {
+        object CombineTest4 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Combine test 4") END
+        
+
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+
+                COMBINE ('potatoes) INTO FIRST MIXING_BOWL END
+
+
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        CombineTest4.run()
+    }
 
     // test to make sure you can't COMBINE on a baking dish
+    "Combine test 5" should "make sure you can't COMBINE from a baking dish" in {
+        object CombineTest5 extends ScalaChef {
+            def run(): Unit = {       
+                TITLE ("Combine test 5") END
+        
+
+                START_INGREDIENTS
+        
+                2 ('potatoes) END
+        
+                END_INGREDIENTS
+
+
+                intercept[RuntimeException] {
+                    COMBINE ('potatoes) INTO FIRST BAKING_DISH END
+                }
+            }
+        }
+
+        CombineTest5.run()
+    }
 
 
     // test to make sure add DIVIDE divides something already on a stack
