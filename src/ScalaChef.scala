@@ -774,10 +774,10 @@ class ScalaChef {
    
     /* Start parsing a line that starts with REFRIGERATE */
     object REFRIGERATE {
-        def apply(e:End) = {
+        def END() = {
             currentOpType = O_REFR
             intArg = 0
-            e.finish
+            ScalaChef.this.END.finish
         }
         
         def FOR(num: Int): Hours = {
@@ -1156,10 +1156,7 @@ class ScalaChef {
                 val ingredientToPush = new Ingredient((mixingStacks(stack).peek.asNumber - 
                                                     variableBindings(ingredient).asNumber),
                                                     variableBindings(ingredient).state)
-                if (ingredientToPush.number < 0) {
-                    throw new RuntimeException("an ingredient can't have a " +
-                                               "negative value after REMOVE")
-                }
+                
                 mixingStacks(stack).pop
 
 
