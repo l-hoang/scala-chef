@@ -689,8 +689,8 @@ class ScalaChef {
     object STIR_FOR;
     object FOR{
         def apply(num: Int) = {
-            if (intArg < 0) {
-                throw new RuntimeException("can't STIR a negative amount")
+            if (intArg <= 0) {
+                throw new RuntimeException("can't STIR non-positive")
             }
 
             intArg = num
@@ -1131,6 +1131,11 @@ class ScalaChef {
                 val ingredientToPush = new Ingredient((mixingStacks(stack).peek.asNumber - 
                                                     variableBindings(ingredient).asNumber),
                                                     variableBindings(ingredient).state)
+                if (ingredientToPush.number < 0) {
+                    throw new RuntimeException("an ingredient can't have a " +
+                                               "negative value after REMOVE")
+                }
+
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
