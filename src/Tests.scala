@@ -188,6 +188,12 @@ class Tests extends FlatSpec {
 
 
 
+
+    // NEW: make sure ingredients can't be negative (0 is fine even though
+    // it's a bit strange)
+
+
+
     // TAKE
 
     // note you'll have to provide input to these tests when you run them
@@ -1143,6 +1149,23 @@ class Tests extends FlatSpec {
 
     // STIR INGREDIENT
 
+    // note these tests are exactly as above, except now the # comes from
+    // the ingredient
+
+    // test general functionality (moves top ingredient down some # )
+
+    // test to make sure it moves top ingredient to bottom if you stir
+    // a # greater than the # of things in the stack
+
+    // test to make sure you can't stir a negative # of minutes 
+
+    // test to make sure you can't stir 0 minutes
+
+    // test to make sure it works on all 5 mixing bowls
+    
+    // test to make sure can't work on baking dishes
+
+    // DIFFERENT: make sure the ingredient actually exists
 
 
     // MIX
