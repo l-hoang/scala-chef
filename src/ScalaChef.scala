@@ -776,6 +776,7 @@ class ScalaChef {
     object REFRIGERATE {
         def apply(e:End) = {
             currentOpType = O_REFR
+            intArg = 0
             e.finish
         }
         
