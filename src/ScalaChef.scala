@@ -677,7 +677,7 @@ class ScalaChef {
         /* Stir ingredient ... */
         def apply(ingredient: Symbol) = {
             currentOpType = O_STIR2
-            // MISSING
+            new IntoThe
         }
     }
     class StirBowl {
@@ -705,6 +705,49 @@ class ScalaChef {
             STIR_FOR
         }
     }
+
+    class IntoThe {
+        def INTO(t: TheStir):TheStir = {
+            THE
+        }
+    }
+
+    object MIXING_BOWL;
+    abstract sealed class TheStir { 
+        def FIRST(a: MIXING_BOWL.type):Ender
+        def SECOND(a: MIXING_BOWL.type):Ender
+        def THIRD(a: MIXING_BOWL.type):Ender
+        def FOURTH(a: MIXING_BOWL.type):Ender
+        def FIFTH(a: MIXING_BOWL.type):Ender
+
+    }
+    object THE extends TheStir { 
+        def FIRST(a: MIXING_BOWL.type):Ender = {
+            currentStack = ScalaChef.this.FIRST 
+            new Ender(END)
+        }
+        def SECOND(a: MIXING_BOWL.type):Ender = {
+            currentStack = ScalaChef.this.SECOND 
+            new Ender(END)
+
+        }
+        def THIRD(a: MIXING_BOWL.type):Ender = {
+            currentStack = ScalaChef.this.THIRD 
+            new Ender(END)
+
+        }
+        def FOURTH(a: MIXING_BOWL.type):Ender = {
+            currentStack = ScalaChef.this.FOURTH 
+            new Ender(END)
+
+        }
+        def FIFTH(a: MIXING_BOWL.type):Ender = {
+            currentStack = ScalaChef.this.FIFTH 
+            new Ender(END)
+        }
+    }
+
+
 
     /* Start evaluating a line that starts with MIX */
     object MIX {
@@ -1076,9 +1119,9 @@ class ScalaChef {
     }
     
     
-    //evaluator: might need a map to hold loop frames
+    // evaluator
     def evaluate(line : Int){
-//        println(line)
+        //println(line)
         /* check to see if this function has finished */
         if (line == endLineStack.peek) {
             /* function done; restore previous state */

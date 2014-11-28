@@ -56,6 +56,8 @@ object DoesItCompile extends ScalaChef {
 
         STIR THE FIRST MIXING_BOWL FOR (3) MINUTES END
 
+        STIR ('potatoes) INTO THE FIRST MIXING_BOWL END
+
         CLEAN (FIRST) MIXING_BOWL END
 
         SERVES (1) END
