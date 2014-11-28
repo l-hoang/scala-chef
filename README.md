@@ -168,7 +168,7 @@ the verb from the stack and continuing evaluation on the next line.
 
 *To be added later...*
 
-## Changes from Chef
+## Changes from Chef/Things to note
 * The END keyword is used in most places instead of a period.
 * The ingredient parsing begins and ends with START/END_INGREDIENTS; it is also
 mandatory
@@ -179,6 +179,9 @@ ingredient names (I think)
 * measure-type in ingredients not supported
 * Everything is in CAPS
 * mixing bowl and baking dish are combined into MIXING_BOWL and BAKING_DISH
+* negative ingredients aren't possible
+* A loop verb's end counter part is created by adding a d or ed (even if it's
+gramatically incorrect
 
 ## To Do:
 - [ ] implement runtime evaluator
