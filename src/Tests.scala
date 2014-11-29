@@ -1303,7 +1303,6 @@ class Tests extends FlatSpec {
 
     // test to make sure LIQUEFY ingredient changes a dry or non-specified
     // ingredient to a liqued (i.e. when it outputs it outputs a character)
-    // TODO
     "Liquefy test 1" should "make sure it works" in {
         object LiquefyTest1 extends ScalaChef {
             def run(): Unit = {
@@ -1537,11 +1536,13 @@ class Tests extends FlatSpec {
             def run(): Unit = {
                 TITLE ("Liquefy test 7") END
 
+
                 START_INGREDIENTS
 
                 1 G ('potatoes) END
 
                 END_INGREDIENTS
+
 
                 intercept[RuntimeException] {
                     LIQUEFY CONTENTS OF THE FIRST BAKING_DISH END
@@ -1555,20 +1556,229 @@ class Tests extends FlatSpec {
 
     // STIR NTH MIXING BOWL
 
-    // test general functionality (moves top ingredient down some # )
+    // test general functionality (moves top ingredient down some #)
+    "Stir test 1" should "make sure it works" in {
+        object StirTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Stir test 1") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('blueberries) END
+
+                3 ('strawberries) END
+
+                4 ('bananas) END
+
+                5 ('apples) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('blueberries) INTO FIRST MIXING_BOWL END
+
+                PUT ('strawberries) INTO FIRST MIXING_BOWL END
+
+                PUT ('bananas) INTO FIRST MIXING_BOWL END
+
+                PUT ('apples) INTO FIRST MIXING_BOWL END    
+
+                STIR THE FIRST MIXING_BOWL FOR (3) MINUTES END  
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 4)
+                assert(mixingStacks(FIRST).pop.asNumber == 3)
+                assert(mixingStacks(FIRST).pop.asNumber == 2)
+                assert(mixingStacks(FIRST).pop.asNumber == 5)
+                assert(mixingStacks(FIRST).pop.asNumber == 1)          
+            }
+        }
+
+        StirTest1.run()
+    }
 
     // test to make sure it moves top ingredient to bottom if you stir
     // a # greater than the # of things in the stack
 
-    // test to make sure you can't stir a negative # of minutes 
+    // test to make sure you can't stir a negative # of minutes
+    "Stir test 3" should "make sure you can't STIR for a negative number of minutes" in {
+        object StirTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Stir test 3") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('blueberries) END
+
+                3 ('strawberries) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('blueberries) INTO FIRST MIXING_BOWL END
+
+                PUT ('strawberries) INTO FIRST MIXING_BOWL END 
+
+                intercept[RuntimeException] {
+                    STIR THE FIRST MIXING_BOWL FOR (-1) MINUTES END 
+                }   
+            }
+        }
+
+        StirTest3.run()
+    } 
 
     // test to make sure you can't stir 0 minutes
+    "Stir test 4" should "make sure you can't STIR for 0 minutes" in {
+        object StirTest4 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Stir test 4") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('blueberries) END
+
+                3 ('strawberries) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('blueberries) INTO FIRST MIXING_BOWL END
+
+                PUT ('strawberries) INTO FIRST MIXING_BOWL END 
+
+                intercept[RuntimeException] {
+                    STIR THE FIRST MIXING_BOWL FOR (0) MINUTES END 
+                }   
+            }
+        }
+
+        StirTest4.run()
+    } 
 
     // test to make sure it works on all 5 mixing bowls
+    "Stir test 5" should "make sure STIR works on all 5 mixing bowls" in {
+        object StirTest5 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Stir test 5") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('blueberries) END
+
+                3 ('strawberries) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('blueberries) INTO FIRST MIXING_BOWL END
+
+                PUT ('strawberries) INTO FIRST MIXING_BOWL END 
+
+                PUT ('potatoes) INTO SECOND MIXING_BOWL END
+
+                PUT ('blueberries) INTO SECOND MIXING_BOWL END
+
+                PUT ('strawberries) INTO SECOND MIXING_BOWL END 
+
+                PUT ('potatoes) INTO THIRD MIXING_BOWL END
+
+                PUT ('blueberries) INTO THIRD MIXING_BOWL END
+
+                PUT ('strawberries) INTO THIRD MIXING_BOWL END 
+
+                PUT ('potatoes) INTO FOURTH MIXING_BOWL END
+
+                PUT ('blueberries) INTO FOURTH MIXING_BOWL END
+
+                PUT ('strawberries) INTO FOURTH MIXING_BOWL END 
+
+                PUT ('potatoes) INTO FIFTH MIXING_BOWL END
+
+                PUT ('blueberries) INTO FIFTH MIXING_BOWL END
+
+                PUT ('strawberries) INTO FIFTH MIXING_BOWL END
+
+                STIR THE FIRST MIXING_BOWL FOR (2) MINUTES END
+
+                STIR THE SECOND MIXING_BOWL FOR (2) MINUTES END
+
+                STIR THE THIRD MIXING_BOWL FOR (2) MINUTES END
+
+                STIR THE FOURTH MIXING_BOWL FOR (2) MINUTES END
+
+                STIR THE FIFTH MIXING_BOWL FOR (2) MINUTES END 
+
+                
+                RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 2)
+                assert(mixingStacks(FIRST).pop.asNumber == 1)
+                assert(mixingStacks(FIRST).pop.asNumber == 3)
+                assert(mixingStacks(SECOND).pop.asNumber == 2)
+                assert(mixingStacks(SECOND).pop.asNumber == 1)
+                assert(mixingStacks(SECOND).pop.asNumber == 3)
+                assert(mixingStacks(THIRD).pop.asNumber == 2)
+                assert(mixingStacks(THIRD).pop.asNumber == 1)
+                assert(mixingStacks(THIRD).pop.asNumber == 3)
+                assert(mixingStacks(FOURTH).pop.asNumber == 2)
+                assert(mixingStacks(FOURTH).pop.asNumber == 1)
+                assert(mixingStacks(FOURTH).pop.asNumber == 3)
+                assert(mixingStacks(FIFTH).pop.asNumber == 2)
+                assert(mixingStacks(FIFTH).pop.asNumber == 1)
+                assert(mixingStacks(FIFTH).pop.asNumber == 3)
+            }
+        }
+
+        StirTest5.run()
+    } 
     
     // test to make sure can't work on baking dishes
+    // TODO
+    // "Stir test 6" should "make sure you can't STIR a baking dish" in {
+    //     object StirTest6 extends ScalaChef {
+    //         def run(): Unit = {
+    //             TITLE ("Stir test 6") END
 
 
+    //             START_INGREDIENTS
+
+    //             1 ('potatoes) END
+
+    //             END_INGREDIENTS
+
+    //             intercept[RuntimeException] {
+    //                 STIR THE FIRST BAKING_DISH FOR (1) MINUTES END 
+    //             }   
+    //         }
+    //     }
+
+    //     StirTest6.run()
+    // } 
 
 
     // STIR INGREDIENT
