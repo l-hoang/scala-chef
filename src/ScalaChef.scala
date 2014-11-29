@@ -608,7 +608,7 @@ class ScalaChef {
             new To
         }
 
-        def DRY(ingredients: INGREDIENTS.type) {
+        def DRY(ingredients: INGREDIENTS.type) = {
             currentOpType = O_ADDDRY
             new To
         }
