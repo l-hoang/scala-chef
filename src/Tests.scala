@@ -2027,11 +2027,152 @@ class Tests extends FlatSpec {
     // MIX
 
     // general functionality
+    "Mix test 1" should "make sure it works" in {
+        object MixTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Mix test 1") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                MIX THE FIRST MIXING_BOWL WELL END
+
+
+                RUN
+
+
+                if(mixingStacks(FIRST).pop.asNumber == 1) {
+                    assert(mixingStacks(FIRST).peek.asNumber == 2)
+                }
+                else {
+                    assert(mixingStacks(FIRST).peek.asNumber == 1)
+                }
+            }
+        }
+
+        MixTest1.run()
+    }
 
     // works on all 5 bowls
+    "Mix test 2" should "make sure you can MIX all 5 bowls" in {
+        object MixTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Mix test 2") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                PUT ('potatoes) INTO SECOND MIXING_BOWL END
+
+                PUT ('cakes) INTO SECOND MIXING_BOWL END
+
+                PUT ('potatoes) INTO THIRD MIXING_BOWL END
+
+                PUT ('cakes) INTO THIRD MIXING_BOWL END
+
+                PUT ('potatoes) INTO FOURTH MIXING_BOWL END
+
+                PUT ('cakes) INTO FOURTH MIXING_BOWL END
+
+                PUT ('potatoes) INTO FIFTH MIXING_BOWL END
+
+                PUT ('cakes) INTO FIFTH MIXING_BOWL END
+
+                MIX THE FIRST MIXING_BOWL WELL END
+
+                MIX THE SECOND MIXING_BOWL WELL END
+
+                MIX THE THIRD MIXING_BOWL WELL END
+
+                MIX THE FOURTH MIXING_BOWL WELL END
+
+                MIX THE FIFTH MIXING_BOWL WELL END
+
+
+                RUN
+
+
+                if(mixingStacks(FIRST).pop.asNumber == 1) {
+                    assert(mixingStacks(FIRST).peek.asNumber == 2)
+                }
+                else {
+                    assert(mixingStacks(FIRST).peek.asNumber == 1)
+                }
+                if(mixingStacks(SECOND).pop.asNumber == 1) {
+                    assert(mixingStacks(SECOND).peek.asNumber == 2)
+                }
+                else {
+                    assert(mixingStacks(SECOND).peek.asNumber == 1)
+                }
+                if(mixingStacks(THIRD).pop.asNumber == 1) {
+                    assert(mixingStacks(THIRD).peek.asNumber == 2)
+                }
+                else {
+                    assert(mixingStacks(THIRD).peek.asNumber == 1)
+                }
+                if(mixingStacks(FOURTH).pop.asNumber == 1) {
+                    assert(mixingStacks(FOURTH).peek.asNumber == 2)
+                }
+                else {
+                    assert(mixingStacks(FOURTH).peek.asNumber == 1)
+                }
+                if(mixingStacks(FIFTH).pop.asNumber == 1) {
+                    assert(mixingStacks(FIFTH).peek.asNumber == 2)
+                }
+                else {
+                    assert(mixingStacks(FIFTH).peek.asNumber == 1)
+                }
+            }
+        }
+
+        MixTest2.run()
+    }
 
     // fails on a dish
+    // TODO
+    // "Mix test 3" should "make sure MIX doesn't work on a baking dish" in {
+    //     object MixTest3 extends ScalaChef {
+    //         def run(): Unit = {
+    //             TITLE ("Mix test 3") END
 
+
+    //             START_INGREDIENTS
+
+    //             1 ('potatoes) END
+
+    //             END_INGREDIENTS
+
+
+    //             intercept[RuntimeException] {
+    //                 MIX THE FIRST BAKING_DISH WELL END
+    //             }
+    //         }
+    //     }
+
+    //     MixTest3.run()
+    // }
 
 
     // CLEAN 
