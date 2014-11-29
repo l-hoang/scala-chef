@@ -1320,7 +1320,11 @@ class ScalaChef {
             case ArrangeStack2(stack: String, ingredient: Symbol) => {
                 /* get the number */
                 val num = variableBindings(ingredient).asNumber
-
+                
+                if(num<1){
+                    throw new RuntimeException("Stir must be called with a positive value");
+                }
+                
                 /* proceed exactly as ArrangeStack above */
                 val theStack = mixingStacks(stack)
                 val stackSize = theStack.size
