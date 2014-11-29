@@ -2179,37 +2179,37 @@ class Tests extends FlatSpec {
 
     // test general funcitonality
     // TODO
-    // "Clean test 1" should "make sure it works" in {
-    //     object CleanTest1 extends ScalaChef {
-    //         def run(): Unit = {
-    //             TITLE ("Clean test 1") END
+    "Clean test 1" should "make sure it works" in {
+        object CleanTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Clean test 1") END
 
 
-    //             START_INGREDIENTS
+                START_INGREDIENTS
 
-    //             1 ('potatoes) END
+                1 ('potatoes) END
 
-    //             2 ('cakes) END
+                2 ('cakes) END
 
-    //             END_INGREDIENTS
-
-
-    //             PUT ('potatoes) INTO FIRST MIXING_BOWL END
-
-    //             PUT ('cakes) INTO FIRST MIXING_BOWL END
-
-    //             CLEAN FIRST MIXING_BOWL END
+                END_INGREDIENTS
 
 
-    //             RUN
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                CLEAN (FIRST) MIXING_BOWL END
 
 
-    //             assert(mixingStacks(FIRST).isEmpty)
-    //         }
-    //     }
+                RUN
 
-    //     CleanTest1.run()
-    // }
+
+                assert(mixingStacks(FIRST).isEmpty)
+            }
+        }
+
+        CleanTest1.run()
+    }
 
     // test to make sure cleaning a mixing bowl will NOT affect the ingredients
     // not in the mixing bowl
@@ -2378,6 +2378,37 @@ class Tests extends FlatSpec {
     // REFRIGERATE
 
     // general functionality
+    "Refrigerate test 1" should "make sure it works" in {
+        object RefrigerateTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Refrigerate test 1") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                REFRIGERATE END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).peek.asNumber == 1)
+            }
+        }
+
+        RefrigerateTest1.run()
+    }
 
     // test to make sure it passes back the called function's first
     // mixing bowl if it's called in a sub-recipe
