@@ -2178,6 +2178,38 @@ class Tests extends FlatSpec {
     // CLEAN 
 
     // test general funcitonality
+    // TODO
+    // "Clean test 1" should "make sure it works" in {
+    //     object CleanTest1 extends ScalaChef {
+    //         def run(): Unit = {
+    //             TITLE ("Clean test 1") END
+
+
+    //             START_INGREDIENTS
+
+    //             1 ('potatoes) END
+
+    //             2 ('cakes) END
+
+    //             END_INGREDIENTS
+
+
+    //             PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+    //             PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+    //             CLEAN FIRST MIXING_BOWL END
+
+
+    //             RUN
+
+
+    //             assert(mixingStacks(FIRST).isEmpty)
+    //         }
+    //     }
+
+    //     CleanTest1.run()
+    // }
 
     // test to make sure cleaning a mixing bowl will NOT affect the ingredients
     // not in the mixing bowl
@@ -2190,18 +2222,156 @@ class Tests extends FlatSpec {
     // POUR
 
     // general functionality
+    "Pour test 1" should "make sure it works" in {
+        object PourTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Pour test 1") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+
+
+                RUN
+
+
+                assert(bakingStacks(FIRST).pop.asNumber == 2)
+                assert(bakingStacks(FIRST).peek.asNumber == 1)
+            }
+        }
+
+        PourTest1.run()
+    }
 
     // test to make sure you can pour to the same dish twice with
     // expected behavior
+    "Pour test 2" should "make sure you can pour to the same dish twice" in {
+        object PourTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Pour test 2") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                3 ('tacos) END
+
+                4 ('hamburgers) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                PUT ('tacos) INTO SECOND MIXING_BOWL END
+
+                PUT ('hamburgers) INTO SECOND MIXING_BOWL END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+
+                POUR CONTENTS OF THE SECOND MIXING_BOWL INTO THE FIRST BAKING_DISH END
+
+
+                RUN
+
+
+                assert(bakingStacks(FIRST).pop.asNumber == 4)
+                assert(bakingStacks(FIRST).pop.asNumber == 3)
+                assert(bakingStacks(FIRST).pop.asNumber == 2)
+                assert(bakingStacks(FIRST).pop.asNumber == 1)
+            }
+        }
+
+        PourTest2.run()
+    }
 
     // make sure order of mixing bowl that is poured is preserved
     // (i.e. the top of the mixing bowl should be the top of the 
     // baking dish after pour)
+    "Pour test 3" should "make sure mixing bowl is maintained" in {
+        object PourTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Pour test 3") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+
+
+                RUN
+
+
+                assert(bakingStacks(FIRST).peek.asNumber == mixingStacks(FIRST).peek.asNumber)
+            }
+        }
+
+        PourTest3.run()
+    }
 
     // make sure editing the mixing bowl after a POUR doesn't alter
     // the same ingredient in the baking dish
+    "Pour test 4" should "make sure altering mixing bowl doesn't alter baking dish" in {
+        object PourTest4 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Pour test 4") END
 
 
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(bakingStacks(FIRST).peek.asNumber == 2)
+            }
+        }
+
+        PourTest4.run()
+    }
 
 
 
