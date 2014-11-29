@@ -677,6 +677,7 @@ class ScalaChef {
         /* Stir ingredient ... */
         def apply(ingredient: Symbol) = {
             currentOpType = O_STIR2
+            currentIngredient = ingredient
             new IntoThe
         }
     }
