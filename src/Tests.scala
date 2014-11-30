@@ -187,14 +187,31 @@ class Tests extends FlatSpec {
     }
 
 
-
-
     // NEW: make sure ingredients can't be negative (0 is fine even though
     // it's a bit strange)
+    "Ingredients test 1" should "make sure ingredients can't be negative" in {
+        object IngredientsTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Ingredients test 1") END
+
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                intercept[RuntimeException] {
+                    -1 ('cakes) END
+                }
+
+                END_INGREDIENTS
+            }
+        }
+    }
 
 
 
     // TAKE
+    // TODO
 
     // note you'll have to provide input to these tests when you run them
 
@@ -556,7 +573,34 @@ class Tests extends FlatSpec {
     // (i.e. you fold and get a liquid ingredient, but the ingredient you assign
     // to is a dry ingredient; according to the spec, only the value should be
     // copied)
-    // TODO
+    "Fold Test 7" should "make sure FOLD doesn't change the state of an ingredient" in {
+        object FoldTest7 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Fold test 7") END
+
+
+                START_INGREDIENTS
+
+                1 G ('potatoes) END
+
+                2 ML ('oil) END
+
+                END_INGREDIENTS
+
+
+                PUT ('oil) INTO FIRST MIXING_BOWL END
+
+                FOLD ('potatoes) INTO FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(variableBindings('potatoes).asNumber == 2)
+                assert(variableBindings('potatoes).state == I_DRY)
+            }
+        }
+    }
 
 
     // test to make sure ADD adds to something already on a stack 
@@ -902,7 +946,34 @@ class Tests extends FlatSpec {
 
     // test to make sure you can't do a remove that will result in an ingredient
     // with a negative value
-    // TODO 
+    "Remove test 6" should "make sure you can't do a REMOVE that will result in negative" in {
+        object RemoveTest6 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Remove test 6") END
+
+
+                START_INGREDIENTS
+
+                2 ('potatoes) END
+
+                3 ('cakes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                REMOVE ('cakes) FROM FIRST MIXING_BOWL END
+
+
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        RemoveTest6.run()
+    }
 
     // test to make sure COMBINE multiplies to something already on a stack
     "Combine test 1" should "do a simple COMBINE in first mixing bowl" in {
@@ -1607,6 +1678,43 @@ class Tests extends FlatSpec {
 
     // test to make sure it moves top ingredient to bottom if you stir
     // a # greater than the # of things in the stack
+    "Stir test 2" should "make sure top ingredient is moved to bottom if # is greater than size of stack" in {
+        object StirTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Stir test 2") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('blueberries) END
+
+                3 ('strawberries) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('blueberries) INTO FIRST MIXING_BOWL END
+
+                PUT ('strawberries) INTO FIRST MIXING_BOWL END
+
+                STIR THE FIRST MIXING_BOWL FOR (5) MINUTES END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 2)
+                assert(mixingStacks(FIRST).pop.asNumber == 1)
+                assert(mixingStacks(FIRST).peek.asNumber == 3)
+            }
+        }
+
+        StirTest2.run()
+    }
 
     // test to make sure you can't stir a negative # of minutes
     "Stir test 3" should "make sure you can't STIR for a negative number of minutes" in {
@@ -1837,7 +1945,45 @@ class Tests extends FlatSpec {
 
     // test to make sure it moves top ingredient to bottom if you stir
     // a # greater than the # of things in the stack
-    // TODO
+    "Stir ingredient test 2" should "make sure top ingredient is moved to bottom if # is greater than size of stack" in {
+        object StirIngredientTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Stir ingredient test 2") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('blueberries) END
+
+                3 ('strawberries) END
+
+                5 ML ('vinegar) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('blueberries) INTO FIRST MIXING_BOWL END
+
+                PUT ('strawberries) INTO FIRST MIXING_BOWL END
+
+                STIR ('vinegar) INTO THE FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).pop.asNumber == 2)
+                assert(mixingStacks(FIRST).pop.asNumber == 1)
+                assert(mixingStacks(FIRST).peek.asNumber == 3)
+            }
+        }
+
+        StirIngredientTest2.run()
+    }
 
     // test to make sure you can't stir a negative # of minutes
     "Stir ingredient test 3" should "make sure you can't STIR for a negative number of minutes" in {
@@ -2180,7 +2326,6 @@ class Tests extends FlatSpec {
     // CLEAN 
 
     // test general funcitonality
-    // TODO
     "Clean test 1" should "make sure it works" in {
         object CleanTest1 extends ScalaChef {
             def run(): Unit = {
@@ -2215,9 +2360,101 @@ class Tests extends FlatSpec {
 
     // test to make sure cleaning a mixing bowl will NOT affect the ingredients
     // not in the mixing bowl
+    "Clean test 2" should "make sure CLEAN doesn't affect ingredients not in bowl" in {
+        object CleanTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Clean test 2") END
+
+
+                START_INGREDIENTS
+
+                1 G ('potatoes) END
+
+                2 ML ('vinegar) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('vinegar) INTO FIRST MIXING_BOWL END
+
+                CLEAN (FIRST) MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(variableBindings('potatoes).asNumber == 1)
+                assert(variableBindings('potatoes).state == I_DRY)
+                assert(variableBindings('vinegar).asNumber == 2)
+                assert(variableBindings('vinegar).state == I_LIQUID)
+            }
+        }
+
+        CleanTest2.run()
+    }
 
     // test to see if it works on all 5 bowls
+    "Clean test 3" should "make sure CLEAN works on all 5 mixing bowls" in {
+        object CleanTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Clean test 3") END
 
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                2 ('cakes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                PUT ('potatoes) INTO SECOND MIXING_BOWL END
+
+                PUT ('cakes) INTO SECOND MIXING_BOWL END
+
+                PUT ('potatoes) INTO THIRD MIXING_BOWL END
+
+                PUT ('cakes) INTO THIRD MIXING_BOWL END
+
+                PUT ('potatoes) INTO FOURTH MIXING_BOWL END
+
+                PUT ('cakes) INTO FOURTH MIXING_BOWL END
+
+                PUT ('potatoes) INTO FIFTH MIXING_BOWL END
+
+                PUT ('cakes) INTO FIFTH MIXING_BOWL END
+
+                CLEAN (FIRST) MIXING_BOWL END
+
+                CLEAN (SECOND) MIXING_BOWL END
+
+                CLEAN (THIRD) MIXING_BOWL END
+
+                CLEAN (FOURTH) MIXING_BOWL END
+
+                CLEAN (FIFTH) MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).isEmpty)
+                assert(mixingStacks(SECOND).isEmpty)
+                assert(mixingStacks(THIRD).isEmpty)
+                assert(mixingStacks(FOURTH).isEmpty)
+                assert(mixingStacks(FIFTH).isEmpty)
+            }
+        }
+
+        CleanTest3.run()
+    }
 
 
 
