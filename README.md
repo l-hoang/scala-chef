@@ -59,9 +59,7 @@ classes are stored in a HashMap where the key to get them is the line #
 of the program. This representation allows easy runtime evaluation: a program
 would start by grabbing the case class for a particular line number, and
 depending on the case class, different things will be done to alter program
-state. Most case classes will have a function that the runtime evaluator can
-call to do the work that's required. Others will need to have some logic
-in the runtime evaluator itself (e.g. loops).
+state.
 
 Ingredients are represented by an Ingredient class that holds its value and
 its interpretation (as a number, character, or either).
@@ -69,22 +67,17 @@ its interpretation (as a number, character, or either).
 Bindings for ingredients are represented as a HashMap that maps a Symbol
 (the ingredient name) to an Ingredient object.
 
-**What follows is stuff that still needs to be implemented, but it's the idea
-I've come up with for it**
-
-There will exist 2 HashMaps for looping purposes: LoopStart and LoopEnd. 
-LoopStart takes a Verb and returns the line where the loop starts.
-LoopEnd takes a Verb and returns the line where the program would execute given
-that the loop condition fails (i.e. after the until statement)
-
 There will exist a HashMap that maps recipe titles to line numbers. This is so
 a function call can just jump to a particular line number and start from there.
+It will also store the end line of a recipe to know when a recipe is finished.
 
-There will also exist a HashMap that maps titles to variable bindings. This is
-so every function/recipe can have its own set of variable bindings.
+There will also exist a HashMap that maps titles to default variable bindings. 
+This makes it so calling recipes will load a copy of its default variable 
+bindings.
 
-Likewise, there will be a HashMap that maps titles to mixing bowls and 
-baking dishes. Again, this is so every recipe has its own set.
+Each recipe has a set of loop bindings that hold the loop info for some verb
+(which marks the start/end of a loop). In order to keep track of loops, a stack
+is used to track the order of loops entered.
 
 ### How it is parsed
 
@@ -106,10 +99,8 @@ keywords/arguments that are parsed in each line, the program will set variables
 that will be used at the end of line parsing. At the end of line parsing,
 depending on how the variables were set, the program will alter the parsing
 mode, change the state of things like variable bindings, or create a case class
-holding a function that will be saved into a hash table that tracks line 
-numbers. In the latter case, the runtime evaluator will use the line number
-to get this case class and call this function during evaluation. The function
-will do what the parsed line needed it to do.
+that holds relevant values that the program needs to do that function when it
+gets reached by the line evaluator.
 
 For a more concrete example, the object PUT has an apply method that will grab 
 the ingredient name as a symbol. It saves the fact that it's parsing PUT and
@@ -118,9 +109,9 @@ INTO keyword as the Into class defines INTO as a function. The function grabs
 the stack that the line specified, then a BowlOrDish class is created to grab
 MIXING_BOWL. The END keyword is finally parsed, and it eventually calls the
 finish routine. The finish routine will see that it's currently parsing a
-PUT line with some specified ingredient and stack, so it will create a function
-that pushes that ingredient value onto the specified stack and save that
-function in the HashMap of lines for runtime evaluation.
+PUT line with some specified ingredient and stack, so it will create a case
+class that holds the ingredient that needs to be pushed and the stack that
+needs to be pushed to for the runtime evaluator to do it.
 
 ### How loops work
 
@@ -164,9 +155,38 @@ the verb from the stack and continuing evaluation on the next line.
 
 ### How function calls work
 
-**NEEDS TO BE IMPLEMENTED**
+When a recipe is "served" (i.e. function call), the current state is saved
+by pushing info onto a bunch of stacks.
 
-*To be added later...*
+* The line to return to after the function ends
+* The line that the function being called ends at
+* The currently running recipe's loop stack (that tracks loops)
+* The currently running recipe's mixing bowls
+* The currently running recipe's baking dishes
+* The currently running recipe's ingredient bindings
+* The currently running recipe's loop bindings (loop info)
+
+A function's start/end line are gotten and saved during the initial parsing 
+stage of running the program. They're saved into a class that holds the 2
+value, and this class is stored in a HashMap.
+
+Before jumping to the start of the new recipe, the program must make a deep
+copy of the caller's mixing bowls and baking dishes. It must also load a copy
+of its default ingredient bindings (saved during the initial parse) and its 
+loop bindings. It's loop stack will start completely empty (since it hasn't
+even begun to run).
+
+Before evaluating a line, the program checks to see if the current line matches
+the end line on the stack of function end lines (i.e. if the function its in has
+ended). If it matches, then the function ends by popping all of the values stored
+on the stacks above and dumping the called function's first mixing bowl into the
+original caller's first mixing bowl. A return command (REFRIGERATE) will do the
+same thing (pop all of the values on the stacks, dump mixing bowl) except that
+it can be done in the middle of a recipe.
+
+The stacks allow both recursion and calling functions within other functions.
+It may be limited by memory, however.
+
 
 ## Changes from Chef/Things to note
 * The END keyword is used in most places instead of a period.
@@ -182,11 +202,13 @@ ingredient names (I think)
 * negative ingredients aren't possible
 * A loop verb's end counter part is created by adding a d or ed (even if it's
 gramatically incorrect
+* Some things that could be optional in the original language are not optional
+here
 
 ## To Do:
-- [ ] implement runtime evaluator
-- [ ] implement loops
-- [ ] implement the rest of the instructions
-- [ ] decide how to do function calls
+- [x] implement runtime evaluator
+- [x] implement loops
+- [x] implement the rest of the instructions
+- [x] decide how to do function calls
 - [ ] write a bunch of tests
 
