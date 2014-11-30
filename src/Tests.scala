@@ -1865,7 +1865,9 @@ class Tests extends FlatSpec {
 
                 PUT ('strawberries) INTO FIRST MIXING_BOWL END 
 
-                STIR ('cookies) INTO THE FIRST MIXING_BOWL END 
+                intercept[RuntimeException] {
+                    STIR ('cookies) INTO THE FIRST MIXING_BOWL END 
+                }
 
 
                 intercept[RuntimeException] {
@@ -2412,6 +2414,7 @@ class Tests extends FlatSpec {
 
     // test to make sure it passes back the called function's first
     // mixing bowl if it's called in a sub-recipe
+    // TODO
 
     // test to make sure the default version works (REFRIGERATE END)
 
@@ -2444,11 +2447,43 @@ class Tests extends FlatSpec {
 
     // can't declare a new function (i.e. start a new TITLE declaration)
     // while parsing ingredients
+    "Function test 1" should "make sure you can't declare a new function while parsing ingredients" in {
+        object FunctionTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Function test 1") END
+
+
+                intercept[RuntimeException] {
+                    START_INGREDIENTS
+
+                    TITLE ("This is bad") END
+
+                    1 ('potatoes) END
+
+                    END_INGREDIENTS
+                }
+            }
+        }
+
+        FunctionTest1.run()
+    }
 
     // can't declare a new function until ingredients have been declared (even
     // if the ingredients are empty)
 
+    "Function test 2" should "make sure you can't declare a new function until ingredients declared" in {
+        object FunctionTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Function test 2") END
 
+                intercept[RuntimeException] {
+                    TITLE ("This is bad") END
+                }
+            }
+        }
+
+        FunctionTest2.run()
+    }
 
 
 
