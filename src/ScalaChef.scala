@@ -38,11 +38,11 @@ SOFTWARE.
  *
  * Put : puts an ingredient value into a stack
  * 
- * Fold : essentially a pop into an ingredient
+ * Fold : essentially a pop into an ingredient and store its value in an
+ * ingredient
  *
  * It's unclear if these ops push a new value onto the stack or just modify the
- * value on the stack in place (need to check)
- *
+ * value on the stack in place; this implementation modifies in place
  * Add : take a value and add it to the value on top of the stack
  * Remove : subtract
  * Combine : multiply
@@ -53,9 +53,8 @@ SOFTWARE.
  * Liquefy : make an var interpreted as unicode
  * Liquefy contents : entire stack interpreted as unicode
  *
- * Stir for (number) minutes :  
- * Stir ingredient : ???
- *
+ * Stir: move something on a stack some # of elements down 
+
  * Mix : randomize a stack
  *
  * Clean : remove all elements from a stack
@@ -71,7 +70,7 @@ SOFTWARE.
  *
  * Serve with recipe : function call
  *
- * Refrigerate : return statement (can specify how many baking dishes to return)
+ * Refrigerate : return statement (can specify how many baking dishes to print)
  *
  *
  *
