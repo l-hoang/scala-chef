@@ -319,6 +319,8 @@ class ScalaChef {
     var programFinished = false
     /* tells if run has been called */
     var calledRun = false
+    /* the end of the main function */
+    var mainEnd = 0
 
     /*********************************/
     /* Here begins keywords for Chef */
@@ -1129,6 +1131,12 @@ class ScalaChef {
     // evaluator
     def evaluate(line : Int){
         //println(line)
+        /* check to see if the main function has ended */
+        if (endLineStack.size == 0 && line == mainEnd) {
+            programFinished = true
+            return
+        }
+        
         /* check to see if this function has finished */
         if (line == endLineStack.peek) {
             /* function done; restore previous state */
@@ -1642,6 +1650,9 @@ class ScalaChef {
             // declared
             loopBindings = allLoopBindings(mainRecipe)
         }
+        
+        /* set the end line of the the main recipe */
+        mainEnd = functionStartEnd(mainRecipe).endLine
 
         evaluate(1)
     }
