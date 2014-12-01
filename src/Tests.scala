@@ -2668,18 +2668,177 @@ class Tests extends FlatSpec {
 
     // test to make sure SERVES prints nothing if the baking dishes (but
     // not the mixing bowls) are empty
+    "Serves test 1" should "print nothing" in {
+        object ServesTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Serves test 1") END
+
+
+                START_INGREDIENTS
+
+                70 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                SERVES (1) END
+
+
+                RUN
+            }
+        }
+
+        ServesTest1.run()
+    }
 
     // test to make sure SERVES actually prints stuff from all 5 dishes
-    
-    // test to make sure SERVES does not print from mixing bowls
+    "Serves test 2" should "print stuff from all 5 dishes" in {
+        object ServesTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Serves test 2") END
+
+
+                START_INGREDIENTS
+
+                70 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE SECOND BAKING_DISH END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE THIRD BAKING_DISH END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FOURTH BAKING_DISH END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIFTH BAKING_DISH END
+
+                SERVES (5) END
+
+
+                RUN
+            }
+        }
+
+        ServesTest2.run()
+    }
 
     // test to make sure SERVES only prints the specified # of baking dishes
     // (e.g. SERVES (2) END only prints the first 2 and ignores latter 3
+    "Serves test 3" should "print stuff from first 2 dishes" in {
+        object ServesTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Serves test 3") END
+
+
+                START_INGREDIENTS
+
+                70 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE SECOND BAKING_DISH END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE THIRD BAKING_DISH END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FOURTH BAKING_DISH END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIFTH BAKING_DISH END
+
+                SERVES (2) END
+
+
+                RUN
+            }
+        }
+
+        ServesTest3.run()
+    }
 
     // test to make sure only 1 SERVES can exist in a program
+    "Serves test 4" should "make sure only 1 SERVES can exist in a program" in {
+        object ServesTest4 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Serves test 4") END
+
+
+                START_INGREDIENTS
+
+                70 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                SERVES (1) END
+
+                intercept[RuntimeException] {
+                    SERVES (1) END
+                }
+            }
+        }
+
+        ServesTest4.run()
+    }
 
     // test to make sure SERVES only works in the main recipe
+    "Serves test 5" should "make sure SERVES only works in the main recipe" in {
+        object ServesTest5 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Serves test 5") END
 
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                SERVE WITH "Serves auxiliary" END
+
+                // SERVES (1) END
+
+
+                TITLE ("Serves auxiliary") END
+
+
+                START_INGREDIENTS
+
+                2 ('cakes)
+
+                END_INGREDIENTS
+
+
+                SERVES (1) END
+
+
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        ServesTest5.run()
+    }
 
     // function related tests
 
