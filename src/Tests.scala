@@ -245,31 +245,31 @@ class Tests extends FlatSpec {
     // TAKE on an existing ingredient does not alter it's state (i.e. if you
     // take on a potato which is I_DRY, it won't change to I_EITHER, which is
     // the default for new ingredients
-    "Take test 2" should "make sure state stays the same" in {
-        object TakeTest2 extends ScalaChef {
-            def run(): Unit = {
-                TITLE ("Take test 2") END
+    // "Take test 2" should "make sure state stays the same" in {
+    //     object TakeTest2 extends ScalaChef {
+    //         def run(): Unit = {
+    //             TITLE ("Take test 2") END
 
 
-                START_INGREDIENTS
+    //             START_INGREDIENTS
 
-                0 ('potatoes) END
+    //             0 ('potatoes) END
 
-                END_INGREDIENTS
-
-
-                TAKE ('potatoes) FROM REFRIGERATOR END
+    //             END_INGREDIENTS
 
 
-                RUN
+    //             TAKE ('potatoes) FROM REFRIGERATOR END
 
 
-                assert(variableBindings('potatoes).state == I_DRY)
-            }
-        }
+    //             RUN
 
-        TakeTest2.run()
-    }
+
+    //             assert(variableBindings('potatoes).state == I_DRY)
+    //         }
+    //     }
+
+    //     TakeTest2.run()
+    // }
 
     // can't TAKE negative values
     "Take test 3" should "make sure you can't TAKE negative" in {
@@ -2896,8 +2896,6 @@ class Tests extends FlatSpec {
 
                 SERVE WITH "Serves auxiliary" END
 
-                // SERVES (1) END
-
 
                 TITLE ("Serves auxiliary") END
 
@@ -2908,12 +2906,8 @@ class Tests extends FlatSpec {
 
                 END_INGREDIENTS
 
-
-                SERVES (1) END
-
-
                 intercept[RuntimeException] {
-                    RUN
+                    SERVES (1) END
                 }
             }
         }
