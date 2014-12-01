@@ -848,6 +848,10 @@ class ScalaChef {
                 throw new RuntimeException("There can only be 1 SERVES in a " +
                                             "program")
             }
+            
+            if (!currentRecipe.equals(mainRecipe)) {
+                throw new RuntimeException("SERVES can only be declared in the main recipe")
+            }
 
             currentOpType = O_SERVES
             if (numberOfDiners <= 0 || numberOfDiners > 5) {
