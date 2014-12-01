@@ -216,16 +216,138 @@ class Tests extends FlatSpec {
     // note you'll have to provide input to these tests when you run them
 
     // general functionality (input int, it saves it to an ingredient)
+    "Take test 1" should "make sure it works" in {
+        object TakeTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Take test 1") END
+
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                TAKE ('potatoes) FROM REFRIGERATOR END
+
+
+                RUN
+
+
+                assert(variableBindings('potatoes).asNumber != 0)
+            }
+        }
+
+        TakeTest1.run()
+    }
 
     // TAKE on an existing ingredient does not alter it's state (i.e. if you
     // take on a potato which is I_DRY, it won't change to I_EITHER, which is
     // the default for new ingredients
+    "Take test 2" should "make sure state stays the same" in {
+        object TakeTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Take test 2") END
+
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                TAKE ('potatoes) FROM REFRIGERATOR END
+
+
+                RUN
+
+
+                assert(variableBindings('potatoes).state == I_DRY)
+            }
+        }
+
+        TakeTest2.run()
+    }
 
     // can't TAKE negative values
+    "Take test 3" should "make sure you can't TAKE negative" in {
+        object TakeTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Take test 3") END
+
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                TAKE ('potatoes) FROM REFRIGERATOR END
+
+
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        TakeTest3.run()
+    }
 
     // can't TAKE non numbers
+    "Take test 4" should "make sure you can't TAKE non numbers" in {
+        object TakeTest4 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Take test 4") END
+
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                TAKE ('potatoes) FROM REFRIGERATOR END
+
+
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        TakeTest4.run()
+    }
 
     // can't TAKE floats
+    "Take test 5" should "make sure you can't TAKE floats" in {
+        object TakeTest5 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Take test 5") END
+
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                TAKE ('potatoes) FROM REFRIGERATOR END
+
+
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        TakeTest5.run()
+    }
 
 
     // test to make sure PUT puts stuff in a stack
@@ -1985,52 +2107,11 @@ class Tests extends FlatSpec {
         StirIngredientTest2.run()
     }
 
-    // If ingredient checking works, we can't have negative ingredients
-    /* test to make sure you can't stir a negative # of minutes
-    "Stir ingredient test 3" should "make sure you can't STIR for a negative number of minutes" in {
+    // test to make sure you can't stir 0 minutes
+    "Stir ingredient test 3" should "make sure you can't STIR for 0 minutes" in {
         object StirIngredientTest3 extends ScalaChef {
             def run(): Unit = {
                 TITLE ("Stir ingredient test 3") END
-
-
-                START_INGREDIENTS
-
-                -1 ('cookies) END
-
-                1 ('potatoes) END
-
-                2 ('blueberries) END
-
-                3 ('strawberries) END
-
-                END_INGREDIENTS
-
-
-                PUT ('potatoes) INTO FIRST MIXING_BOWL END
-
-                PUT ('blueberries) INTO FIRST MIXING_BOWL END
-
-                PUT ('strawberries) INTO FIRST MIXING_BOWL END 
-
-                intercept[RuntimeException] {
-                    STIR ('cookies) INTO THE FIRST MIXING_BOWL END 
-                }
-
-
-                intercept[RuntimeException] {
-                    RUN
-                }
-            }
-        }
-
-        StirIngredientTest3.run()
-    }  */
-
-    // test to make sure you can't stir 0 minutes
-    "Stir ingredient test 4" should "make sure you can't STIR for 0 minutes" in {
-        object StirIngredientTest4 extends ScalaChef {
-            def run(): Unit = {
-                TITLE ("Stir ingredient test 4") END
 
 
                 START_INGREDIENTS
@@ -2061,14 +2142,14 @@ class Tests extends FlatSpec {
             }
         }
 
-        StirIngredientTest4.run()
+        StirIngredientTest3.run()
     } 
 
     // test to make sure it works on all 5 mixing bowls
-    "Stir ingredient test 5" should "make sure STIR works on all 5 mixing bowls" in {
-        object StirIngredientTest5 extends ScalaChef {
+    "Stir ingredient test 4" should "make sure STIR works on all 5 mixing bowls" in {
+        object StirIngredientTest4 extends ScalaChef {
             def run(): Unit = {
-                TITLE ("Stir ingredient test 5") END
+                TITLE ("Stir ingredient test 4") END
 
 
                 START_INGREDIENTS
@@ -2144,7 +2225,7 @@ class Tests extends FlatSpec {
             }
         }
 
-        StirIngredientTest5.run()
+        StirIngredientTest4.run()
     } 
     
     // test to make sure can't work on baking dishes
