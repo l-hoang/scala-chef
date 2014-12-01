@@ -8,8 +8,6 @@ object ChefGuessingGame extends ScalaChef {
         
         1 ('secret_ingredient) END
         
-        1 ('user_ingredient) END
-        
         // true
         1 ('true) END
         
@@ -123,8 +121,6 @@ object ChefGuessingGame extends ScalaChef {
         "LEVEL" UNTIL "LEVELED" END
         
         "GUESS" UNTIL "GUESSED" END
-        
-        SERVES (1) END
         
         
         TITLE ("Prompt Pudding") END
