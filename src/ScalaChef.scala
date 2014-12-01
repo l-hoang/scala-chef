@@ -171,6 +171,9 @@ class ScalaChef {
     val O_TITLE = 21
 
 
+    // SCANNER
+    val in = new Scanner(System.in)
+
     /* ingredient in use; tracks the ingredient that is being used in some line */  
     var currentIngredient: Symbol = null
 
@@ -1170,7 +1173,7 @@ class ScalaChef {
 
         lines(line) match{
             case Read(ingredient: Symbol) => {
-                val in = new Scanner(System.in)
+                // val in = new Scanner(System.in)
                 val ingredientToAdd = new Ingredient(in.nextInt(), I_EITHER)
 
                 if (ingredientToAdd.number < 0) {
@@ -1185,7 +1188,7 @@ class ScalaChef {
                 }
 
                 variableBindings(ingredient) = ingredientToAdd
-                in.close()
+                // in.close()
                 evaluate(line+1)
             }
             case PushStack(stack: String , ingredient: Symbol) => {
