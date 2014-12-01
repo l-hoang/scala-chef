@@ -18,13 +18,10 @@ object ChefGuessingGame extends ScalaChef {
         
         1 ('result) END
         
-        // greater = false
         1 ('greater) END
         
-        // less = false
         1 ('less) END
         
-        // equal = false
         1 ('equal) END
         
         END_INGREDIENTS
