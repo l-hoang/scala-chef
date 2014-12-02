@@ -83,7 +83,6 @@ import scala.collection.mutable
 import java.util.ArrayDeque
 import java.util.ArrayList
 import java.util.Collections
-import java.util.Scanner
 
 class ScalaChef {
     abstract sealed class ChefLine
@@ -169,10 +168,6 @@ class ScalaChef {
     val O_REFR = 19
     val O_SERVES = 20
     val O_TITLE = 21
-
-
-    // SCANNER
-    val in = new Scanner(System.in)
 
     /* ingredient in use; tracks the ingredient that is being used in some line */  
     var currentIngredient: Symbol = null
@@ -1182,7 +1177,7 @@ class ScalaChef {
         lines(line) match{
             case Read(ingredient: Symbol) => {
                 // val in = new Scanner(System.in)
-                val ingredientToAdd = new Ingredient(in.nextInt(), I_EITHER)
+                val ingredientToAdd = new Ingredient(readInt(), I_EITHER)
 
                 if (ingredientToAdd.number < 0) {
                     throw new RuntimeException("ingredients can't be <0")
