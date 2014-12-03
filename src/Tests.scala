@@ -1447,37 +1447,37 @@ class Tests extends FlatSpec {
 
     // test to make sure ADD DRY INGREDIENTS adds all of the dry ingredients
     // together (i.e. does it work basically)
-    // "Add dry ingredients test 1" should "make sure it works" in {
-    //     object AddDryTest1 extends ScalaChef {
-    //         def run(): Unit = {
-    //             TITLE ("Add dry ingredients test 1") END
+    "Add dry ingredients test 1" should "make sure it works" in {
+        object AddDryTest1 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Add dry ingredients test 1") END
 
 
-    //             START_INGREDIENTS
+                START_INGREDIENTS
 
-    //             2 G ('potatoes) END
+                2 G ('potatoes) END
 
-    //             3 KG ('turkey) END
+                3 KG ('turkey) END
 
-    //             4 G ('stuffing) END
+                4 G ('stuffing) END
 
-    //             0 G ('corn) END
+                0 G ('corn) END
 
-    //             END_INGREDIENTS
-
-
-    //             ADD DRY INGREDIENTS TO FIRST MIXING_BOWL END
+                END_INGREDIENTS
 
 
-    //             RUN
+                ADD DRY INGREDIENTS TO FIRST MIXING_BOWL END
 
 
-    //             assert(mixingStacks(FIRST).peek.asNumber == 9)
-    //         }
-    //     }
+                RUN
 
-    //     AddDryTest1.run()
-    // }
+
+                assert(mixingStacks(FIRST).peek.asNumber == 9)
+            }
+        }
+
+        AddDryTest1.run()
+    }
 
     // test to make sure ADD DRY INGREDIENTS ignores liquid/either ingredients
 
