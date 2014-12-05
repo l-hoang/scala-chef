@@ -4,6 +4,9 @@ scala-chef
 Implementation of the esoteric programming language Chef as an internal Scala DSL.
 For more details, check the webpage: http://www.dangermouse.net/esoteric/chef.html
 
+## Disclaimer
+The information in this readme could potentially be inaccurate. Apologies if it is.
+
 ## Changes from Chef/Important Implementation Details
 * The END keyword is used in most places instead of a period.
 * The ingredient parsing begins and ends with START/END_INGREDIENTS; it is also
