@@ -73,8 +73,6 @@ SOFTWARE.
  * Refrigerate : return statement (can specify how many baking dishes to print)
  *
  *
- *
- *
  */
 
 import scala.language.implicitConversions
@@ -385,6 +383,9 @@ class ScalaChef {
         def PINCH(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_DRY
+            if (num != 1) {
+                throw new RuntimeException("PINCH needs to have value 1")
+            }
             intArg = num
             new Ender(END)
         }
@@ -413,6 +414,10 @@ class ScalaChef {
         def DASH(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_LIQUID
+            if (num != 1) {
+                throw new RuntimeException("DASH needs to have value 1")
+            }
+
             intArg = num
             new Ender(END)
         }
@@ -427,6 +432,9 @@ class ScalaChef {
         def CUP(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_EITHER
+            if (num != 1) {
+                throw new RuntimeException("CUP needs to have value 1")
+            }
             intArg = num
             new Ender(END)
         }
@@ -441,6 +449,9 @@ class ScalaChef {
         def TEASPOON(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_EITHER
+            if (num != 1) {
+                throw new RuntimeException("TEASPOON needs to have value 1")
+            }
             intArg = num
             new Ender(END)
         }
@@ -455,6 +466,9 @@ class ScalaChef {
         def TABLESPOON(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_EITHER
+            if (num != 1) {
+                throw new RuntimeException("TABLESPOON needs to have value 1")
+            }
             intArg = num
             new Ender(END)
         }
