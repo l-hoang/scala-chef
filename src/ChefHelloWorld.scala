@@ -1,4 +1,6 @@
-/*Sample chef code that prints "hello world". Change formatting as necessary.*/
+/* Sample chef code that prints "hello world".    
+ * http://www.dangermouse.net/esoteric/chef_hello.html
+ */
 
 object ChefHelloWorld extends ScalaChef {
     def main(args: Array[String]): Unit = {

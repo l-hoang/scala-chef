@@ -1,3 +1,10 @@
+/*
+ * original implementation of this from http://www.dangermouse.net/esoteric/chef_fib.html,
+ * but it was broken, so this is the fixed version of it
+ *
+ * To change # of fibonacchi #s printed, change the flour count in the main recipe.
+ * Be warned that you may need to give the VM more memory....
+ */
 object ChefFibonacci extends ScalaChef {
     def main(args: Array[String]): Unit = {
         TITLE ("Fibonacci Numbers With Caramel Sauce") END
@@ -5,7 +12,7 @@ object ChefFibonacci extends ScalaChef {
 
         START_INGREDIENTS
         
-        7 G ('flour) END
+        6 G ('flour) END
         
         250 G ('butter) END
         
