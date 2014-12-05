@@ -1,3 +1,5 @@
+/* created for presentation purposes */
+
 object ChefGuessingGame extends ScalaChef {
     def main(args: Array[String]): Unit = {
         TITLE ("Guessing Salad with Prompt Pudding, More, Less, and Equal") END
