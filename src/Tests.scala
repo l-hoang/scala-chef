@@ -208,10 +208,17 @@ class Tests extends FlatSpec {
         }
     }
 
+    // make sure ingredients can't be floats
+
+    // make sure ingredients can't be not numbers
+
+    // make sure PINCH can only have value 1 (i.e. 4 PINCH fails)
+
+    // make sure that the above (only value 1) applies to 
+    // DASH, CUP, TEASPOON, TABLESPOON (4 different tests here) 
 
 
     // TAKE
-    // TODO
 
     // note you'll have to provide input to these tests when you run them
 
@@ -2979,6 +2986,10 @@ class Tests extends FlatSpec {
 
 
     // make sure you can't call the main recipe (i.e. the first one)
+
+
+    // make sure that if main recipe doesn't have a SERVES statement that
+    // it DOESN'T run to the sub recipes
 
 
 
