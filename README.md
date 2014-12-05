@@ -28,6 +28,7 @@ stack).
 * Some instructions may require parens around them (most notably CLEAN, which
 requires the second keyword to be in parens).
 * PUT creates an unspecified ingredient (i.e. not dry or liquid).
+* Singular measures (e.g. PINCH, CUP) will only work with 1
 
 ## How to Run
 
