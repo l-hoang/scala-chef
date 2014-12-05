@@ -4,9 +4,55 @@ scala-chef
 Implementation of the esoteric programming language Chef as an internal Scala DSL.
 For more details, check the webpage: http://www.dangermouse.net/esoteric/chef.html
 
+## Changes from Chef/Important Implementation Details
+* The END keyword is used in most places instead of a period.
+* The ingredient parsing begins and ends with START/END_INGREDIENTS; it is also
+mandatory
+* There are only 5 mixing bowls and 5 baking dishes
+* Symbol notation is required for ingredients, and spaces aren't allowed in
+ingredient names 
+* Symbols should be in parens.
+* Cooking time and oven temperature are not supported
+* measure-type in ingredients not supported
+* Everything is in CAPS
+* mixing bowl and baking dish are combined into MIXING_BOWL and BAKING_DISH
+* negative ingredients aren't possible
+* A loop verb's end counter part is created by adding a d or ed (even if it's
+gramatically incorrect
+* Some things that could be optional in the original language are not optional
+here
+* Start a program by having RUN at the end of the program
+* The arithmetic operations (add, subtract, multiply, divide) will modify
+the value on the stack in place (i.e. it won't push another value onto the
+stack).
+* Some instructions may require parens around them (most notably CLEAN, which
+requires the second keyword to be in parens).
+* PUT creates an unspecified ingredient (i.e. not dry or liquid).
+
 ## How to Run
 
-*to be added*
+First, compile ScalaChef.
+```
+scalac ScalaChef.scala
+```
+
+Create your Chef program in this fashion.
+
+```
+object TITLEHERE extends ScalaChef {
+    def main(args: Array[String]): Unit = {
+        /* write your Chef here */
+    }
+}
+```
+Compile...
+```
+scalac TITLEHERE.scala
+```
+Then run.
+```
+scala TITLEHERE
+```
 
 ## How to run tests
 
@@ -23,6 +69,7 @@ For more details, check here:
 http://www.scalatest.org/quick_start
 
 ## Impelmentation Details
+
 
 ### Syntax
 
@@ -44,14 +91,14 @@ SERVES (a # from 1 to 5) END
 RUN (this should start runtime evaluation)
 ```
 
-**NOTE THAT ALL LINES SHOULD BE FOLLOWED BY A BLANK LINE.**
+**NOTE THAT IT IS HIGHLY RECOMMENDED TO FOLLOW ALL CHEF LINES WITH A BLANK LINE.**
 This is because otherwise certain commands will break.
 
 ### How state is stored/represented
 
 Chef has mixing bowls and baking dishes. These are esentially stacks. They
 are represented in the program as ArrayDeques. To access a particular 1 (e.g.
-the first one), HashMaps exists that takes FIRST, SECOND, THIRD, FOURTH, or
+the first one), HashMaps exist that take FIRST, SECOND, THIRD, FOURTH, or
 FIFTH, and it'll grab the corrosponding bowl/dish.
 
 Statements will have a case class that is associated with it. These
@@ -67,11 +114,11 @@ its interpretation (as a number, character, or either).
 Bindings for ingredients are represented as a HashMap that maps a Symbol
 (the ingredient name) to an Ingredient object.
 
-There will exist a HashMap that maps recipe titles to line numbers. This is so
+There exists a HashMap that maps recipe titles to line numbers. This is so
 a function call can just jump to a particular line number and start from there.
 It will also store the end line of a recipe to know when a recipe is finished.
 
-There will also exist a HashMap that maps titles to default variable bindings. 
+There exists a HashMap that maps titles to default variable bindings. 
 This makes it so calling recipes will load a copy of its default variable 
 bindings.
 
@@ -87,15 +134,16 @@ currently in, the END statement at the end of most lines will function
 differently. Additionally, the code will also use the mode its currently in to
 make sure that you are following correct program order.
 
-For example, every program will start in title parsing mode: if it doesn't find
+For example, a program will start in title parsing mode: if it doesn't find
 a title, the END evaluator will throw a runtime exception since a title hasn't
 been parsed yet.
 
 As for the parsing itself, the keyword at the beginning of each Chef line is
 either an object or a function call. The object has a method that will grab the
-next word in the line. It will then create a class to return, and that class
-will be responsible for grabbing the next word in the line. Depending on the 
-keywords/arguments that are parsed in each line, the program will set variables
+next word in the line. It will then usually create a class to return, and that class
+will be responsible for grabbing the next word in the line (otherwise it does
+some other thing that will let it continue parsing).
+Depending on the keywords/arguments that are parsed in each line, the program will set variables
 that will be used at the end of line parsing. At the end of line parsing,
 depending on how the variables were set, the program will alter the parsing
 mode, change the state of things like variable bindings, or create a case class
@@ -168,12 +216,12 @@ by pushing info onto a bunch of stacks.
 
 A function's start/end line are gotten and saved during the initial parsing 
 stage of running the program. They're saved into a class that holds the 2
-value, and this class is stored in a HashMap.
+values, and this class is stored in a HashMap.
 
 Before jumping to the start of the new recipe, the program must make a deep
 copy of the caller's mixing bowls and baking dishes. It must also load a copy
 of its default ingredient bindings (saved during the initial parse) and its 
-loop bindings. It's loop stack will start completely empty (since it hasn't
+loop bindings. Its loop stack will start completely empty (since it hasn't
 even begun to run).
 
 Before evaluating a line, the program checks to see if the current line matches
@@ -184,31 +232,6 @@ original caller's first mixing bowl. A return command (REFRIGERATE) will do the
 same thing (pop all of the values on the stacks, dump mixing bowl) except that
 it can be done in the middle of a recipe.
 
-The stacks allow both recursion and calling functions within other functions.
+The stacks allow both recursion and calling functions within other functions (but
+you can't call the main recipe).
 It may be limited by memory, however.
-
-
-## Changes from Chef/Things to note
-* The END keyword is used in most places instead of a period.
-* The ingredient parsing begins and ends with START/END_INGREDIENTS; it is also
-mandatory
-* There are only 5 mixing bowls and 5 baking dishes
-* Symbol notation is required for ingredients, and spaces aren't allowed in
-ingredient names (I think)
-* Cooking time and oven temperature are not supported
-* measure-type in ingredients not supported
-* Everything is in CAPS
-* mixing bowl and baking dish are combined into MIXING_BOWL and BAKING_DISH
-* negative ingredients aren't possible
-* A loop verb's end counter part is created by adding a d or ed (even if it's
-gramatically incorrect
-* Some things that could be optional in the original language are not optional
-here
-
-## To Do:
-- [x] implement runtime evaluator
-- [x] implement loops
-- [x] implement the rest of the instructions
-- [x] decide how to do function calls
-- [ ] write a bunch of tests
-
