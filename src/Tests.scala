@@ -22,6 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+/* we try testing for most things, but some tests may be left with a description
+ * but no implementation. The description and the test may not match up as well:
+ * please look at the actual test to see what is being tested */
+
 import org.scalatest.FlatSpec
 
 class Tests extends FlatSpec {
