@@ -22,6 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+/* we try testing for most things, but some tests may be left with a description
+ * but no implementation. The description and the test may not match up as well:
+ * please look at the actual test to see what is being tested */
+
 import org.scalatest.FlatSpec
 
 class Tests extends FlatSpec {
@@ -153,6 +157,7 @@ class Tests extends FlatSpec {
         object GeneralTest6 extends ScalaChef {
             def run(): Unit = { 
                 intercept[RuntimeException] {
+                    PUT ('potatoes) INTO FIRST MIXING_BOWL END
                     RUN
                 }
             }
@@ -216,10 +221,7 @@ class Tests extends FlatSpec {
             def run(): Unit = {
                 TITLE ("Ingredients test 2") END
 
-
                 START_INGREDIENTS
-
-                0 ('potatoes) END
 
                 intercept[RuntimeException] {
                     2 PINCH ('cakes) END
