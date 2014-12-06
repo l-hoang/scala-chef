@@ -74,6 +74,9 @@ Additionally, the header comment desciptions for some tests may not match
 what is actually being tested: for the right understanding, look at the
 actual test itself.
 
+The example programs provided are also tests in themselves (mainly of
+functions/loops used as conditionals).
+
 For more details, check here:
 http://www.scalatest.org/quick_start
 
