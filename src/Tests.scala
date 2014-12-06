@@ -206,17 +206,117 @@ class Tests extends FlatSpec {
                 END_INGREDIENTS
             }
         }
+
+        IngredientsTest1.run()
     }
 
-    // make sure ingredients can't be floats
-
-    // make sure ingredients can't be not numbers
-
     // make sure PINCH can only have value 1 (i.e. 4 PINCH fails)
+    "Ingredients test 2" should "make sure you can only have a pinch of size 1" in {
+        object IngredientsTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Ingredients test 2") END
+
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                intercept[RuntimeException] {
+                    2 PINCH ('cakes) END
+                }
+
+                END_INGREDIENTS
+            }
+        }
+
+        IngredientsTest2.run()
+    }
 
     // make sure that the above (only value 1) applies to 
     // DASH, CUP, TEASPOON, TABLESPOON (4 different tests here) 
+    "Ingredients test 3" should "make sure you can only have a dash of size 1" in {
+        object IngredientsTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Ingredients test 3") END
 
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                intercept[RuntimeException] {
+                    2 DASH ('cakes) END
+                }
+
+                END_INGREDIENTS
+            }
+        }
+
+        IngredientsTest3.run()
+    }
+
+    "Ingredients test 4" should "make sure you can only have a cup of size 1" in {
+        object IngredientsTest4 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Ingredients test 4") END
+
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                intercept[RuntimeException] {
+                    2 CUP ('cakes) END
+                }
+
+                END_INGREDIENTS
+            }
+        }
+
+        IngredientsTest4.run()
+    }
+
+    "Ingredients test 5" should "make sure you can only have a teaspoon of size 1" in {
+        object IngredientsTest5 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Ingredients test 5") END
+
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                intercept[RuntimeException] {
+                    2 TEASPOON ('cakes) END
+                }
+
+                END_INGREDIENTS
+            }
+        }
+
+        IngredientsTest5.run()
+    }
+
+    "Ingredients test 6" should "make sure you can only have a tablespoon of size 1" in {
+        object IngredientsTest6 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Ingredients test 6") END
+
+
+                START_INGREDIENTS
+
+                0 ('potatoes) END
+
+                intercept[RuntimeException] {
+                    2 TABLESPOON ('cakes) END
+                }
+
+                END_INGREDIENTS
+            }
+        }
+
+        IngredientsTest6.run()
+    }
 
     // TAKE
 
