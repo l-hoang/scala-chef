@@ -3116,8 +3116,6 @@ class Tests extends FlatSpec {
     }
 
 
-    // make sure that if main recipe doesn't have a SERVES statement that
-    // it DOESN'T run to the sub recipes
     "Function test 4" should "make sure a serves in the main recipe stops execution" in {
         object FunctionTest4 extends ScalaChef {
             def run(): Unit = {
