@@ -31,7 +31,7 @@ stack).
 * Some instructions may require parens around them (most notably CLEAN, which
 requires the second keyword to be in parens).
 * PUT creates an unspecified ingredient (i.e. not dry or liquid).
-* Singular measures (e.g. PINCH, CUP) will only work with 1
+* Singular measures (e.g. PINCH, CUP) (should) only work with 1
 
 ## How to Run
 
@@ -65,9 +65,11 @@ has already been compiled.
 
 ```
 scalac -cp scalatest_2.11-2.2.1.jar:. Tests.scala
-scala -cp scalatest_2.11-2.2.1.jar org.scalatest.run Tests
-
+scala -cp scalatest_2.11-2.2.1.jar org.scalatest.run Tests < Tests.in
 ```
+
+We tried to have most things tested, but there may be some unfinished 
+tests/descriptions of test not yet implemented in the test file as well.
 
 For more details, check here:
 http://www.scalatest.org/quick_start
