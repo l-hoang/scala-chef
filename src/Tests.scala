@@ -1589,18 +1589,148 @@ class Tests extends FlatSpec {
     }
 
     // test to make sure ADD DRY INGREDIENTS ignores liquid/either ingredients
+    "Add dry ingredients test 2" should "make sure it ignores liquids/eithers" in {
+        object AddDryTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Add dry ingredients test 2") END
+
+
+                START_INGREDIENTS
+
+                2 G ('potatoes) END
+
+                3 KG ('turkey) END
+
+                4 G ('stuffing) END
+
+                0 G ('corn) END
+
+                10 ML ('oil) END
+
+                100 ('fries) END
+
+                END_INGREDIENTS
+
+
+                ADD DRY INGREDIENTS TO FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).peek.asNumber == 9)
+            }
+        }
+
+        AddDryTest2.run()
+    }
 
     // test to make sure ADD DRY INGREDIENTS works on all 5 mixing bowls
+    "Add dry ingredients test 3" should "make sure it works on all 5 mixing bowls" in {
+        object AddDryTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Add dry ingredients test 3") END
+
+
+                START_INGREDIENTS
+
+                2 G ('potatoes) END
+
+                3 KG ('turkey) END
+
+                4 G ('stuffing) END
+
+                0 G ('corn) END
+
+                END_INGREDIENTS
+
+
+                ADD DRY INGREDIENTS TO FIRST MIXING_BOWL END
+
+                ADD DRY INGREDIENTS TO SECOND MIXING_BOWL END
+
+                ADD DRY INGREDIENTS TO THIRD MIXING_BOWL END
+
+                ADD DRY INGREDIENTS TO FOURTH MIXING_BOWL END
+
+                ADD DRY INGREDIENTS TO FIFTH MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).peek.asNumber == 9)
+                assert(mixingStacks(SECOND).peek.asNumber == 9)
+                assert(mixingStacks(THIRD).peek.asNumber == 9)
+                assert(mixingStacks(FOURTH).peek.asNumber == 9)
+                assert(mixingStacks(FIFTH).peek.asNumber == 9)
+            }
+        }
+
+        AddDryTest3.run()
+    }
 
     // test to make sure ADD DRY INGREDIENTS adds 0 to a mixing bowl if there are no
     // dry ingredients
+    "Add dry ingredients test 4" should "make sure it adds a 0 if no ingredients" in {
+        object AddDryTest4 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Add dry ingredients test 4") END
+
+
+                START_INGREDIENTS
+
+                END_INGREDIENTS
+
+
+                ADD DRY INGREDIENTS TO FIRST MIXING_BOWL END
+
+
+                RUN
+
+
+                assert(mixingStacks(FIRST).peek.asNumber == 0)
+            }
+        }
+
+        AddDryTest4.run()
+    }
 
     // test to make sure ADD DRY INGREDIENTS adds a DRY ingredient when it does
     // the pushing onto a mixing bowl
+    // "Add dry ingredients test 5" should "make sure it adds a dry ingredient to the mixing bowl" in {
+    //     object AddDryTest5 extends ScalaChef {
+    //         def run(): Unit = {
+    //             TITLE ("Add dry ingredients test 5") END
+
+
+    //             START_INGREDIENTS
+
+    //             2 G ('potatoes) END
+
+    //             3 KG ('turkey) END
+
+    //             4 G ('stuffing) END
+
+    //             0 G ('corn) END
+
+    //             END_INGREDIENTS
+
+
+    //             ADD DRY INGREDIENTS TO FIRST MIXING_BOWL END
+
+
+    //             RUN
+
+
+    //             assert(mixingStacks(FIRST).peek.state == I_DRY)
+    //         }
+    //     }
+
+    //     AddDryTest5.run()
+    // }
 
     // test to make sure you can't ADD DRY INGREDIENTS on a baking dish
-
-
 
 
     // test to make sure LIQUEFY ingredient changes a dry or non-specified
