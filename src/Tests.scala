@@ -1698,37 +1698,37 @@ class Tests extends FlatSpec {
 
     // test to make sure ADD DRY INGREDIENTS adds a DRY ingredient when it does
     // the pushing onto a mixing bowl
-    // "Add dry ingredients test 5" should "make sure it adds a dry ingredient to the mixing bowl" in {
-    //     object AddDryTest5 extends ScalaChef {
-    //         def run(): Unit = {
-    //             TITLE ("Add dry ingredients test 5") END
+    "Add dry ingredients test 5" should "make sure it adds a dry ingredient to the mixing bowl" in {
+        object AddDryTest5 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Add dry ingredients test 5") END
 
 
-    //             START_INGREDIENTS
+                START_INGREDIENTS
 
-    //             2 G ('potatoes) END
+                2 G ('potatoes) END
 
-    //             3 KG ('turkey) END
+                3 KG ('turkey) END
 
-    //             4 G ('stuffing) END
+                4 G ('stuffing) END
 
-    //             0 G ('corn) END
+                0 G ('corn) END
 
-    //             END_INGREDIENTS
-
-
-    //             ADD DRY INGREDIENTS TO FIRST MIXING_BOWL END
+                END_INGREDIENTS
 
 
-    //             RUN
+                ADD DRY INGREDIENTS TO FIRST MIXING_BOWL END
 
 
-    //             assert(mixingStacks(FIRST).peek.state == I_DRY)
-    //         }
-    //     }
+                RUN
 
-    //     AddDryTest5.run()
-    // }
+
+                assert(mixingStacks(FIRST).peek.state == I_DRY)
+            }
+        }
+
+        AddDryTest5.run()
+    }
 
     // test to make sure you can't ADD DRY INGREDIENTS on a baking dish
 
@@ -3246,6 +3246,8 @@ class Tests extends FlatSpec {
     }
 
 
+    // make sure that if main recipe doesn't have a SERVES statement that
+    // it DOESN'T run to the sub recipes
     "Function test 4" should "make sure a serves in the main recipe stops execution" in {
         object FunctionTest4 extends ScalaChef {
             def run(): Unit = {

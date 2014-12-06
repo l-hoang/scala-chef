@@ -1270,7 +1270,7 @@ class ScalaChef {
                 }
 
                 /* create a new ingredient with the value sum */
-                val ingredientToPush = new Ingredient(currentSum, I_EITHER)
+                val ingredientToPush = new Ingredient(currentSum, I_DRY)
                 /* push on stack */
                 mixingStacks(stack).push(ingredientToPush)
 
