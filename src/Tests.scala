@@ -3086,14 +3086,78 @@ class Tests extends FlatSpec {
 
 
     // make sure you can't call the main recipe (i.e. the first one)
+    "Function test 3" should "make sure you can't call the main recipe" in {
+        object FunctionTest3 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Function test 3") END
+
+
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                END_INGREDIENTS
+
+
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                SERVE WITH "Function test 1" END
+                
+
+                intercept[RuntimeException] {
+                    RUN
+                }
+            }
+        }
+
+        FunctionTest3.run()
+    }
 
 
     // make sure that if main recipe doesn't have a SERVES statement that
     // it DOESN'T run to the sub recipes
+    "Function test 4" should "make sure a serves in the main recipe stops execution" in {
+        object FunctionTest4 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Function test 4") END
 
 
+                START_INGREDIENTS
+
+                1 ('potatoes) END
+
+                END_INGREDIENTS
 
 
+                PUT ('potatoes) INTO FIRST MIXING_BOWL END
+
+                POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+
+                SERVES (1) END
+                
+
+                TITLE ("Serves auxiliary") END
+
+
+                START_INGREDIENTS
+
+                2 ('cakes)
+
+                END_INGREDIENTS
+
+
+                PUT ('cakes) INTO FIRST MIXING_BOWL END
+
+                
+                RUN
+
+
+                assert(mixingStacks(FIRST).peek.asNumber == 1)
+            }
+        }
+
+        FunctionTest4.run()
+    }
 
 
 
