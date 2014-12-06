@@ -153,6 +153,7 @@ class Tests extends FlatSpec {
         object GeneralTest6 extends ScalaChef {
             def run(): Unit = { 
                 intercept[RuntimeException] {
+                    PUT ('potatoes) INTO FIRST MIXING_BOWL END
                     RUN
                 }
             }
@@ -208,11 +209,22 @@ class Tests extends FlatSpec {
         }
     }
 
-    // make sure ingredients can't be floats
-
-    // make sure ingredients can't be not numbers
-
     // make sure PINCH can only have value 1 (i.e. 4 PINCH fails)
+    "Ingredients test 2" should "make sure PINCH cannot != 1" in {
+        object IngredientsTest2 extends ScalaChef {
+            def run(): Unit = {
+                TITLE ("Ingredients test 2") END
+
+
+                START_INGREDIENTS
+                intercept[RuntimeException] {
+                    3 PINCH ('potatoes) END
+                }
+
+                END_INGREDIENTS
+            }
+        }
+    }
 
     // make sure that the above (only value 1) applies to 
     // DASH, CUP, TEASPOON, TABLESPOON (4 different tests here) 
