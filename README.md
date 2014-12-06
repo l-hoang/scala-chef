@@ -70,6 +70,9 @@ scala -cp scalatest_2.11-2.2.1.jar org.scalatest.run Tests < Tests.in
 
 We tried to have most things tested, but there may be some unfinished 
 tests/descriptions of test not yet implemented in the test file as well.
+Additionally, the header comment desciptions for some tests may not match
+what is actually being tested: for the right understanding, look at the
+actual test itself.
 
 For more details, check here:
 http://www.scalatest.org/quick_start
