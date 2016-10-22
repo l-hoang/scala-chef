@@ -229,7 +229,7 @@ class ScalaChef {
     
     /* Start evaluating a line that starts with TITLE */
     object TITLE {
-        def apply(title: String):Ender = {
+        def apply(title: String) = {
             if (currentMode == M_INGREDIENT) {
                 /* can't declare another recipe before declaring ingredients */
                 throw new RuntimeException("can't parse a title in ingredient mode")
@@ -247,7 +247,9 @@ class ScalaChef {
             stringArg = title
             currentOpType = O_TITLE
             currentMode = M_TITLE
-            new Ender(END)
+
+            // end this line parse
+            END.finish
         }
     }
 
@@ -264,25 +266,28 @@ class ScalaChef {
         canParseIngredients = true
     }
 
+
+
     /* An implicit below will convert numbers into this class. Then the numbers
      * will be able to use these methods in order to parse the rest of the line */
-    case class IngredientGetter(num: Int) {
+    class IngredientGetter(num: Int) {
         if (!canParseIngredients) {
             throw new RuntimeException("you can't parse ingredients now")
         }
+
 
         def G(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_DRY
             intArg = num
-            new Ender(END)
+            END.finish
         }
 
         def KG(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_DRY
             intArg = num
-            new Ender(END)
+            END.finish
         }
 
         def PINCH(ingredient: Symbol) = {
@@ -292,28 +297,28 @@ class ScalaChef {
                 throw new RuntimeException("PINCH needs to have value 1")
             }
             intArg = num
-            new Ender(END)
+            END.finish
         }
         
         def PINCHES(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_DRY
             intArg = num
-            new Ender(END)
+            END.finish
         }
 
         def ML(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_LIQUID
             intArg = num
-            new Ender(END)
+            END.finish
         }
 
         def L(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_LIQUID
             intArg = num
-            new Ender(END)
+            END.finish
         }
         
         def DASH(ingredient: Symbol) = {
@@ -324,14 +329,14 @@ class ScalaChef {
             }
 
             intArg = num
-            new Ender(END)
+            END.finish
         }
 
         def DASHES(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_LIQUID
             intArg = num
-            new Ender(END)
+            END.finish
         }
         
         def CUP(ingredient: Symbol) = {
@@ -343,14 +348,14 @@ class ScalaChef {
             }
             
             intArg = num
-            new Ender(END)
+            END.finish
         }
 
         def CUPS(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_EITHER
             intArg = num
-            new Ender(END)
+            END.finish
         }
         
         def TEASPOON(ingredient: Symbol) = {
@@ -360,14 +365,14 @@ class ScalaChef {
                 throw new RuntimeException("TEASPOON needs to have value 1")
             }
             intArg = num
-            new Ender(END)
+            END.finish
         }
 
         def TEASPOONS(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_EITHER
             intArg = num
-            new Ender(END)
+            END.finish
         }
         
         def TABLESPOON(ingredient: Symbol) = {
@@ -377,28 +382,27 @@ class ScalaChef {
                 throw new RuntimeException("TABLESPOON needs to have value 1")
             }
             intArg = num
-            new Ender(END)
+            END.finish
         }
 
         def TABLESPOONS(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_EITHER
             intArg = num
-            new Ender(END)
+            END.finish
         }
 
-        /* this method is if they don't specify a measure */
         def apply(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_EITHER
             intArg = num
-            new Ender(END)
-        }
 
+            END.finish
+        }
     }
 
-    implicit def int2IngredientGetter(i: Int) = IngredientGetter(i)
-    
+    implicit def int2IngredientGetter(i: Int) = new IngredientGetter(i)   
+
     /* This def serves to end ingredient mode */
     def END_INGREDIENTS {
         if (currentMode != M_INGREDIENT) {
@@ -436,28 +440,33 @@ class ScalaChef {
     }
 
     /* This builds loops*/
-    case class LoopBuilder(verb:String){
+    class LoopBuilder(verb: String) {
         if(verb.toUpperCase().last == 'E'){
             currentVerb = (verb + "D").toUpperCase()
         } else {
             currentVerb = (verb + "ED").toUpperCase()
         }
-        
+
         def THE(ingredient:Symbol) = {
             currentIngredient = ingredient
             new LoopFollow
+            //currentOpType = O_VERB
+            //ScalaChef.this.END.finish
         }
-        
+
         def UNTIL(verbed:String) = {
             currentVerb = (verbed).toUpperCase()
             currentOpType = O_VERBEND
             currentIngredient = null
-            new Ender(END)
+            END.finish
         }
     }
-    
-    class LoopFollow(){
-        def END() = {
+
+
+    class LoopFollow() {
+        // TODO hacky fix, requires NOW keyword because otherwise
+        // parsing is wrong
+        def NOW() = {
             currentOpType = O_VERB
             ScalaChef.this.END.finish
         }
@@ -465,17 +474,19 @@ class ScalaChef {
         def UNTIL(verbed: String) = {
             currentVerb = (verbed).toUpperCase()
             currentOpType = O_VERBEND
-            new Ender(ScalaChef.this.END)
+            ScalaChef.this.END.finish
         }
     }
-    
-    implicit def string2LoopBuilder(verb: String) = LoopBuilder(verb);
+
+    implicit def string2LoopBuilder(verb: String) = new LoopBuilder(verb);
+    implicit
+
     
     /* Start evaluating a line that starts with SET*/
     object SET {
-        def ASIDE(e:End) = {
+        def ASIDE() = {
             currentOpType = O_SET
-            e.finish
+            END.finish
         }
     }
 
@@ -490,14 +501,14 @@ class ScalaChef {
 
     /* This class reads the keyword FROM in a line with REFRIGERATOR */
     class fromRefr {
-        def FROM(r:refrigerator) = {
-            new Ender(END)
+        def FROM(r:Refrigerator) = {
+            END.finish
         }
     }
 
     /* Object to read keyword REFRIGERATOR */ 
-    abstract sealed class refrigerator {}
-    object REFRIGERATOR extends refrigerator {}
+    abstract sealed class Refrigerator {}
+    object REFRIGERATOR extends Refrigerator {}
 
     
     /* Start evaluating a line that starts with PUT */
@@ -574,10 +585,10 @@ class ScalaChef {
 
     /* Start evaluating a line that starts with LIQUEFY */
     object LIQUEFY {
-        def apply(ingredient: Symbol):Ender = {
+        def apply(ingredient: Symbol) = {
             currentOpType = O_LIQUEFY
             currentIngredient = ingredient
-            new Ender(END)
+            END.finish
         }
         def CONTENTS(of: OF.type) = {
             currentOpType = O_LIQUEFY2
@@ -609,8 +620,8 @@ class ScalaChef {
     }
     
     class Minutes{
-         def MINUTES(e:End) = {
-             e.finish
+         def MINUTES() = {
+             END.finish
          } 
     }
    
@@ -644,36 +655,36 @@ class ScalaChef {
     val gFifth = FIFTH
 
     abstract sealed class TheStir { 
-        def FIRST(a: MIXING_BOWL.type):Ender
-        def SECOND(a: MIXING_BOWL.type):Ender
-        def THIRD(a: MIXING_BOWL.type):Ender
-        def FOURTH(a: MIXING_BOWL.type):Ender
-        def FIFTH(a: MIXING_BOWL.type):Ender
+        def FIRST(a: MIXING_BOWL.type)
+        def SECOND(a: MIXING_BOWL.type)
+        def THIRD(a: MIXING_BOWL.type)
+        def FOURTH(a: MIXING_BOWL.type)
+        def FIFTH(a: MIXING_BOWL.type)
 
     }
     object THE extends TheStir { 
-        def FIRST(a: MIXING_BOWL.type):Ender = {
+        def FIRST(a: MIXING_BOWL.type) = {
             currentStack = gFirst
-            new Ender(END)
+            END.finish
         }
-        def SECOND(a: MIXING_BOWL.type):Ender = {
+        def SECOND(a: MIXING_BOWL.type) = {
             currentStack = gSecond
-            new Ender(END)
+            END.finish
 
         }
-        def THIRD(a: MIXING_BOWL.type):Ender = {
+        def THIRD(a: MIXING_BOWL.type) = {
             currentStack = gThird
-            new Ender(END)
+            END.finish
 
         }
-        def FOURTH(a: MIXING_BOWL.type):Ender = {
+        def FOURTH(a: MIXING_BOWL.type) = {
             currentStack = gFourth
-            new Ender(END)
+            END.finish
 
         }
-        def FIFTH(a: MIXING_BOWL.type):Ender = {
+        def FIFTH(a: MIXING_BOWL.type) = {
             currentStack = gFifth
-            new Ender(END)
+            END.finish
         }
     }
 
@@ -689,22 +700,36 @@ class ScalaChef {
     }
 
     /* Start evaluating a line that starts with CLEAN */
-    object CLEAN {
-        //def applyDynamic(stack: String)(args: Any*) = {
-        //    currentOpType = O_CLEAN
-        //    currentStack = stack match {
-        //        case "FIRST" => FIRST
-        //        case "SECOND" => SECOND
-        //        case "THIRD" => THIRD
-        //        case "FOURTH" => FOURTH
-        //        case "FIFTH" => FIFTH
-        //    }
-        //}
-        def apply(stack: StackNumber) = {
+    object CLEAN extends Dynamic {
+        def applyDynamic(stack: String)(args: Any*) = {
+            if ((args length) > 1) {
+                println((args length))
+                throw new RuntimeException("clean line is wrong")
+            }
+
             currentOpType = O_CLEAN
-            currentStack = stack
-            new BowlOrDish
+            currentStack = stack match {
+                case "FIRST" => FIRST
+                case "SECOND" => SECOND
+                case "THIRD" => THIRD
+                case "FOURTH" => FOURTH
+                case "FIFTH" => FIFTH
+            }
+
+            if (args(0) == "MIXING_BOWL") {
+                println(args(0))
+                throw new RuntimeException("clean line is wrong")
+            }
+            stackType = T_BOWL
+
+            END.finish
         }
+
+        //def apply(stack: StackNumber) = {
+        //    currentOpType = O_CLEAN
+        //    currentStack = stack
+        //    new BowlOrDish
+        //}
     }
 
     /* Start evaluating a line that starts with POUR */
@@ -733,14 +758,14 @@ class ScalaChef {
         }
     }
     class PourDish {
-        def BAKING_DISH(e: End) = {
-            e.finish
+        def BAKING_DISH() = {
+            END.finish
         }
     }
 
     /* start parsing line that starts with SERVE (function call) */
     object SERVE {
-        def WITH(recipe: String): Ender = {
+        def WITH(recipe: String) = {
             currentOpType = O_SERVE
             if (recipe.equals("")) {
                 throw new RuntimeException("can't parse blank recipes")
@@ -751,13 +776,13 @@ class ScalaChef {
             }
 
             stringArg = recipe
-            new Ender(END)
+            END.finish
         }
     }
    
     /* Start parsing a line that starts with REFRIGERATE */
     object REFRIGERATE {
-        def END() = {
+        def NOW() = {
             currentOpType = O_REFR
             intArg = 0
             ScalaChef.this.END.finish
@@ -775,8 +800,8 @@ class ScalaChef {
     }
     
     class Hours {
-        def HOURS(e:End) = {
-            e.finish
+        def HOURS() = {
+            END.finish
         }
     }
     
@@ -800,7 +825,7 @@ class ScalaChef {
             }   
             intArg = (numberOfDiners - 1)
             oneServes = true
-            new Ender(END)
+            END.finish
         }
     }
     
@@ -831,41 +856,25 @@ class ScalaChef {
     /* Class to read keywords MIXING_BOWL WELL*/
     class mixWell{
         def MIXING_BOWL(w:WELL.type) = {
-            new Ender(END);
+            END.finish
         }
     }
 
     /* This class will evaluate MIXING_BOWL or BAKING_DISH in a line.
      * It sets the line stack type, then calls END's finish method */
     class BowlOrDish {
-        def MIXING_BOWL(e: End) = {
+        def MIXING_BOWL() = {
             stackType = T_BOWL
-            e.finish
+            END.finish
         }
 
-        def BAKING_DISH(e: End) = {
+        def BAKING_DISH() = {
             if (currentOpType != O_POUR) {
                 throw new RuntimeException("You can only do POUR on a baking dish")
             }
             stackType = T_DISH
-            e.finish
+            END.finish
         }
-    }
-
-    /* This class is created when the next keyword to parse is END; it absorbs
-     * the END keyword and calls the object END finish method to finish the
-     * line eval. */
-    class Ender(e: End) {
-        def END = {
-            e.finish
-        }
-    }
-
-
-    /* This class's purpose is solely to let the object END extend it so that
-     * END can be used as an argument/pass type checking. */
-    abstract sealed class End {
-        def finish
     }
 
     /* The keyword END must be at the end of every line. The finish method of
@@ -874,7 +883,7 @@ class ScalaChef {
      * 
      * It extends the abstract class End so that other keywords can take END
      * as an "argument". */
-    object END extends End {
+    object END {
         def finish = {
             if (programFinished) {
                 throw new RuntimeException("trying to parse after program " +

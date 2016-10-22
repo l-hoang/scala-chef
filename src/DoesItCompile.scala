@@ -22,42 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import scala.language.postfixOps
+
 object DoesItCompile extends ScalaChef {
     def main(args: Array[String]): Unit = {       
-        TITLE ("tester") END
+        TITLE ("tester")
 
         START_INGREDIENTS
-
-        111 ('potatoes) END
-
+        111 ('potatoes)
         END_INGREDIENTS
 
+        CLEAN FIRST MIXING_BOWL
 
-        PUT ('potatoes) INTO FIRST MIXING_BOWL END
+        "kill" THE ('wabbit)
 
-        FOLD ('potatoes) INTO FIRST MIXING_BOWL END
+        "beat" UNTIL "killed"
 
-        ADD ('potatoes) TO FIRST MIXING_BOWL END
-
-        COMBINE ('potatoes) INTO FIRST MIXING_BOWL END
-
-        DIVIDE ('potatoes) INTO FIRST MIXING_BOWL END
-
-        LIQUEFY ('potatoes) END
-
-        "COOK" THE ('potatoes) END
-        
-        "COOK" UNTIL "COOKED" END
-        
-        "BAKE" THE ('potatoes) END
-        
-        "BAKE" THE ('potatoes) UNTIL "BAKED" END
-
-        STIR THE FIRST MIXING_BOWL FOR (3) MINUTES END
-
-        STIR ('potatoes) INTO THE FIRST MIXING_BOWL END
-
-        CLEAN (FIRST) MIXING_BOWL END
-        SERVES (1) END
+        RUN
     }
 }
