@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 Zane Urbanski, Eric Yu, Loc Hoang
+Copyright (c) 2014-2016 Zane Urbanski, Eric Yu, Loc Hoang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ SOFTWARE.
 
 
 /* Refer to the Baysick implementation,
- * LOLCODE and Shakessembly impelementations from last year's class
+ * LOLCODE and Shakessembly impelementations from last year's (2013?) class
  * for details on how to do this */
 
 /* Chef syntax stuff (simplified):
@@ -84,6 +84,8 @@ import java.util.Collections
 
 class ScalaChef {
     abstract sealed class ChefLine
+
+    // different case classes for lines in Chef
     case class Read(ingredient:Symbol) extends ChefLine
     case class PushStack(stack: String, ingredient:Symbol) extends ChefLine
     case class PopStack(stack: String, ingredient:Symbol) extends ChefLine
@@ -110,6 +112,13 @@ class ScalaChef {
     val I_DRY = 0
     val I_LIQUID = 1
     val I_EITHER = 2
+
+    /* uses case classes as enums */
+    //abstract sealed class IngredientInterpretation
+    //case object I_DRY extends IngredientInterpretation
+    //case object I_LIQUID extends IngredientInterpretation
+    //case object I_EITHER extends IngredientInterpretation
+
     /* Holds an Ingredient value and how it is to be interpreted */
     class Ingredient(value: Int, interpretation: Int) {
         var number = value
@@ -118,6 +127,7 @@ class ScalaChef {
                 interpretation != I_EITHER) {
             throw new RuntimeException("bad ingredient designation")
         }
+
         var state = interpretation
         
         /* change the interpretation of this ingredient */
@@ -172,7 +182,6 @@ class ScalaChef {
 
     /* this argument is used to hold integer arguments for a line */
     var intArg: Int = -1
-
     var stringArg: String = ""
 
     /* the number of the stack we want to use; unlike Chef, this code only has
@@ -354,6 +363,7 @@ class ScalaChef {
         if (currentMode != M_INGREDIENT) {
             throw new RuntimeException("not in ingredient mode")
         }
+
         if (canParseIngredients == 1) {
             throw new RuntimeException("you've already called Start_Ingre once")
         }
@@ -361,6 +371,8 @@ class ScalaChef {
         canParseIngredients = 1
     }
 
+    /* An implicit below will convert numbers into this class. Then the numbers
+     * will be able to use these methods in order to parse the rest of the line */
     case class IngredientGetter(num: Int) {
         if (canParseIngredients == 0) {
             throw new RuntimeException("you can't parse ingredients now")
