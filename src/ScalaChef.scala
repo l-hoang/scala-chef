@@ -82,8 +82,6 @@ import java.util.ArrayDeque
 import java.util.ArrayList
 import java.util.Collections
 
-import Enums._
-
 class ScalaChef {
     abstract sealed class ChefLine
 
