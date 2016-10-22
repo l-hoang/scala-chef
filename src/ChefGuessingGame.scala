@@ -2,233 +2,233 @@
 
 object ChefGuessingGame extends ScalaChef {
     def main(args: Array[String]): Unit = {
-        TITLE ("Guessing Salad with Prompt Pudding, More, Less, and Equal") END
+        TITLE ("Guessing Salad with Prompt Pudding, More, Less, and Equal") 
         
         START_INGREDIENTS
         
-        100 ('random_ingredients) END
+        100 ('random_ingredients) 
         
-        1 ('secret_ingredient) END
+        1 ('secret_ingredient) 
         
         // true
-        1 ('true) END
+        1 ('true) 
         
         // false
-        0 ('false) END
+        0 ('false) 
         
-        1 ('result) END
+        1 ('result) 
         
-        1 ('greater) END
+        1 ('greater) 
         
-        1 ('less) END
+        1 ('less) 
         
-        1 ('equal) END
+        1 ('equal) 
         
         END_INGREDIENTS
         
-        "AMASS" THE ('random_ingredients) END
+        "AMASS" THE ('random_ingredients) NOW
         
-        PUT ('random_ingredients) INTO FIRST MIXING_BOWL END
+        PUT ('random_ingredients) INTO FIRST MIXING_BOWL 
         
-        "AMASS" THE ('random_ingredients) UNTIL ("AMASSED") END
+        "AMASS" THE ('random_ingredients) UNTIL ("AMASSED") 
         
-        MIX THE FIRST MIXING_BOWL WELL END
+        MIX THE FIRST MIXING_BOWL WELL 
         
-        FOLD ('secret_ingredient) INTO FIRST MIXING_BOWL END
+        FOLD ('secret_ingredient) INTO FIRST MIXING_BOWL 
         
-        "GUESS" THE ('secret_ingredient) END
+        "GUESS" THE ('secret_ingredient) NOW
         
-        PUT ('false) INTO SECOND MIXING_BOWL END
+        PUT ('false) INTO SECOND MIXING_BOWL 
         
-        FOLD ('equal) INTO SECOND MIXING_BOWL END
+        FOLD ('equal) INTO SECOND MIXING_BOWL 
         
-        PUT ('false) INTO SECOND MIXING_BOWL END
+        PUT ('false) INTO SECOND MIXING_BOWL 
         
-        FOLD ('greater) INTO SECOND MIXING_BOWL END
+        FOLD ('greater) INTO SECOND MIXING_BOWL 
         
-        PUT ('true) INTO SECOND MIXING_BOWL END
+        PUT ('true) INTO SECOND MIXING_BOWL 
         
-        FOLD ('less) INTO SECOND MIXING_BOWL END
+        FOLD ('less) INTO SECOND MIXING_BOWL 
         
-        SERVE WITH "Prompt Pudding" END
+        SERVE WITH "Prompt Pudding" 
         
-        TAKE ('guess) FROM REFRIGERATOR END
+        TAKE ('guess) FROM REFRIGERATOR 
         
-        PUT ('guess) INTO SECOND MIXING_BOWL END
+        PUT ('guess) INTO SECOND MIXING_BOWL 
 
-        DIVIDE ('secret_ingredient) INTO SECOND MIXING_BOWL END
+        DIVIDE ('secret_ingredient) INTO SECOND MIXING_BOWL 
         
-        FOLD ('result) INTO SECOND MIXING_BOWL END
+        FOLD ('result) INTO SECOND MIXING_BOWL 
         
-        "CHECK" THE ('result) END
+        "CHECK" THE ('result) NOW
 
-        PUT ('false) INTO SECOND MIXING_BOWL END
+        PUT ('false) INTO SECOND MIXING_BOWL 
         
-        FOLD ('less) INTO SECOND MIXING_BOWL END
+        FOLD ('less) INTO SECOND MIXING_BOWL 
         
-        PUT ('true) INTO SECOND MIXING_BOWL END
+        PUT ('true) INTO SECOND MIXING_BOWL 
         
-        FOLD ('equal) INTO SECOND MIXING_BOWL END
+        FOLD ('equal) INTO SECOND MIXING_BOWL 
         
-        PUT ('guess) INTO SECOND MIXING_BOWL END
+        PUT ('guess) INTO SECOND MIXING_BOWL 
         
-        REMOVE ('secret_ingredient) FROM SECOND MIXING_BOWL END
+        REMOVE ('secret_ingredient) FROM SECOND MIXING_BOWL 
         
-        FOLD ('result) INTO SECOND MIXING_BOWL END
+        FOLD ('result) INTO SECOND MIXING_BOWL 
         
-        "EQUALIZE" THE ('result) END
+        "EQUALIZE" THE ('result) NOW
         
-        PUT ('false) INTO SECOND MIXING_BOWL END
+        PUT ('false) INTO SECOND MIXING_BOWL 
         
-        FOLD ('equal) INTO SECOND MIXING_BOWL END
+        FOLD ('equal) INTO SECOND MIXING_BOWL 
         
-        PUT ('true) INTO SECOND MIXING_BOWL END
+        PUT ('true) INTO SECOND MIXING_BOWL 
         
-        FOLD ('greater) INTO SECOND MIXING_BOWL END
+        FOLD ('greater) INTO SECOND MIXING_BOWL 
         
-        SET ASIDE END
+        SET ASIDE 
         
-        "EQUALIZE" UNTIL "EQUALIZED" END
+        "EQUALIZE" UNTIL "EQUALIZED" 
         
-        SET ASIDE END
+        SET ASIDE 
         
-        "CHECK" UNTIL "CHECKED" END
+        "CHECK" UNTIL "CHECKED" 
         
-        "LOWER" THE ('less) END
+        "LOWER" THE ('less) NOW
         
-        SERVE WITH ("More") END
+        SERVE WITH ("More") 
         
-        SET ASIDE END
+        SET ASIDE 
         
-        "LOWER" UNTIL "LOWERED" END
+        "LOWER" UNTIL "LOWERED" 
         
-        "MAX" THE ('greater) END
+        "MAX" THE ('greater) NOW
         
-        SERVE WITH "Less" END
+        SERVE WITH "Less" 
         
-        SET ASIDE END
+        SET ASIDE 
         
-        "MAX" UNTIL "MAXED" END
+        "MAX" UNTIL "MAXED" 
         
-        "LEVEL" THE ('equal) END
+        "LEVEL" THE ('equal) NOW
         
-        PUT ('false) INTO SECOND MIXING_BOWL END
+        PUT ('false) INTO SECOND MIXING_BOWL 
         
-        FOLD ('secret_ingredient) INTO SECOND MIXING_BOWL END
+        FOLD ('secret_ingredient) INTO SECOND MIXING_BOWL 
         
-        SERVE WITH "Equal" END
+        SERVE WITH "Equal" 
         
-        SET ASIDE END
+        SET ASIDE 
         
-        "LEVEL" UNTIL "LEVELED" END
+        "LEVEL" UNTIL "LEVELED" 
         
-        "GUESS" UNTIL "GUESSED" END
-        
-        
-        TITLE ("Prompt Pudding") END
-        
-        START_INGREDIENTS
-        
-        103 G ('white_sugar) END
-        
-        117 ('eggs) END
-        
-        101 CUPS ('corn_starch) END
-        
-        115 CUPS ('milk) END
-        
-        58 ('bananas) END
-        
-        END_INGREDIENTS
-        
-        CLEAN (FIRST) MIXING_BOWL END
-        
-        PUT ('bananas) INTO FIRST MIXING_BOWL END
-        
-        PUT ('milk) INTO FIRST MIXING_BOWL END
-        
-        PUT ('milk) INTO FIRST MIXING_BOWL END
-        
-        PUT ('corn_starch) INTO FIRST MIXING_BOWL END
-        
-        PUT ('eggs) INTO FIRST MIXING_BOWL END
-        
-        PUT ('white_sugar) INTO FIRST MIXING_BOWL END
-        
-        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
-        
-        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
-        
-        REFRIGERATE FOR 1 HOURS END
+        "GUESS" UNTIL "GUESSED" 
         
         
-        TITLE ("More") END
+        TITLE ("Prompt Pudding") 
         
         START_INGREDIENTS
         
-        10 ('nl) END
+        103 G ('white_sugar) 
         
-        62 ('up) END
+        117 ('eggs) 
+        
+        101 CUPS ('corn_starch) 
+        
+        115 CUPS ('milk) 
+        
+        58 ('bananas) 
         
         END_INGREDIENTS
         
-        CLEAN (FIRST) MIXING_BOWL END
+        CLEAN FIRST MIXING_BOWL 
         
-        PUT ('nl) INTO FIRST MIXING_BOWL END
+        PUT ('bananas) INTO FIRST MIXING_BOWL 
         
-        PUT ('up) INTO FIRST MIXING_BOWL END
+        PUT ('milk) INTO FIRST MIXING_BOWL 
         
-        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
+        PUT ('milk) INTO FIRST MIXING_BOWL 
         
-        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+        PUT ('corn_starch) INTO FIRST MIXING_BOWL 
         
-        REFRIGERATE FOR 1 HOURS END
+        PUT ('eggs) INTO FIRST MIXING_BOWL 
+        
+        PUT ('white_sugar) INTO FIRST MIXING_BOWL 
+        
+        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL 
+        
+        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH 
+        
+        REFRIGERATE FOR 1 HOURS 
         
         
-        TITLE ("Less") END
+        TITLE ("More") 
         
         START_INGREDIENTS
         
-        10 ('nl) END
+        10 ('nl) 
         
-        60 ('down) END
+        62 ('up) 
         
         END_INGREDIENTS
         
-        CLEAN (FIRST) MIXING_BOWL END
+        CLEAN FIRST MIXING_BOWL 
         
-        PUT ('nl) INTO FIRST MIXING_BOWL END
+        PUT ('nl) INTO FIRST MIXING_BOWL 
         
-        PUT ('down) INTO FIRST MIXING_BOWL END
+        PUT ('up) INTO FIRST MIXING_BOWL 
         
-        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
+        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL 
         
-        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH 
         
-        REFRIGERATE FOR 1 HOURS END
+        REFRIGERATE FOR 1 HOURS 
         
         
-        TITLE ("Equal") END
+        TITLE ("Less") 
         
         START_INGREDIENTS
         
-        10 ('nl) END
+        10 ('nl) 
         
-        61 ('eq) END
+        60 ('down) 
         
         END_INGREDIENTS
         
-        CLEAN (FIRST) MIXING_BOWL END
+        CLEAN FIRST MIXING_BOWL 
         
-        PUT ('nl) INTO FIRST MIXING_BOWL END
+        PUT ('nl) INTO FIRST MIXING_BOWL 
         
-        PUT ('eq) INTO FIRST MIXING_BOWL END
+        PUT ('down) INTO FIRST MIXING_BOWL 
         
-        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
+        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL 
         
-        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH 
         
-        REFRIGERATE FOR 1 HOURS END
+        REFRIGERATE FOR 1 HOURS 
+        
+        
+        TITLE ("Equal") 
+        
+        START_INGREDIENTS
+        
+        10 ('nl) 
+        
+        61 ('eq) 
+        
+        END_INGREDIENTS
+        
+        CLEAN FIRST MIXING_BOWL 
+        
+        PUT ('nl) INTO FIRST MIXING_BOWL 
+        
+        PUT ('eq) INTO FIRST MIXING_BOWL 
+        
+        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL 
+        
+        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH 
+        
+        REFRIGERATE FOR 1 HOURS 
         
         RUN
     }

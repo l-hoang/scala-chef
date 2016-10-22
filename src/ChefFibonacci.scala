@@ -7,131 +7,129 @@
  */
 object ChefFibonacci extends ScalaChef {
     def main(args: Array[String]): Unit = {
-        TITLE ("Fibonacci Numbers With Caramel Sauce") END
+        TITLE ("Fibonacci Numbers With Caramel Sauce") 
         
 
         START_INGREDIENTS
         
-        6 G ('flour) END
+        6 G ('flour) 
         
-        250 G ('butter) END
+        250 G ('butter) 
         
-        44 ('eggs) END
+        44 ('eggs) 
 
         END_INGREDIENTS
 
 
-        LIQUEFY ('eggs) END
+        LIQUEFY ('eggs) 
 
-        "SIFT" THE ('flour) END
+        "SIFT" THE ('flour) NOW
 
-        PUT ('flour) INTO FIRST MIXING_BOWL END
+        PUT ('flour) INTO FIRST MIXING_BOWL 
         
-        SERVE WITH "Caramel Sauce" END
+        SERVE WITH "Caramel Sauce" 
         
-        STIR THE FIRST MIXING_BOWL FOR (1) MINUTES END
+        STIR THE FIRST MIXING_BOWL FOR (1) MINUTES 
 
-        FOLD ('butter) INTO FIRST MIXING_BOWL END 
+        FOLD ('butter) INTO FIRST MIXING_BOWL 
 
-        PUT ('eggs) INTO FIRST MIXING_BOWL END
+        PUT ('eggs) INTO FIRST MIXING_BOWL 
 
-        "RUB" THE ('flour) UNTIL "SIFTED" END
+        "RUB" THE ('flour) UNTIL "SIFTED" 
 
-        FOLD ('butter) INTO FIRST MIXING_BOWL END
+        FOLD ('butter) INTO FIRST MIXING_BOWL 
 
-        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH 
         
-        SERVES (1) END
+        SERVES (1) 
         
 
 
         
-        TITLE ("Caramel Sauce") END
+        TITLE ("Caramel Sauce") 
         
 
         START_INGREDIENTS
         
-        1 CUP ('white_sugar) END
+        1 CUP ('white_sugar) 
         
-        1 CUP ('brown_sugar) END
+        1 CUP ('brown_sugar) 
         
-        1 ('vanilla_bean) END
+        1 ('vanilla_bean) 
 
-        1 ('dummy) END
+        1 ('dummy) 
 
         END_INGREDIENTS
         
 
-        FOLD ('white_sugar) INTO FIRST MIXING_BOWL END
+        FOLD ('white_sugar) INTO FIRST MIXING_BOWL 
         
-        PUT ('white_sugar) INTO FIRST MIXING_BOWL END
+        PUT ('white_sugar) INTO FIRST MIXING_BOWL 
         
-        FOLD ('brown_sugar) INTO FIRST MIXING_BOWL END
+        FOLD ('brown_sugar) INTO FIRST MIXING_BOWL 
         
-        CLEAN (FIRST) MIXING_BOWL END
+        CLEAN FIRST MIXING_BOWL 
         
-        PUT ('white_sugar) INTO FIRST MIXING_BOWL END
+        PUT ('white_sugar) INTO FIRST MIXING_BOWL 
         
-        REMOVE ('vanilla_bean) FROM FIRST MIXING_BOWL END
+        REMOVE ('vanilla_bean) FROM FIRST MIXING_BOWL 
         
-        FOLD ('white_sugar) INTO FIRST MIXING_BOWL END
+        FOLD ('white_sugar) INTO FIRST MIXING_BOWL 
         
         // if non zero (i.e. != 1)
-        "MELT" THE ('white_sugar) END
+        "MELT" THE ('white_sugar) NOW
 
-        PUT ('white_sugar) INTO FIRST MIXING_BOWL END
+        PUT ('white_sugar) INTO FIRST MIXING_BOWL 
         
-        REMOVE ('vanilla_bean) FROM FIRST MIXING_BOWL END
+        REMOVE ('vanilla_bean) FROM FIRST MIXING_BOWL 
         
-        FOLD ('white_sugar) INTO FIRST MIXING_BOWL END
+        FOLD ('white_sugar) INTO FIRST MIXING_BOWL 
        
         
         // != 2
-        "CARAMELIZE" THE ('white_sugar) END
+        "CARAMELIZE" THE ('white_sugar) NOW
         
-        PUT ('white_sugar) INTO FIRST MIXING_BOWL END
+        PUT ('white_sugar) INTO FIRST MIXING_BOWL 
         
-        SERVE WITH "Caramel Sauce" END
+        SERVE WITH "Caramel Sauce" 
         
-        FOLD ('brown_sugar) INTO FIRST MIXING_BOWL END 
+        FOLD ('brown_sugar) INTO FIRST MIXING_BOWL 
 
         // get rid of other thing
-        FOLD ('dummy) INTO FIRST MIXING_BOWL END
+        FOLD ('dummy) INTO FIRST MIXING_BOWL 
         
-        PUT ('white_sugar) INTO FIRST MIXING_BOWL END
+        PUT ('white_sugar) INTO FIRST MIXING_BOWL 
         
-        ADD ('vanilla_bean) TO FIRST MIXING_BOWL END 
+        ADD ('vanilla_bean) TO FIRST MIXING_BOWL 
         
-        SERVE WITH "Caramel Sauce" END
+        SERVE WITH "Caramel Sauce" 
         
-        ADD ('brown_sugar) TO FIRST MIXING_BOWL END 
+        ADD ('brown_sugar) TO FIRST MIXING_BOWL 
 
-        FOLD ('white_sugar) INTO FIRST MIXING_BOWL END
+        FOLD ('white_sugar) INTO FIRST MIXING_BOWL 
 
         // get rid of other thing
-        FOLD ('dummy) INTO FIRST MIXING_BOWL END
+        FOLD ('dummy) INTO FIRST MIXING_BOWL 
 
-        PUT ('white_sugar) INTO FIRST MIXING_BOWL END
+        PUT ('white_sugar) INTO FIRST MIXING_BOWL 
 
-        REFRIGERATE END
+        REFRIGERATE NOW
         
-        "COOK" THE ('white_sugar) UNTIL "CARAMELIZED" END
+        "COOK" THE ('white_sugar) UNTIL "CARAMELIZED" 
         
 
-        PUT ('vanilla_bean) INTO FIRST MIXING_BOWL END
+        PUT ('vanilla_bean) INTO FIRST MIXING_BOWL 
         
-        REFRIGERATE END
+        REFRIGERATE NOW
         
-        "HEAT" THE ('white_sugar) UNTIL "MELTED" END 
+        "HEAT" THE ('white_sugar) UNTIL "MELTED" 
 
 
         // if it is 0 do this
-        PUT ('vanilla_bean) INTO FIRST MIXING_BOWL END
+        PUT ('vanilla_bean) INTO FIRST MIXING_BOWL 
         
-        REFRIGERATE END
+        REFRIGERATE NOW
    
-
-        
         RUN
     }
 }

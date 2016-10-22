@@ -4,50 +4,61 @@
 
 object ChefHelloWorld extends ScalaChef {
     def main(args: Array[String]): Unit = {
-        TITLE ("Hello World") END
-
+        TITLE ("Hello World") 
 
 
         START_INGREDIENTS
         
-        72 G ('haricot_beans) END
+        72 G ('haricot_beans) 
         
-        101 ('eggs) END
+        101 ('eggs) 
         
-        108 G ('lard) END
+        108 G ('lard) 
 
-        111 CUPS ('oil) END
+        111 CUPS ('oil) 
 
-        32 ('zucchinis) END
+        32 ('zucchinis) 
 
-        119 ML ('water) END
+        119 ML ('water) 
 
-        114 G ('red_salmon) END
+        114 G ('red_salmon) 
 
-        100 G ('dijon_mustard) END
+        100 G ('dijon_mustard) 
 
-        33 ('potatoes) END
+        33 ('potatoes) 
 
         END_INGREDIENTS
 
+        
+        PUT ('potatoes) INTO FIRST MIXING_BOWL 
 
+        PUT ('dijon_mustard) INTO FIRST MIXING_BOWL 
 
-        PUT ('potatoes) INTO FIRST MIXING_BOWL END
-        PUT ('dijon_mustard) INTO FIRST MIXING_BOWL END
-        PUT ('lard) INTO FIRST MIXING_BOWL END
-        PUT ('red_salmon) INTO FIRST MIXING_BOWL END
-        PUT ('oil) INTO FIRST MIXING_BOWL END
-        PUT ('water) INTO FIRST MIXING_BOWL END
-        PUT ('zucchinis) INTO FIRST MIXING_BOWL END
-        PUT ('oil) INTO FIRST MIXING_BOWL END
-        PUT ('lard) INTO FIRST MIXING_BOWL END
-        PUT ('lard) INTO FIRST MIXING_BOWL END
-        PUT ('eggs) INTO FIRST MIXING_BOWL END
-        PUT ('haricot_beans) INTO FIRST MIXING_BOWL END
-        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL END
-        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH END
+        PUT ('lard) INTO FIRST MIXING_BOWL 
 
-        SERVES (1) END
+        PUT ('red_salmon) INTO FIRST MIXING_BOWL 
+
+        PUT ('oil) INTO FIRST MIXING_BOWL 
+
+        PUT ('water) INTO FIRST MIXING_BOWL 
+
+        PUT ('zucchinis) INTO FIRST MIXING_BOWL 
+
+        PUT ('oil) INTO FIRST MIXING_BOWL 
+
+        PUT ('lard) INTO FIRST MIXING_BOWL 
+
+        PUT ('lard) INTO FIRST MIXING_BOWL 
+
+        PUT ('eggs) INTO FIRST MIXING_BOWL 
+
+        PUT ('haricot_beans) INTO FIRST MIXING_BOWL 
+
+        LIQUEFY CONTENTS OF THE FIRST MIXING_BOWL 
+
+        POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH 
+
+        SERVES (1) 
         
         RUN
     }
