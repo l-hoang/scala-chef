@@ -8,18 +8,22 @@ For more details, check the webpage: http://www.dangermouse.net/esoteric/chef.ht
 The information in this readme could potentially be inaccurate. Apologies if it is.
 
 ## Changes from Chef/Important Implementation Details
-* The END keyword is used in most places instead of a period.
+* NOW is required for the REFRIGERATE command and the VERB THE INGREDIENT command
+to mark the end of that line.
+* To be sure the code will not break, add a blank line between all lines you 
+write.
 * The ingredient parsing begins and ends with START/END_INGREDIENTS; it is also
 mandatory
 * There are only 5 mixing bowls and 5 baking dishes
 * Symbol notation is required for ingredients, and spaces aren't allowed in
 ingredient names 
-* Symbols should be in parens.
+* Symbols and numbers should be in parens (if the number is not at the beginning
+of the line).
 * Cooking time and oven temperature are not supported
 * measure-type in ingredients not supported
-* Everything is in CAPS
-* mixing bowl and baking dish are combined into MIXING_BOWL and BAKING_DISH
-* negative ingredients aren't possible
+* Everything Chef related is in CAPS
+* Mixing Bowl and Baking Dish are combined into MIXING_BOWL and BAKING_DISH
+* Negative ingredients aren't possible
 * A loop verb's end counter part is created by adding a d or ed (even if it's
 gramatically incorrect
 * Some things that could be optional in the original language are not optional
@@ -28,8 +32,6 @@ here
 * The arithmetic operations (add, subtract, multiply, divide) will modify
 the value on the stack in place (i.e. it won't push another value onto the
 stack).
-* Some instructions may require parens around them (most notably CLEAN, which
-requires the second keyword to be in parens).
 * PUT creates an unspecified ingredient (i.e. not dry or liquid).
 * Singular measures (e.g. PINCH, CUP) (should) only work with 1
 
@@ -39,6 +41,7 @@ First, compile ScalaChef, which will required compiling the helper files
 beforehand.
 ```
 scalac Enums.scala
+scalac ChefHelpers.scala
 scalac ScalaChef.scala
 ```
 
@@ -66,9 +69,12 @@ Run these 2 commands in the src directory. Make sure ScalaChef.scala
 has already been compiled.
 
 ```
-scalac -cp scalatest_2.11-2.2.1.jar:. Tests.scala
+scalac -cp scalatest_2.11-2.2.1.jar:. Tests2.scala
 scala -cp scalatest_2.11-2.2.1.jar org.scalatest.run Tests < Tests.in
 ```
+
+Note that the Tests used are Tests2, not Tests. The original Tests file
+was for a prior implementation of Scala Chef. (see the "original" branch)
 
 We tried to have most things tested, but there may be some unfinished 
 tests/descriptions of test not yet implemented in the test file as well.
@@ -84,23 +90,25 @@ http://www.scalatest.org/quick_start
 
 ## Impelmentation Details
 
+**Note: this may be out of date given that I (Loc) recently did
+some refactoring on the code (Oct. 22, 2016).**
 
 ### Syntax
 
 The internal DSL takes this general form:
 
 ```
-TITLE ("title here") END
+TITLE ("title here")
 
 START_INGREDIENTS
 
-ingredients here (must be ended with an END)
+ingredients here 
 
 END_INGREDIENTS
 
 program lines
 
-SERVES (a # from 1 to 5) END
+SERVES (a # from 1 to 5) 
 
 RUN (this should start runtime evaluation)
 ```
