@@ -1,4 +1,3 @@
-I'm back
 scala-chef
 ==========
 
@@ -36,8 +35,10 @@ requires the second keyword to be in parens).
 
 ## How to Run
 
-First, compile ScalaChef.
+First, compile ScalaChef, which will required compiling the helper files
+beforehand.
 ```
+scalac Enums.scala
 scalac ScalaChef.scala
 ```
 
