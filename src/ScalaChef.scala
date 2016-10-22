@@ -82,6 +82,8 @@ import java.util.ArrayDeque
 import java.util.ArrayList
 import java.util.Collections
 
+import Enums._
+
 class ScalaChef {
     abstract sealed class ChefLine
 
@@ -109,13 +111,6 @@ class ScalaChef {
     case class PrintStacks(num : Int) extends ChefLine
 
 
-    // ingredient interpretations
-    abstract sealed class IngredientInterpretation
-    case object I_DRY extends IngredientInterpretation
-    case object I_LIQUID extends IngredientInterpretation
-    case object I_EITHER extends IngredientInterpretation
-    case object I_NONE extends IngredientInterpretation
-
     /* Holds an Ingredient value and how it is to be interpreted */
     class Ingredient(value: Int, interpretation: IngredientInterpretation) {
         var number = value
@@ -138,32 +133,6 @@ class ScalaChef {
     }
 
     var currentOpType: OperationType = O_NOTHING
-
-    /* operation "enum" types */
-    abstract sealed class OperationType
-    case object O_NOTHING extends OperationType
-    case object O_TAKE extends OperationType
-    case object O_PUT extends OperationType
-    case object O_FOLD extends OperationType
-    case object O_ADD extends OperationType
-    case object O_REMOVE extends OperationType
-    case object O_COMBINE extends OperationType
-    case object O_DIVIDE extends OperationType
-    case object O_ADDDRY extends OperationType
-    case object O_LIQUEFY extends OperationType
-    case object O_LIQUEFY2 extends OperationType
-    case object O_STIR extends OperationType
-    case object O_STIR2 extends OperationType
-    case object O_MIX extends OperationType
-    case object O_CLEAN extends OperationType
-    case object O_POUR extends OperationType
-    case object O_VERB extends OperationType
-    case object O_VERBEND extends OperationType
-    case object O_SET extends OperationType
-    case object O_SERVE extends OperationType
-    case object O_REFR extends OperationType
-    case object O_SERVES extends OperationType
-    case object O_TITLE extends OperationType
 
     /* ingredient in use; tracks the ingredient that is being used in some line */  
     var currentIngredient: Symbol = null
