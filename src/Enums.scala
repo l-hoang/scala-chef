@@ -1,4 +1,3 @@
-object Enums {
     // ingredient interpretations
     abstract sealed class IngredientInterpretation
     case object I_DRY extends IngredientInterpretation
@@ -53,4 +52,3 @@ object Enums {
     case object M_TITLE extends ProgramMode
     case object M_INGREDIENT extends ProgramMode
     case object M_PROGRAM extends ProgramMode
-}

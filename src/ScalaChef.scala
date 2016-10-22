@@ -255,7 +255,7 @@ class ScalaChef {
     var newRecipe = false
 
     /* tells you if you can start parsing ingredients */
-    var canParseIngredients = 0
+    var canParseIngredients = false
     var ingredientType: IngredientInterpretation = I_NONE
 
     /* tells if there has been a SERVES line yet */
@@ -307,17 +307,17 @@ class ScalaChef {
             throw new RuntimeException("not in ingredient mode")
         }
 
-        if (canParseIngredients == 1) {
+        if (canParseIngredients) {
             throw new RuntimeException("you've already called Start_Ingre once")
         }
 
-        canParseIngredients = 1
+        canParseIngredients = true
     }
 
     /* An implicit below will convert numbers into this class. Then the numbers
      * will be able to use these methods in order to parse the rest of the line */
     case class IngredientGetter(num: Int) {
-        if (canParseIngredients == 0) {
+        if (!canParseIngredients) {
             throw new RuntimeException("you can't parse ingredients now")
         }
 
@@ -454,11 +454,11 @@ class ScalaChef {
         if (currentMode != M_INGREDIENT) {
             throw new RuntimeException("not in ingredient mode")
         }
-        if (canParseIngredients == 0) {
+        if (!canParseIngredients) {
             throw new RuntimeException("START_INGREDIENT not called")
         }
 
-        canParseIngredients = 0;
+        canParseIngredients = false;
 
         /* make sure currentRecipe is set */
         if (currentRecipe.equals("")) {
@@ -1106,6 +1106,7 @@ class ScalaChef {
     // evaluator
     def evaluate(line : Int){
         //println(line)
+
         /* check to see if the main function has ended */
         if (endLineStack.size == 0 && line == mainEnd) {
             programFinished = true
@@ -1148,6 +1149,7 @@ class ScalaChef {
             /* jump back */
             evaluate(jumpBack)
         }
+
         /* end of program */
         if(!lines.contains(line)){
             programFinished = true
