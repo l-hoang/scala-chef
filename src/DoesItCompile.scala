@@ -26,7 +26,6 @@ object DoesItCompile extends ScalaChef {
     def main(args: Array[String]): Unit = {       
         TITLE ("tester") END
 
-
         START_INGREDIENTS
 
         111 ('potatoes) END
@@ -59,7 +58,6 @@ object DoesItCompile extends ScalaChef {
         STIR ('potatoes) INTO THE FIRST MIXING_BOWL END
 
         CLEAN (FIRST) MIXING_BOWL END
-
         SERVES (1) END
     }
 }

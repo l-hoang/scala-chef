@@ -77,6 +77,7 @@ SOFTWARE.
 
 import scala.language.implicitConversions
 import scala.language.postfixOps
+import scala.language.dynamics
 import scala.collection.mutable
 import java.util.ArrayDeque
 import java.util.ArrayList
@@ -689,6 +690,16 @@ class ScalaChef {
 
     /* Start evaluating a line that starts with CLEAN */
     object CLEAN {
+        //def applyDynamic(stack: String)(args: Any*) = {
+        //    currentOpType = O_CLEAN
+        //    currentStack = stack match {
+        //        case "FIRST" => FIRST
+        //        case "SECOND" => SECOND
+        //        case "THIRD" => THIRD
+        //        case "FOURTH" => FOURTH
+        //        case "FIFTH" => FIFTH
+        //    }
+        //}
         def apply(stack: StackNumber) = {
             currentOpType = O_CLEAN
             currentStack = stack
