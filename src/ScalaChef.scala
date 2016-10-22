@@ -84,7 +84,6 @@ import java.util.Collections
 
 class ScalaChef {
     abstract sealed class ChefLine
-
     // different case classes for lines in Chef
     case class Read(ingredient:Symbol) extends ChefLine
     case class PushStack(stack: StackNumber, ingredient:Symbol) extends ChefLine
@@ -107,28 +106,6 @@ class ScalaChef {
     case class CallFunction(title: String) extends ChefLine
     case class Return(dishes: Int) extends ChefLine
     case class PrintStacks(num : Int) extends ChefLine
-
-
-    /* Holds an Ingredient value and how it is to be interpreted */
-    class Ingredient(value: Int, interpretation: IngredientInterpretation) {
-        var number = value
-        var state = interpretation
-        
-        /* change the interpretation of this ingredient */
-        def changeInterpretation(newInterpretation: IngredientInterpretation) = {
-            state = newInterpretation
-        }
-
-        /* returns this ingredient's value as a number */
-        def asNumber(): Int = {
-            number       
-        }
-
-        /* returns this ingredient's value as a Unicode char */
-        def asChar(): Char = {
-            number.toChar
-        }
-    }
 
     var currentOpType: OperationType = O_NOTHING
 
@@ -180,18 +157,6 @@ class ScalaChef {
     /* name of currently running recipe */
     var currentRecipe = ""
 
-    class FunctionInfo {
-        var startLine = -1
-        var endLine = -1
-
-        def setStart(s: Int) = {
-            startLine = s
-        }
-
-        def setEnd(e: Int) = {
-            endLine = e
-        }
-    }
 
     /* holds the starting vars for some recipe */
     val startingIngredients = new mutable.HashMap[String, 
@@ -220,20 +185,6 @@ class ScalaChef {
     val ingredientStack = new ArrayDeque[mutable.HashMap[Symbol, Ingredient]]
     /* stack that stores loop binding info */
     val loopBindingsStack = new ArrayDeque[mutable.HashMap[String, LoopInfo]]
-
-
-    /* This class stores loop information */
-    class LoopInfo(ingredient : Symbol, s : Int){
-        var start = s
-        var end = -1
-        var loopIngredient = ingredient
-        var decIngredient: Symbol = null
-        
-        def setEnd(ingredient: Symbol, e : Int) = {
-            end = e
-            decIngredient = ingredient
-        }
-    }
     
     /* This structure stores the program's loop stack*/
     var loopStack = new ArrayDeque[String]
@@ -543,7 +494,7 @@ class ScalaChef {
         }
     }
 
-    /* Object to read keyword REFRIGERATOR*/ 
+    /* Object to read keyword REFRIGERATOR */ 
     abstract sealed class refrigerator {}
     object REFRIGERATOR extends refrigerator {}
 
@@ -1149,15 +1100,16 @@ class ScalaChef {
         }
 
         /* end of program */
-        if(!lines.contains(line)){
+        if (!lines.contains(line)) {
             programFinished = true
             return
         }
 
         lines(line) match{
             case Read(ingredient: Symbol) => {
-                // val in = new Scanner(System.in)
-                val ingredientToAdd = new Ingredient(readInt(), I_EITHER)
+                // Thanks to 
+                // http://stackoverflow.com/questions/33275418/scala-console-readint-deprecated
+                val ingredientToAdd = new Ingredient(scala.io.StdIn.readInt(), I_EITHER)
 
                 if (ingredientToAdd.number < 0) {
                     throw new RuntimeException("ingredients can't be <0")
