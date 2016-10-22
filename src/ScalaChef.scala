@@ -251,10 +251,7 @@ class ScalaChef {
     var currentVerb = ""
     
     /* mode the program parsing is in; starts by parsing a title */
-    val M_TITLE = 0
-    val M_INGREDIENT = 1
-    val M_PROGRAM =  2
-    var currentMode = M_TITLE
+    var currentMode: ProgramMode = M_TITLE
     var newRecipe = false
 
     /* tells you if you can start parsing ingredients */

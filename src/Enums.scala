@@ -48,4 +48,9 @@ object Enums {
     case object T_NOTHING extends StackType
     case object T_BOWL extends StackType
     case object T_DISH extends StackType
+
+    abstract sealed class ProgramMode
+    case object M_TITLE extends ProgramMode
+    case object M_INGREDIENT extends ProgramMode
+    case object M_PROGRAM extends ProgramMode
 }
