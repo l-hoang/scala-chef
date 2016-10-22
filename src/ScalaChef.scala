@@ -89,20 +89,20 @@ class ScalaChef {
 
     // different case classes for lines in Chef
     case class Read(ingredient:Symbol) extends ChefLine
-    case class PushStack(stack: String, ingredient:Symbol) extends ChefLine
-    case class PopStack(stack: String, ingredient:Symbol) extends ChefLine
-    case class AddStack(stack: String, ingredient:Symbol) extends ChefLine
-    case class SubtractStack(stack: String, ingredient:Symbol) extends ChefLine
-    case class MultiplyStack(stack: String, ingredient:Symbol) extends ChefLine
-    case class DivideStack(stack: String, ingredient:Symbol) extends ChefLine
-    case class AddDry(stack: String) extends ChefLine
+    case class PushStack(stack: StackNumber, ingredient:Symbol) extends ChefLine
+    case class PopStack(stack: StackNumber, ingredient:Symbol) extends ChefLine
+    case class AddStack(stack: StackNumber, ingredient:Symbol) extends ChefLine
+    case class SubtractStack(stack: StackNumber, ingredient:Symbol) extends ChefLine
+    case class MultiplyStack(stack: StackNumber, ingredient:Symbol) extends ChefLine
+    case class DivideStack(stack: StackNumber, ingredient:Symbol) extends ChefLine
+    case class AddDry(stack: StackNumber) extends ChefLine
     case class ToUnicode(ingredient:Symbol) extends ChefLine
-    case class StackToUnicode(stack: String) extends ChefLine
-    case class MixStack(stack: String) extends ChefLine
-    case class EmptyStack(stack: String) extends ChefLine
-    case class ArrangeStack(stack: String, num: Int) extends ChefLine
-    case class ArrangeStack2(stack: String, ingredient: Symbol) extends ChefLine
-    case class StackToReturnStack(stack: String, dish: String) extends ChefLine
+    case class StackToUnicode(stack: StackNumber) extends ChefLine
+    case class MixStack(stack: StackNumber) extends ChefLine
+    case class EmptyStack(stack: StackNumber) extends ChefLine
+    case class ArrangeStack(stack: StackNumber, num: Int) extends ChefLine
+    case class ArrangeStack2(stack: StackNumber, ingredient: Symbol) extends ChefLine
+    case class StackToReturnStack(stack: StackNumber, dish: StackNumber) extends ChefLine
     case class LoopStart(verb: String) extends ChefLine
     case class LoopEnd(verb: String) extends ChefLine
     case class Break() extends ChefLine
@@ -141,22 +141,12 @@ class ScalaChef {
     var intArg: Int = -1
     var stringArg: String = ""
 
-    /* the number of the stack we want to use; unlike Chef, this code only has
-     * a limited # of stacks (at the moment) */
-    val NONE = "none"
-    val FIRST = "FIRST"
-    val SECOND = "SECOND"
-    val THIRD = "THIRD"
-    val FOURTH = "FOURTH"
-    val FIFTH = "FIFTH"
-    var currentStack = NONE
-    var currentDish = NONE
-
+    /* current stack number */
+    var currentStack: StackNumber = NONE
+    var currentDish: StackNumber = NONE
+    
     /* stack type we are referring to: mixing bowl or baking dish */
-    var stackType = -1
-    val T_NOTHING = -1
-    val T_BOWL = 0
-    val T_DISH = 1
+    var stackType: StackType = T_NOTHING
 
     var currentLine = 1
     /* This structure holds the program lines */
@@ -166,7 +156,7 @@ class ScalaChef {
     var variableBindings = new mutable.HashMap[Symbol, Ingredient]
 
     /* This structure holds mixing bowl stacks */
-    var mixingStacks = new mutable.HashMap[String, ArrayDeque[Ingredient]]
+    var mixingStacks = new mutable.HashMap[StackNumber, ArrayDeque[Ingredient]]
 
     /* set up mixingStacks */
     mixingStacks.put(FIRST, new ArrayDeque)
@@ -176,7 +166,7 @@ class ScalaChef {
     mixingStacks.put(FIFTH, new ArrayDeque)
 
     /* This structure holds baking dish stacks */
-    var bakingStacks = new mutable.HashMap[String, ArrayDeque[Ingredient]]
+    var bakingStacks = new mutable.HashMap[StackNumber, ArrayDeque[Ingredient]]
 
     /* set up bakingStacks */
     bakingStacks.put(FIRST, new ArrayDeque)
@@ -184,7 +174,6 @@ class ScalaChef {
     bakingStacks.put(THIRD, new ArrayDeque)
     bakingStacks.put(FOURTH, new ArrayDeque)
     bakingStacks.put(FIFTH, new ArrayDeque)
-
 
 
     /* holds the name of the main recipe (i.e. the first one) */
@@ -224,10 +213,10 @@ class ScalaChef {
     /* stack that stores loopStacks */
     val loopStackStack = new ArrayDeque[ArrayDeque[String]]
     /* stack that stores mixing bowls */
-    val mixingBowlStack = new ArrayDeque[mutable.HashMap[String, 
+    val mixingBowlStack = new ArrayDeque[mutable.HashMap[StackNumber, 
                                                          ArrayDeque[Ingredient]]]
     /* stack that stores baking dishes */
-    val bakingDishStack = new ArrayDeque[mutable.HashMap[String, 
+    val bakingDishStack = new ArrayDeque[mutable.HashMap[StackNumber, 
                                                          ArrayDeque[Ingredient]]]
     /* stack that stores ingredient bindings */
     val ingredientStack = new ArrayDeque[mutable.HashMap[Symbol, Ingredient]]
@@ -609,7 +598,7 @@ class ScalaChef {
 
     /* This class exists to read the keyword FROM for REMOVE */
     class From {
-        def FROM(stack: String) = {
+        def FROM(stack: StackNumber) = {
             currentStack = stack
             new BowlOrDish
         }
@@ -652,7 +641,7 @@ class ScalaChef {
     /* Start evaluating a line that starts with STIR */
     object STIR {
         /* Stir the nth mixing.... */
-        def THE(stack: String):StirBowl = {
+        def THE(stack: StackNumber):StirBowl = {
             currentOpType = O_STIR
             currentStack = stack
             new StirBowl
@@ -698,6 +687,15 @@ class ScalaChef {
     }
 
     object MIXING_BOWL;
+
+    /* the purpose of these is to still be able to refer to the enums
+     * even if they get shadowed (see below) */
+    val gFirst = FIRST
+    val gSecond = SECOND
+    val gThird = THIRD
+    val gFourth = FOURTH
+    val gFifth = FIFTH
+
     abstract sealed class TheStir { 
         def FIRST(a: MIXING_BOWL.type):Ender
         def SECOND(a: MIXING_BOWL.type):Ender
@@ -708,26 +706,26 @@ class ScalaChef {
     }
     object THE extends TheStir { 
         def FIRST(a: MIXING_BOWL.type):Ender = {
-            currentStack = ScalaChef.this.FIRST 
+            currentStack = gFirst
             new Ender(END)
         }
         def SECOND(a: MIXING_BOWL.type):Ender = {
-            currentStack = ScalaChef.this.SECOND 
+            currentStack = gSecond
             new Ender(END)
 
         }
         def THIRD(a: MIXING_BOWL.type):Ender = {
-            currentStack = ScalaChef.this.THIRD 
+            currentStack = gThird
             new Ender(END)
 
         }
         def FOURTH(a: MIXING_BOWL.type):Ender = {
-            currentStack = ScalaChef.this.FOURTH 
+            currentStack = gFourth
             new Ender(END)
 
         }
         def FIFTH(a: MIXING_BOWL.type):Ender = {
-            currentStack = ScalaChef.this.FIFTH 
+            currentStack = gFifth
             new Ender(END)
         }
     }
@@ -736,7 +734,7 @@ class ScalaChef {
 
     /* Start evaluating a line that starts with MIX */
     object MIX {
-        def THE(stack: String) = {
+        def THE(stack: StackNumber) = {
             currentOpType = O_MIX
             currentStack = stack
             new mixWell
@@ -745,7 +743,7 @@ class ScalaChef {
 
     /* Start evaluating a line that starts with CLEAN */
     object CLEAN {
-        def apply(stack: String) = {
+        def apply(stack: StackNumber) = {
             currentOpType = O_CLEAN
             currentStack = stack
             new BowlOrDish
@@ -760,7 +758,7 @@ class ScalaChef {
         }
     }
     class PourThe {
-        def THE(stack: String) = {
+        def THE(stack: StackNumber) = {
             currentStack = stack
             new PourBowl
         }
@@ -772,7 +770,7 @@ class ScalaChef {
         }
     }
     class PourThe2 {
-        def THE(stack: String) = {
+        def THE(stack: StackNumber) = {
             currentDish = stack
             new PourDish
         }
@@ -851,7 +849,7 @@ class ScalaChef {
     
     /* This class reads the keyword INTO in a line */
     class Into {
-        def INTO(stack: String) = {
+        def INTO(stack: StackNumber) = {
             currentStack = stack
             new BowlOrDish
         }
@@ -859,7 +857,7 @@ class ScalaChef {
      
     /* This class reads the keyword TO in a line */
     class To {
-        def TO(stack: String) = {
+        def TO(stack: StackNumber) = {
             currentStack = stack
             new BowlOrDish
         }
@@ -867,7 +865,7 @@ class ScalaChef {
 
     /* This class reads the keyword THE in a line */
     class The {
-        def THE(stack: String) = {
+        def THE(stack: StackNumber) = {
             currentStack = stack
             new BowlOrDish
         }
@@ -1179,7 +1177,7 @@ class ScalaChef {
                 // in.close()
                 evaluate(line+1)
             }
-            case PushStack(stack: String , ingredient: Symbol) => {
+            case PushStack(stack: StackNumber , ingredient: Symbol) => {
                 /* make a copy of the ingredient */
                 val ingredientToCopy = variableBindings(ingredient)
                 val ingredientCopy = new Ingredient(ingredientToCopy.number,
@@ -1187,21 +1185,21 @@ class ScalaChef {
                 mixingStacks(stack).push(ingredientCopy)
                 evaluate(line+1)
             }
-            case PopStack(stack:String, ingredient:Symbol) => {
+            case PopStack(stack: StackNumber, ingredient:Symbol) => {
                 /* get the ingredient */
                 val poppedIngredient = mixingStacks(stack).pop
                 /* it only gets the value of the ingredient */
                 variableBindings(ingredient).number = poppedIngredient.number
                 evaluate(line+1)
             }
-            case AddStack(stack: String, ingredient: Symbol) => {
+            case AddStack(stack: StackNumber, ingredient: Symbol) => {
                 val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber + 
                                                     mixingStacks(stack).pop.asNumber),
                                                     variableBindings(ingredient).state)
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
-            case SubtractStack(stack: String, ingredient: Symbol) => {
+            case SubtractStack(stack: StackNumber, ingredient: Symbol) => {
                 val ingredientToPush = new Ingredient((mixingStacks(stack).pop.asNumber - 
                                                     variableBindings(ingredient).asNumber),
                                                     variableBindings(ingredient).state)
@@ -1213,21 +1211,21 @@ class ScalaChef {
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
-            case MultiplyStack(stack: String , ingredient: Symbol) => {
+            case MultiplyStack(stack: StackNumber , ingredient: Symbol) => {
                 val ingredientToPush = new Ingredient((variableBindings(ingredient).asNumber * 
                                                     mixingStacks(stack).pop.asNumber),
                                                     variableBindings(ingredient).state)
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
-            case DivideStack(stack: String , ingredient: Symbol) => {
+            case DivideStack(stack: StackNumber , ingredient: Symbol) => {
                 val ingredientToPush = new Ingredient((mixingStacks(stack).pop.asNumber / 
                                                     variableBindings(ingredient).asNumber),
                                                     variableBindings(ingredient).state)
                 mixingStacks(stack).push(ingredientToPush)
                 evaluate(line+1)
             }
-            case AddDry(stack: String) => {
+            case AddDry(stack: StackNumber) => {
                 var currentSum = 0
                 val stuff =  variableBindings.valuesIterator
 
@@ -1251,24 +1249,24 @@ class ScalaChef {
                 variableBindings(ingredient).changeInterpretation(I_LIQUID)
                 evaluate(line+1)
             }
-            case StackToUnicode(stack : String) => {
+            case StackToUnicode(stack: StackNumber) => {
                 val it = mixingStacks(stack).iterator()
                 while(it.hasNext()){
                     it.next().changeInterpretation(I_LIQUID)
                 }
                 evaluate(line+1)
             }
-            case MixStack(stack : String) => {
+            case MixStack(stack : StackNumber) => {
                 val temp = new ArrayList(mixingStacks(stack))
                 Collections.shuffle(temp)
                 mixingStacks(stack) = new ArrayDeque(temp)
                 evaluate(line+1)
             }
-            case EmptyStack(stack : String) => {
+            case EmptyStack(stack: StackNumber) => {
                 mixingStacks(stack).clear()
                 evaluate(line+1)
             }
-            case ArrangeStack(stack: String, num: Int) => {
+            case ArrangeStack(stack: StackNumber, num: Int) => {
                 val theStack = mixingStacks(stack)
                 val stackSize = theStack.size
 
@@ -1311,7 +1309,7 @@ class ScalaChef {
 
                 evaluate(line+1)
             }
-            case ArrangeStack2(stack: String, ingredient: Symbol) => {
+            case ArrangeStack2(stack: StackNumber, ingredient: Symbol) => {
                 /* get the number */
                 val num = variableBindings(ingredient).asNumber
                 
@@ -1392,10 +1390,10 @@ class ScalaChef {
 
                 /* make a copy of all the ingredients in all of the mixing
                  * and baking stacks for the function to use */
-                val stackNumbers = Array(FIRST, SECOND, THIRD, FOURTH,
-                                                     FIFTH)
+                val stackNumbers = Array(FIRST, SECOND, THIRD, FOURTH, FIFTH)
+
                 var i = 0
-                val mixingStacksCopy = new mutable.HashMap[String,
+                val mixingStacksCopy = new mutable.HashMap[StackNumber,
                                         ArrayDeque[Ingredient]]
                 /* copy mixing stacks */
                 for (i <- 0 to 4) {
@@ -1414,7 +1412,7 @@ class ScalaChef {
 
                 /* copy baking stacks */
                 i = 0
-                val bakingStacksCopy = new mutable.HashMap[String,
+                val bakingStacksCopy = new mutable.HashMap[StackNumber,
                                         ArrayDeque[Ingredient]]
                 for (i <- 0 to 4) {
                     val theStack = bakingStacks(stackNumbers(i))
@@ -1460,7 +1458,7 @@ class ScalaChef {
                 /* jump to the line that the function starts at */
                 evaluate(functionInfo.startLine)
             }
-            case StackToReturnStack(stack:String, dish:String) => {
+            case StackToReturnStack(stack: StackNumber, dish: StackNumber) => {
                 /* get an iterator that starts at the bottom of the stack */
                 val it = mixingStacks(stack).descendingIterator()
 

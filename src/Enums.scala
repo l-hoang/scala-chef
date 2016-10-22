@@ -5,7 +5,8 @@ object Enums {
     case object I_LIQUID extends IngredientInterpretation
     case object I_EITHER extends IngredientInterpretation
     case object I_NONE extends IngredientInterpretation
-
+    
+    // operation types
     abstract sealed class OperationType
     case object O_NOTHING extends OperationType
     case object O_TAKE extends OperationType
@@ -30,4 +31,21 @@ object Enums {
     case object O_REFR extends OperationType
     case object O_SERVES extends OperationType
     case object O_TITLE extends OperationType
+    
+    
+    // the stack to use; currently only a limited number of stacks are supported
+    // unlike Chef
+    abstract sealed class StackNumber
+    case object NONE extends StackNumber
+    case object FIRST extends StackNumber
+    case object SECOND extends StackNumber
+    case object THIRD extends StackNumber
+    case object FOURTH extends StackNumber
+    case object FIFTH extends StackNumber
+
+    // stack type 
+    abstract sealed class StackType
+    case object T_NOTHING extends StackType
+    case object T_BOWL extends StackType
+    case object T_DISH extends StackType
 }
