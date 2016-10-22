@@ -108,35 +108,21 @@ class ScalaChef {
     case class Return(dishes: Int) extends ChefLine
     case class PrintStacks(num : Int) extends ChefLine
 
-    /* ways to intrepret an ingredient */
-    val I_DRY = 0
-    val I_LIQUID = 1
-    val I_EITHER = 2
 
-    /* uses case classes as enums */
-    //abstract sealed class IngredientInterpretation
-    //case object I_DRY extends IngredientInterpretation
-    //case object I_LIQUID extends IngredientInterpretation
-    //case object I_EITHER extends IngredientInterpretation
+    // ingredient interpretations
+    abstract sealed class IngredientInterpretation
+    case object I_DRY extends IngredientInterpretation
+    case object I_LIQUID extends IngredientInterpretation
+    case object I_EITHER extends IngredientInterpretation
+    case object I_NONE extends IngredientInterpretation
 
     /* Holds an Ingredient value and how it is to be interpreted */
-    class Ingredient(value: Int, interpretation: Int) {
+    class Ingredient(value: Int, interpretation: IngredientInterpretation) {
         var number = value
-
-        if (interpretation != I_DRY && interpretation != I_LIQUID &&
-                interpretation != I_EITHER) {
-            throw new RuntimeException("bad ingredient designation")
-        }
-
         var state = interpretation
         
         /* change the interpretation of this ingredient */
-        def changeInterpretation(newInterpretation: Int) = {
-            if (newInterpretation != I_DRY && newInterpretation != I_LIQUID &&
-                    newInterpretation != I_EITHER) {
-                throw new RuntimeException("bad ingredient designation in change" +
-                                           "interpretation")
-            }
+        def changeInterpretation(newInterpretation: IngredientInterpretation) = {
             state = newInterpretation
         }
 
@@ -313,7 +299,7 @@ class ScalaChef {
 
     /* tells you if you can start parsing ingredients */
     var canParseIngredients = 0
-    var ingredientType = -1
+    var ingredientType: IngredientInterpretation = I_NONE
 
     /* tells if there has been a SERVES line yet */
     var oneServes = false
@@ -444,9 +430,11 @@ class ScalaChef {
         def CUP(ingredient: Symbol) = {
             currentIngredient = ingredient
             ingredientType = I_EITHER
+
             if (num != 1) {
                 throw new RuntimeException("CUP needs to have value 1")
             }
+            
             intArg = num
             new Ender(END)
         }
@@ -1024,7 +1012,7 @@ class ScalaChef {
                 variableBindings(currentIngredient) = ingredientToAdd
 
                 currentIngredient = null
-                ingredientType = -1
+                ingredientType = I_NONE
                 intArg = -1
             } else if (currentMode == M_PROGRAM) {
                 /* do different things depending on what the operation of the line
