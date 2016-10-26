@@ -4,8 +4,10 @@ object ChefGuessingGame extends ScalaChef {
     def main(args: Array[String]): Unit = {
         TITLE ("Guessing Salad with Prompt Pudding, More, Less, and Equal") 
         
+        // no parens required!
         START_INGREDIENTS
         
+        // implicit conversion of 100 to an Ingredient getter
         100 ('random_ingredients) 
         
         1 ('secret_ingredient) 
@@ -26,105 +28,146 @@ object ChefGuessingGame extends ScalaChef {
         
         END_INGREDIENTS
         
+        // implicit conversion of string to a loop builder
         "AMASS" THE ('random_ingredients) NOW
         
-        PUT ('random_ingredients) INTO FIRST MIXING_BOWL 
+            // throw 100 numbers into the first stack
+            PUT ('random_ingredients) INTO FIRST MIXING_BOWL 
         
         "AMASS" THE ('random_ingredients) UNTIL ("AMASSED") 
         
+        // shuffle the first stack
         MIX THE FIRST MIXING_BOWL WELL 
         
+        // grab the top value of the stack: it will be the number
+        // we need to guess
         FOLD ('secret_ingredient) INTO FIRST MIXING_BOWL 
         
+        // done with the stack; empty it
+        CLEAN FIRST MIXING_BOWL 
+
         "GUESS" THE ('secret_ingredient) NOW
         
-        PUT ('false) INTO SECOND MIXING_BOWL 
-        
-        FOLD ('equal) INTO SECOND MIXING_BOWL 
-        
-        PUT ('false) INTO SECOND MIXING_BOWL 
-        
-        FOLD ('greater) INTO SECOND MIXING_BOWL 
-        
-        PUT ('true) INTO SECOND MIXING_BOWL 
-        
-        FOLD ('less) INTO SECOND MIXING_BOWL 
-        
-        SERVE WITH "Prompt Pudding" 
-        
-        TAKE ('guess) FROM REFRIGERATOR 
-        
-        PUT ('guess) INTO SECOND MIXING_BOWL 
+            PUT ('false) INTO SECOND MIXING_BOWL 
+            
+            // equal = 0
+            FOLD ('equal) INTO SECOND MIXING_BOWL 
+            
+            PUT ('false) INTO SECOND MIXING_BOWL 
+            
+            // greater = 0
+            FOLD ('greater) INTO SECOND MIXING_BOWL 
+            
+            PUT ('true) INTO SECOND MIXING_BOWL 
+            
+            // less =  1
+            FOLD ('less) INTO SECOND MIXING_BOWL 
+            
+            SERVE WITH "Prompt Pudding" 
+            
+            // ask for a guess
+            TAKE ('guess) FROM REFRIGERATOR 
+            
+            // grab guess, put into 2nd stack
+            PUT ('guess) INTO SECOND MIXING_BOWL 
 
-        DIVIDE ('secret_ingredient) INTO SECOND MIXING_BOWL 
-        
-        FOLD ('result) INTO SECOND MIXING_BOWL 
-        
-        "CHECK" THE ('result) NOW
+            DIVIDE ('secret_ingredient) INTO SECOND MIXING_BOWL 
+            
+            // get the result of guess / actual number
+            FOLD ('result) INTO SECOND MIXING_BOWL 
+            
+            // guess > actual => result at least 1
+            // guess = actual = result is 1
+            // guess < actual = result is 0, don't go in this
+            "CHECK" THE ('result) NOW
 
-        PUT ('false) INTO SECOND MIXING_BOWL 
-        
-        FOLD ('less) INTO SECOND MIXING_BOWL 
-        
-        PUT ('true) INTO SECOND MIXING_BOWL 
-        
-        FOLD ('equal) INTO SECOND MIXING_BOWL 
-        
-        PUT ('guess) INTO SECOND MIXING_BOWL 
-        
-        REMOVE ('secret_ingredient) FROM SECOND MIXING_BOWL 
-        
-        FOLD ('result) INTO SECOND MIXING_BOWL 
-        
-        "EQUALIZE" THE ('result) NOW
-        
-        PUT ('false) INTO SECOND MIXING_BOWL 
-        
-        FOLD ('equal) INTO SECOND MIXING_BOWL 
-        
-        PUT ('true) INTO SECOND MIXING_BOWL 
-        
-        FOLD ('greater) INTO SECOND MIXING_BOWL 
-        
-        SET ASIDE 
-        
-        "EQUALIZE" UNTIL "EQUALIZED" 
-        
-        SET ASIDE 
-        
-        "CHECK" UNTIL "CHECKED" 
-        
-        "LOWER" THE ('less) NOW
-        
-        SERVE WITH ("More") 
-        
-        SET ASIDE 
-        
-        "LOWER" UNTIL "LOWERED" 
-        
-        "MAX" THE ('greater) NOW
-        
-        SERVE WITH "Less" 
-        
-        SET ASIDE 
-        
-        "MAX" UNTIL "MAXED" 
-        
-        "LEVEL" THE ('equal) NOW
-        
-        PUT ('false) INTO SECOND MIXING_BOWL 
-        
-        FOLD ('secret_ingredient) INTO SECOND MIXING_BOWL 
-        
-        SERVE WITH "Equal" 
-        
-        SET ASIDE 
-        
-        "LEVEL" UNTIL "LEVELED" 
+                PUT ('false) INTO SECOND MIXING_BOWL 
+                
+                // less = 0; i.e. set less to be false
+                FOLD ('less) INTO SECOND MIXING_BOWL 
+                
+                PUT ('true) INTO SECOND MIXING_BOWL 
+                
+                // equal = 1
+                FOLD ('equal) INTO SECOND MIXING_BOWL 
+
+                PUT ('guess) INTO SECOND MIXING_BOWL 
+                
+                // subtract the guess form the secret ingredient
+                REMOVE ('secret_ingredient) FROM SECOND MIXING_BOWL 
+                
+                // grab result
+                FOLD ('result) INTO SECOND MIXING_BOWL 
+                
+                // if result is 0, then this loop will no happen
+                // other wise it will; in other words we're basically
+                // using the loop as a conditional
+                "EQUALIZE" THE ('result) NOW
+                
+                    PUT ('false) INTO SECOND MIXING_BOWL 
+                    
+                    // equal = 0
+                    FOLD ('equal) INTO SECOND MIXING_BOWL 
+                    
+                    PUT ('true) INTO SECOND MIXING_BOWL 
+                    
+                    // greater = 1
+                    FOLD ('greater) INTO SECOND MIXING_BOWL 
+                    
+                    // break out of the loop
+                    SET ASIDE 
+                
+                "EQUALIZE" UNTIL "EQUALIZED" 
+
+                // break out of loop, i.e. this was a conditional
+                SET ASIDE 
+            
+            "CHECK" UNTIL "CHECKED" 
+
+
+            // at this point we know if the number is greater than
+            // less than or equal to based on the settings of
+            // less, greater, and equal; we then use loops as conditionals
+            // to print out the correct option
+
+            // only 1 of less, greater, or equal will be set
+            
+            "LOWER" THE ('less) NOW
+            
+                SERVE WITH ("More") 
+                
+                SET ASIDE 
+            
+            "LOWER" UNTIL "LOWERED" 
+            
+
+            "MAX" THE ('greater) NOW
+            
+                SERVE WITH "Less" 
+                
+                SET ASIDE 
+            
+            "MAX" UNTIL "MAXED" 
+
+            
+            "LEVEL" THE ('equal) NOW
+            
+                PUT ('false) INTO SECOND MIXING_BOWL 
+                
+                // make the secret ingredient 0, meaning we break out
+                // of the guessing loop
+                FOLD ('secret_ingredient) INTO SECOND MIXING_BOWL 
+                
+                SERVE WITH "Equal" 
+                
+                SET ASIDE 
+            
+            "LEVEL" UNTIL "LEVELED" 
         
         "GUESS" UNTIL "GUESSED" 
         
         
+        // asks for a guess
         TITLE ("Prompt Pudding") 
         
         START_INGREDIENTS
@@ -140,7 +183,9 @@ object ChefGuessingGame extends ScalaChef {
         58 ('bananas) 
         
         END_INGREDIENTS
+
         
+        // clear stack again just in case
         CLEAN FIRST MIXING_BOWL 
         
         PUT ('bananas) INTO FIRST MIXING_BOWL 
@@ -161,7 +206,9 @@ object ChefGuessingGame extends ScalaChef {
         
         REFRIGERATE FOR 1 HOURS 
         
-        
+
+
+
         TITLE ("More") 
         
         START_INGREDIENTS
@@ -185,6 +232,8 @@ object ChefGuessingGame extends ScalaChef {
         REFRIGERATE FOR 1 HOURS 
         
         
+
+
         TITLE ("Less") 
         
         START_INGREDIENTS
@@ -207,6 +256,9 @@ object ChefGuessingGame extends ScalaChef {
         
         REFRIGERATE FOR 1 HOURS 
         
+
+
+
         
         TITLE ("Equal") 
         
@@ -229,6 +281,9 @@ object ChefGuessingGame extends ScalaChef {
         POUR CONTENTS OF THE FIRST MIXING_BOWL INTO THE FIRST BAKING_DISH 
         
         REFRIGERATE FOR 1 HOURS 
+
+
+
         
         RUN
     }
